@@ -1,0 +1,76 @@
+# Others #
+######################
+.idea/
+.project/
+.bundle/
+*.retry
+.vscode/
+# Project #
+######################
+package-lock.json
+yarn.lock
+
+node_modules
+bower_components
+website/public/assets/*
+website/public/page_ouverture*
+website/public/dist/*
+website/public/apidocs/*
+website/public/scripts/*
+website/public/styles/*
+website/.env
+website/.env.master
+website/.env.preprod
+website/.env.prod
+website/vendor/
+website/.cert/
+website/.cert/*
+npm-shrinkwrap.json
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# logs #
+######################
+*.log
+
+# Temporaly files #
+######################
+*~
+*.swp
+*.swo
+*.tmp
+*.old
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.sass-cache
+frontend/style-refactoring/css
+.svn
+.cache
+
+# htmlhint config #
+######################
+.htmlhintrc
+
+# sass-lint config #
+######################
+sass-lint.yml
+
+website/storage/*
