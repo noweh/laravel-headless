@@ -74,3 +74,4 @@ frontend/style-refactoring/css
 sass-lint.yml
 
 website/storage/*
+!webiste/storage/framework
