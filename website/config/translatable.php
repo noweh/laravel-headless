@@ -11,12 +11,8 @@ return [
     |
     */
     'locales' => [
-        'en',
         'fr',
-        'es' => [
-            'MX', // mexican spanish
-            'CO', // colombian spanish
-        ],
+        'en',
     ],
 
     /*
@@ -80,7 +76,7 @@ return [
     | set it to false.
     |
     */
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'fr',
 
     /*
     |--------------------------------------------------------------------------
