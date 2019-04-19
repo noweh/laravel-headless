@@ -167,6 +167,7 @@ return [
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        Dimsav\Translatable\TranslatableServiceProvider::class,
 
         /*
          * Application Service Providers...
