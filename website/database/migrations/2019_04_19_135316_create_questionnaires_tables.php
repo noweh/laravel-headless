@@ -37,14 +37,14 @@ class CreateQuestionnairesTables extends Migration
             });
         }
 
-        if (!Schema::hasTable('questionnaire_themes')) {
-            Schema::create('questionnaire_themes', function (Blueprint $table) {
-                $table->integer('questionnaire_id')->unsigned()->index('questionnaire_themes_questionnaire_id');
-                $table->integer('theme_id')->unsigned()->index('questionnaire_themes_theme_id');
+        if (!Schema::hasTable('questionnaire_theme')) {
+            Schema::create('questionnaire_theme', function (Blueprint $table) {
+                $table->integer('questionnaire_id')->unsigned()->index('questionnaire_theme_questionnaire_id');
+                $table->integer('theme_id')->unsigned()->index('questionnaire_theme_theme_id');
                 $table->primary(['questionnaire_id','theme_id']);
-                $table->foreign('questionnaire_id', 'fk_questionnaire_themes_questionnaire_id')
+                $table->foreign('questionnaire_id', 'fk_questionnaire_theme_questionnaire_id')
                     ->references('id')->on('questionnaires')->onUpdate('NO ACTION')->onDelete('CASCADE');
-                $table->foreign('theme_id', 'fk_questionnaire_themes_theme_id')
+                $table->foreign('theme_id', 'fk_questionnaire_theme_theme_id')
                     ->references('id')->on('themes')->onUpdate('NO ACTION')->onDelete('CASCADE');
             });
         }
@@ -59,6 +59,6 @@ class CreateQuestionnairesTables extends Migration
     {
         Schema::dropIfExists('questionnaires');
         Schema::dropIfExists('questionnaire_translations');
-        Schema::dropIfExists('questionnaire_themes');
+        Schema::dropIfExists('questionnaire_theme');
     }
 }

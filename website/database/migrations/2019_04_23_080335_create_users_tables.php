@@ -20,13 +20,13 @@ class CreateUsersTables extends Migration
             });
         }*/
 
-        if (!Schema::hasTable('user_questionnaires')) {
-            Schema::create('user_questionnaires', function (Blueprint $table) {
+        if (!Schema::hasTable('user_questionnaire')) {
+            Schema::create('user_questionnaire', function (Blueprint $table) {
                 $table->increments('id');
                 $table->integer('user_id')->unsigned();
                 $table->integer('questionnaire_id')
-                    ->unsigned()->nullable()->index('ndx_user_questionnaires_questionnaire_id');
-                $table->foreign('questionnaire_id', 'fk_user_questionnaires_questionnaire_id')
+                    ->unsigned()->nullable()->index('ndx_user_questionnaire_questionnaire_id');
+                $table->foreign('questionnaire_id', 'fk_user_questionnaire_questionnaire_id')
                     ->references('id')->on('questionnaires')->onUpdate('NO ACTION')->onDelete('cascade');
                 $table->float('note')->nullable();
             });
@@ -41,6 +41,6 @@ class CreateUsersTables extends Migration
     public function down()
     {
         //Schema::dropIfExists('users');
-        Schema::dropIfExists('user_questionnaires');
+        Schema::dropIfExists('user_questionnaire');
     }
 }

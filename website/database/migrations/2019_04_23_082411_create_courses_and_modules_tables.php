@@ -36,14 +36,14 @@ class CreateCoursesAndModulesTables extends Migration
             });
         }
 
-        if (!Schema::hasTable('module_themes')) {
-            Schema::create('module_themes', function (Blueprint $table) {
-                $table->integer('module_id')->unsigned()->index('module_themes_module_id');
-                $table->integer('theme_id')->unsigned()->index('module_themes_theme_id');
+        if (!Schema::hasTable('module_theme')) {
+            Schema::create('module_theme', function (Blueprint $table) {
+                $table->integer('module_id')->unsigned()->index('module_theme_module_id');
+                $table->integer('theme_id')->unsigned()->index('module_theme_theme_id');
                 $table->primary(['module_id','theme_id']);
-                $table->foreign('module_id', 'fk_module_themes_module_id')
+                $table->foreign('module_id', 'fk_module_theme_module_id')
                     ->references('id')->on('modules')->onUpdate('NO ACTION')->onDelete('CASCADE');
-                $table->foreign('theme_id', 'fk_module_themes_theme_id')
+                $table->foreign('theme_id', 'fk_module_theme_theme_id')
                     ->references('id')->on('themes')->onUpdate('NO ACTION')->onDelete('CASCADE');
             });
         }
@@ -75,12 +75,12 @@ class CreateCoursesAndModulesTables extends Migration
             });
         }
 
-        if (!Schema::hasTable('course_themes')) {
-            Schema::create('course_themes', function (Blueprint $table) {
-                $table->integer('course_id')->unsigned()->index('course_themes_course_id');
-                $table->integer('theme_id')->unsigned()->index('course_themes_theme_id');
+        if (!Schema::hasTable('course_theme')) {
+            Schema::create('course_theme', function (Blueprint $table) {
+                $table->integer('course_id')->unsigned()->index('course_theme_course_id');
+                $table->integer('theme_id')->unsigned()->index('course_theme_theme_id');
                 $table->primary(['course_id','theme_id']);
-                $table->foreign('course_id', 'fk_course_themes_course_id')
+                $table->foreign('course_id', 'fk_course_theme_course_id')
                     ->references('id')->on('modules')->onUpdate('NO ACTION')->onDelete('CASCADE');
                 $table->foreign('course_id', 'fk_course_themes_theme_id')
                     ->references('id')->on('themes')->onUpdate('NO ACTION')->onDelete('CASCADE');
@@ -106,9 +106,9 @@ class CreateCoursesAndModulesTables extends Migration
     {
         Schema::dropIfExists('modules');
         Schema::dropIfExists('module_translations');
-        Schema::dropIfExists('module_themes');
+        Schema::dropIfExists('module_theme');
         Schema::dropIfExists('courses');
         Schema::dropIfExists('course_translations');
-        Schema::dropIfExists('course_themes');
+        Schema::dropIfExists('course_theme');
     }
 }

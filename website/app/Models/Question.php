@@ -15,9 +15,13 @@ class Question extends BaseModel
      */
     protected $fillable = [
         'published',
+        'format',
         'duration_min',
         'duration_max',
-        'position'
+        'position',
+        'questionnaire_id',
+        'question_type_id',
+        'good_answer_id'
     ];
 
     /**
@@ -44,6 +48,12 @@ class Question extends BaseModel
     public function possibleAnswers()
     {
         return $this->hasMany('App\Models\PossibleAnswer')->orderBy('position', 'asc');
+    }
+
+    public function availablePossibleAnswers()
+    {
+        return $this->hasMany('App\Models\PossibleAnswer')->orderBy('position', 'asc')
+            ->published()->withActiveTranslations();
     }
 
     public function goodAnswer()

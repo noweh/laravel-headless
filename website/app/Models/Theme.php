@@ -33,8 +33,31 @@ class Theme extends BaseModel
         return $this->hasMany('App\Models\Module')->orderBy('position', 'asc');
     }
 
+    public function availableModules()
+    {
+        return $this->hasMany('App\Models\Module')->orderBy('position', 'asc')
+            ->published()->withActiveTranslations();
+    }
+
     public function questionnaires()
     {
         return $this->hasMany('App\Models\Questionnaire')->orderBy('position', 'asc');
+    }
+
+    public function availableQuestionnaires()
+    {
+        return $this->hasMany('App\Models\Questionnaire')->orderBy('position', 'asc')
+            ->published()->withActiveTranslations();
+    }
+
+    public function courses()
+    {
+        return $this->hasMany('App\Models\Courses')->orderBy('position', 'asc');
+    }
+
+    public function availableCourses()
+    {
+        return $this->hasMany('App\Models\Courses')->orderBy('position', 'asc')
+            ->published()->withActiveTranslations();
     }
 }

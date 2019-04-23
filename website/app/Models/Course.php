@@ -36,6 +36,11 @@ class Course extends BaseModel
 
     public function themes()
     {
-        return $this->belongsToMany('App\Models\Themes');
+        return $this->belongsToMany('App\Models\Theme');
+    }
+
+    public function availableThemes()
+    {
+        return $this->belongsToMany('App\Models\Theme')->published()->withActiveTranslations();
     }
 }

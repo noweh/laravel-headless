@@ -14,7 +14,7 @@ class CreateQuestionsTables extends Migration
     public function up()
     {
         if (!Schema::hasTable('question_types')) {
-            Schema::create('questions', function (Blueprint $table) {
+            Schema::create('question_types', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
                 $table->boolean('published')->nullable();

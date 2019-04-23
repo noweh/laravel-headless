@@ -16,7 +16,8 @@ class Questionnaire extends BaseModel
     protected $fillable = [
         'published',
         'level',
-        'position'
+        'position',
+        'module_id'
     ];
 
     /**
@@ -37,11 +38,21 @@ class Questionnaire extends BaseModel
 
     public function themes()
     {
-        return $this->belongsToMany('App\Models\Themes');
+        return $this->belongsToMany('App\Models\Theme');
+    }
+
+    public function availableThemes()
+    {
+        return $this->belongsToMany('App\Models\Theme')->published()->withActiveTranslations();
     }
 
     public function questions()
     {
         return $this->hasMany('App\Models\Question')->orderBy('position', 'asc');
+    }
+
+    public function availableQuestions()
+    {
+        return $this->hasMany('App\Models\Question')->orderBy('position', 'asc')->published()->withActiveTranslations();
     }
 }
