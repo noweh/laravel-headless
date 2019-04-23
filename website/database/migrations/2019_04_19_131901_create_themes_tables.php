@@ -26,8 +26,8 @@ class CreateThemesTables extends Migration
             Schema::create('theme_translations', function (Blueprint $table) {
                 $table->increments('id');
                 $table->boolean('active')->nullable()->default(1);
-                $table->integer('theme_id')->unsigned()->nullable()->index('ndx_theme_translations_theme_id');
                 $table->string('locale', 3)->nullable();
+                $table->integer('theme_id')->unsigned()->nullable()->index('ndx_theme_translations_theme_id');
                 $table->foreign('theme_id', 'fk_theme_translations_theme_id')
                     ->references('id')->on('themes')->onUpdate('NO ACTION')->onDelete('cascade');
                 $table->text('label')->nullable();

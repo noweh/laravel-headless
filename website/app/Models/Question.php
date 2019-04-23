@@ -45,4 +45,9 @@ class Question extends BaseModel
     {
         return $this->hasMany('App\Models\PossibleAnswer')->orderBy('position', 'asc');
     }
+
+    public function goodAnswer()
+    {
+        return $this->hasOne('App\Models\PossibleAnswer');
+    }
 }

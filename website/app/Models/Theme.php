@@ -27,4 +27,14 @@ class Theme extends BaseModel
         'active',
         'label'
     ];
+
+    public function modules()
+    {
+        return $this->hasMany('App\Models\Module')->orderBy('position', 'asc');
+    }
+
+    public function questionnaires()
+    {
+        return $this->hasMany('App\Models\Questionnaire')->orderBy('position', 'asc');
+    }
 }

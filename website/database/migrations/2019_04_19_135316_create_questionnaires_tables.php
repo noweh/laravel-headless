@@ -27,9 +27,9 @@ class CreateQuestionnairesTables extends Migration
             Schema::create('questionnaire_translations', function (Blueprint $table) {
                 $table->increments('id');
                 $table->boolean('active')->nullable()->default(1);
+                $table->string('locale', 3)->nullable();
                 $table->integer('questionnaire_id')
                     ->unsigned()->nullable()->index('ndx_questionnaire_translations_questionnaire_id');
-                $table->string('locale', 3)->nullable();
                 $table->foreign('questionnaire_id', 'fk_questionnaire_translations_questionnaire_id')
                     ->references('id')->on('questionnaires')->onUpdate('NO ACTION')->onDelete('cascade');
                 $table->text('title')->nullable();

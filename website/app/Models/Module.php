@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Dimsav\Translatable\Translatable;
 
-class Questionnaire extends BaseModel
+class Module extends BaseModel
 {
     use Translatable;
 
@@ -15,7 +15,6 @@ class Questionnaire extends BaseModel
      */
     protected $fillable = [
         'published',
-        'level',
         'position'
     ];
 
@@ -30,18 +29,18 @@ class Questionnaire extends BaseModel
         'description'
     ];
 
-    public function module()
+    public function courses()
     {
-        return $this->belongsTo('App\Models\Module');
+        return $this->hasMany('App\Models\Course')->orderBy('position', 'asc');
+    }
+
+    public function questionnaires()
+    {
+        return $this->hasMany('App\Models\Questionnaire')->orderBy('position', 'asc');
     }
 
     public function themes()
     {
         return $this->belongsToMany('App\Models\Themes');
-    }
-
-    public function questions()
-    {
-        return $this->hasMany('App\Models\Question')->orderBy('position', 'asc');
     }
 }

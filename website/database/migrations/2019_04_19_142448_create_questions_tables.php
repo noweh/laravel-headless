@@ -26,11 +26,11 @@ class CreateQuestionsTables extends Migration
             Schema::create('question_type_translations', function (Blueprint $table) {
                 $table->increments('id');
                 $table->boolean('active')->nullable()->default(1);
+                $table->string('locale', 3)->nullable();
                 $table->integer('question_type_id')
                     ->unsigned()->nullable()->index('ndx_question_type_translations_question_type_id');
                 $table->foreign('question_type_id', 'fk_question_type_translations_question_type_id')
                     ->references('id')->on('question_types')->onUpdate('NO ACTION')->onDelete('cascade');
-                $table->string('locale', 3)->nullable();
                 $table->text('label')->nullable();
             });
         }
@@ -59,11 +59,11 @@ class CreateQuestionsTables extends Migration
             Schema::create('question_translations', function (Blueprint $table) {
                 $table->increments('id');
                 $table->boolean('active')->nullable()->default(1);
+                $table->string('locale', 3)->nullable();
                 $table->integer('question_id')
                     ->unsigned()->nullable()->index('ndx_question_translations_question_id');
                 $table->foreign('question_id', 'fk_question_translations_question_id')
                     ->references('id')->on('questions')->onUpdate('NO ACTION')->onDelete('cascade');
-                $table->string('locale', 3)->nullable();
                 $table->text('title')->nullable();
                 $table->text('description')->nullable();
             });
@@ -87,13 +87,22 @@ class CreateQuestionsTables extends Migration
             Schema::create('possible_answer_translations', function (Blueprint $table) {
                 $table->increments('id');
                 $table->boolean('active')->nullable()->default(1);
+                $table->string('locale', 3)->nullable();
                 $table->integer('possible_answer_id')
                     ->unsigned()->nullable()->index('ndx_possible_answer_translations_possibe_answer_id');
                 $table->foreign('possible_answer_id', 'fk_possible_answer_translations_possible_answer_id')
                     ->references('id')->on('possible_answers')->onUpdate('NO ACTION')->onDelete('cascade');
-                $table->string('locale', 3)->nullable();
                 $table->text('text')->nullable();
                 $table->text('description')->nullable();
+            });
+        }
+
+        if (!Schema::hasColumn('questions', 'good_answer_id')) {
+            Schema::table('questions', function (Blueprint $table) {
+                $table->integer('good_answer_id')
+                    ->unsigned()->nullable()->index('ndx_questions_good_answer_id');
+                $table->foreign('good_answer_id', 'fk_questions_good_answer_id')
+                    ->references('id')->on('possible_answers')->onUpdate('NO ACTION')->onDelete('set null');
             });
         }
     }
