@@ -10,6 +10,8 @@ class UserQuestionnaire extends BaseModel
      * @var array
      */
     protected $fillable = [
+        'user_id',
+        'questionnaire_id',
         'note'
     ];
 

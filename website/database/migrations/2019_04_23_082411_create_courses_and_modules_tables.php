@@ -52,11 +52,12 @@ class CreateCoursesAndModulesTables extends Migration
             Schema::create('courses', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->boolean('published')->nullable();
                 $table->integer('module_id')
                     ->unsigned()->nullable()->index('ndx_courses_module_id');
                 $table->foreign('module_id', 'fk_courses_module_id')
                     ->references('id')->on('modules')->onUpdate('NO ACTION')->onDelete('cascade');
-                $table->boolean('published')->nullable();
+                $table->text('format')->nullable();
                 $table->integer("position")->unsigned();
             });
         }

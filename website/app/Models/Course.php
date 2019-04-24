@@ -15,7 +15,9 @@ class Course extends BaseModel
      */
     protected $fillable = [
         'published',
-        'position'
+        'format',
+        'position',
+        'module_id'
     ];
 
     /**

@@ -14,7 +14,7 @@ class QuestionTypeTableSeeder extends Seeder
     {
         $this->command->info("Creating 2 question types.");
 
-        // Create the Theme
+        // Create the Question Type
         QuestionType::create([
             'published' => true,
             'code' => 'qcm',

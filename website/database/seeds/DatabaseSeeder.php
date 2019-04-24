@@ -23,12 +23,13 @@ class DatabaseSeeder extends Seeder
 
         // $this->call(UsersTableSeeder::class);
         $this->call(ThemeTableSeeder::class);
-        $this->call(CourseTableSeeder::class);
         $this->call(ModuleTableSeeder::class);
+        $this->call(CourseTableSeeder::class);
         $this->call(QuestionnaireTableSeeder::class);
         $this->call(QuestionTypeTableSeeder::class);
         $this->call(QuestionTableSeeder::class);
         $this->call(PossibleAnswerTableSeeder::class);
+        $this->call(UserQuestionnaireSeeder::class);
 
         $this->command->info("Database seeded.");
 

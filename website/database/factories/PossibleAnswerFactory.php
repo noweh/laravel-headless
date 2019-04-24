@@ -4,6 +4,7 @@
 
 use App\Models\PossibleAnswer;
 use App\Models\Question;
+use App\Models\QuestionType;
 use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 
@@ -25,8 +26,9 @@ $factory->define(PossibleAnswer::class, function (Faker $faker) use ($fakerFr, $
         'text:en' => $faker->realText(rand(20, 80)),
         'description' => $faker->realText(rand(80, 600)),
         'question_id' => function () {
-            // Get random question id
-            return Question::inRandomOrder()->first()->id;
+            // Get random question id where question_type is QCM
+            $question_type_id = QuestionType::where('code', 'qcm')->first()->id;
+            return Question::where('question_type_id', $question_type_id)->inRandomOrder()->first()->id;
         },
     ];
 });

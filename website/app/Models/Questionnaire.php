@@ -16,6 +16,7 @@ class Questionnaire extends BaseModel
     protected $fillable = [
         'published',
         'level',
+        'note_max',
         'position',
         'module_id'
     ];
