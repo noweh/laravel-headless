@@ -58,6 +58,6 @@ class Question extends BaseModel
 
     public function goodAnswer()
     {
-        return $this->hasOne('App\Models\PossibleAnswer');
+        return $this->hasOne('App\Models\PossibleAnswer')->where('id', $this->good_answer_id);
     }
 }
