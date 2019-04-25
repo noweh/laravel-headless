@@ -26,7 +26,7 @@ $factory->define(Question::class, function (Faker $faker) use ($fakerFr, $autoIn
         'description:fr' => $fakerFr->realText(rand(80, 600)),
         'active:en' => $faker->boolean(50),
         'title:en' => $faker->sentence(5),
-        'description' => $faker->realText(rand(80, 600)),
+        'description:en' => $faker->realText(rand(80, 600)),
         'questionnaire_id' => function () {
             // Get random questionnaire id
             return Questionnaire::inRandomOrder()->first()->id;

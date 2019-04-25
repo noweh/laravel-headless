@@ -37,12 +37,12 @@ class Question extends BaseModel
 
     public function questionnaire()
     {
-        return $this->belongsTo('App\Models\Questionnaire');
+        return $this->belongsTo('App\Models\Questionnaire', 'questionnaire_id');
     }
 
     public function type()
     {
-        return $this->belongsTo('App\Models\QuestionType');
+        return $this->belongsTo('App\Models\QuestionType', 'question_type_id');
     }
 
     public function possibleAnswers()
@@ -58,6 +58,6 @@ class Question extends BaseModel
 
     public function goodAnswer()
     {
-        return $this->hasOne('App\Models\PossibleAnswer')->where('id', $this->good_answer_id);
+        return $this->hasOne('App\Models\PossibleAnswer', 'id', 'good_answer_id');
     }
 }

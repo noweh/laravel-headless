@@ -11,6 +11,19 @@
 |
 */
 
+use App\Http\Resources\QuestionnaireResource;
+use App\Models\Questionnaire;
+
 Route::get('/', function () {
-    return view('welcome');
+    App::setLocale('fr');
+    $questionnaireRessources = QuestionnaireResource::collection(
+        Questionnaire::with([
+            //'themes',
+            //'questions',
+            //'questions.possibleAnswers',
+            //'questions.goodAnswer'
+        ])->paginate(25)
+    );
+
+    return $questionnaireRessources;
 });

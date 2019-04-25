@@ -27,4 +27,9 @@ class QuestionType extends BaseModel
         'active',
         'label'
     ];
+
+    public function questions()
+    {
+        $this->hasMany('App\Models\Questions');
+    }
 }

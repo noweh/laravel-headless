@@ -20,11 +20,11 @@ $factory->define(PossibleAnswer::class, function (Faker $faker) use ($fakerFr, $
         'format' => 'text',
         'position' => $autoIncrement->current(),
         'active:fr' => $faker->boolean(100),
-        'text:fr' => $faker->realText(rand(20, 80)),
+        'text:fr' => $fakerFr->realText(rand(20, 80)),
         'description:fr' => $fakerFr->realText(rand(80, 600)),
         'active:en' => $faker->boolean(50),
         'text:en' => $faker->realText(rand(20, 80)),
-        'description' => $faker->realText(rand(80, 600)),
+        'description:en' => $faker->realText(rand(80, 600)),
         'question_id' => function () {
             // Get random question id where question_type is QCM
             $question_type_id = QuestionType::where('code', 'qcm')->first()->id;

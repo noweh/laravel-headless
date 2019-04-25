@@ -34,7 +34,7 @@ class Questionnaire extends BaseModel
 
     public function module()
     {
-        return $this->belongsTo('App\Models\Module');
+        return $this->belongsTo('App\Models\Module', 'module_id');
     }
 
     public function themes()

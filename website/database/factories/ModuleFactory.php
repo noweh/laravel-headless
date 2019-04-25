@@ -21,6 +21,6 @@ $factory->define(Module::class, function (Faker $faker) use ($fakerFr, $autoIncr
         'description:fr' => $fakerFr->realText(rand(80, 600)),
         'active:en' => $faker->boolean(50),
         'title:en' => $faker->sentence(5),
-        'description' => $faker->realText(rand(80, 600))
+        'description:en' => $faker->realText(rand(80, 600))
     ];
 });

@@ -16,7 +16,8 @@ class PossibleAnswer extends BaseModel
     protected $fillable = [
         'published',
         'format',
-        'position'
+        'position',
+        'question_id'
     ];
 
     /**
@@ -32,6 +33,6 @@ class PossibleAnswer extends BaseModel
 
     public function question()
     {
-        return $this->belongsTo('App\Models\Question');
+        return $this->belongsTo('App\Models\Question', 'question_id');
     }
 }
