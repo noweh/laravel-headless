@@ -81,6 +81,12 @@ return [
     */
 
     'locale' => 'fr',
+    'locales' => [ 'fr' => 'fr_FR', 'en' => 'en_US'],
+    'compatible_locales' => [
+        'fr' => ['fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR', 'french'],
+        'en' => ['en_US.utf8', 'en_US.UTF-8', 'en_US', 'english'],
+    ],
+    'locale_names' => ['fr' => 'Français', 'en' => 'English'],
 
     /*
     |--------------------------------------------------------------------------

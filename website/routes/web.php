@@ -11,19 +11,8 @@
 |
 */
 
-use App\Http\Resources\QuestionnaireResource;
-use App\Models\Questionnaire;
-
-Route::get('/', function () {
-    App::setLocale('fr');
-    $questionnaireRessources = QuestionnaireResource::collection(
-        Questionnaire::with([
-            //'themes',
-            //'questions',
-            //'questions.possibleAnswers',
-            //'questions.goodAnswer'
-        ])->paginate(25)
-    );
-
-    return $questionnaireRessources;
+Route::group(['middleware' => ['api.language']], function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
 });

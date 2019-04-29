@@ -13,6 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});*/
+
+Route::group(['domain' => env('DOMAINE_API')], function () {
+    Route::group(['prefix' => 'v1'], function () {
+        Route::group(['middleware' => ['api.language']], function () {
+            Route::apiResource('questionnaires', 'QuestionnaireController');
+        });
+    });
 });
