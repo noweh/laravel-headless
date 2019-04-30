@@ -21,7 +21,16 @@ class ThemeResource extends JsonResource
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'active' => $this->active,
-            'label' => $this->label
+            'label' => $this->label,
+            'courses' => $this->when($this->relationLoaded('courses'), function () {
+                return CourseResource::collection($this->courses);
+            }),
+            'modules' => $this->when($this->relationLoaded('modules'), function () {
+                return ModuleResource::collection($this->modules);
+            }),
+            'questionnaires' => $this->when($this->relationLoaded('questionnaires'), function () {
+                return QuestionnaireResource::collection($this->questionnaires);
+            }),
         ];
     }
 }

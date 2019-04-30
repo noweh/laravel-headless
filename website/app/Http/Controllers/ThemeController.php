@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\Repositories\QuestionnaireRepositoryInterface;
+use App\Contracts\Repositories\ThemeRepositoryInterface;
 use Illuminate\Http\Request;
 
-class QuestionnaireController extends AbstractController
+class ThemeController extends AbstractController
 {
     public function __construct(
         Request $request,
-        QuestionnaireRepositoryInterface $repository
+        ThemeRepositoryInterface $repository
     ) {
         $this->request = $request;
         $this->repository = $repository;

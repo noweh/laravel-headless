@@ -1,6 +1,6 @@
 <?php namespace App\Models;
 
-class QuestionTypeTranslation extends BaseModel
+class QuestionTypeTranslation extends AbstractModel
 {
     public $timestamps = false;
 

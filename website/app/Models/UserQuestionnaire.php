@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class UserQuestionnaire extends BaseModel
+class UserQuestionnaire extends AbstractModel
 {
     /**
      * The attributes that are mass assignable.

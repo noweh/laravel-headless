@@ -21,6 +21,7 @@ Route::group(['domain' => env('DOMAINE_API')], function () {
     Route::group(['prefix' => 'v1'], function () {
         Route::group(['middleware' => ['api.language']], function () {
             Route::apiResource('questionnaires', 'QuestionnaireController');
+            Route::apiResource('themes', 'ThemeController');
         });
     });
 });

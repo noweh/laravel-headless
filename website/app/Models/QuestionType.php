@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Dimsav\Translatable\Translatable;
 
-class QuestionType extends BaseModel
+class QuestionType extends AbstractModel
 {
     use Translatable;
 

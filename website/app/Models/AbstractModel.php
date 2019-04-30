@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use App;
 
-abstract class BaseModel extends Model
+abstract class AbstractModel extends Model
 {
     public function scopePublished($query)
     {
@@ -30,5 +30,10 @@ abstract class BaseModel extends Model
                 $query->whereLocale($locale);
             }]);
         }
+    }
+
+    public function getTranslatedAttributes()
+    {
+        return $this->translatedAttributes;
     }
 }
