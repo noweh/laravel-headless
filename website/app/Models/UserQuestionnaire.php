@@ -17,6 +17,6 @@ class UserQuestionnaire extends AbstractModel
 
     public function questionnaires()
     {
-        return $this->belongsToMany('App\Models\Questionnaire');
+        return $this->belongsToMany(Questionnaire::class);
     }
 }

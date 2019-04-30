@@ -31,33 +31,33 @@ class Module extends AbstractModel
 
     public function courses()
     {
-        return $this->hasMany('App\Models\Course')->orderBy('position', 'asc');
+        return $this->hasMany(Course::class)->orderBy('position', 'asc');
     }
 
     public function availableCourses()
     {
-        return $this->hasMany('App\Models\Course')->orderBy('position', 'asc')
+        return $this->hasMany(Course::class)->orderBy('position', 'asc')
             ->published()->withActiveTranslations();
     }
 
     public function questionnaires()
     {
-        return $this->hasMany('App\Models\Questionnaire')->orderBy('position', 'asc');
+        return $this->hasMany(Questionnaire::class)->orderBy('position', 'asc');
     }
 
     public function availableQuestionnaires()
     {
-        return $this->hasMany('App\Models\Questionnaire')->orderBy('position', 'asc')
+        return $this->hasMany(Questionnaire::class)->orderBy('position', 'asc')
             ->published()->withActiveTranslations();
     }
 
     public function themes()
     {
-        return $this->belongsToMany('App\Models\Theme');
+        return $this->belongsToMany(Theme::class);
     }
 
     public function availableThemes()
     {
-        return $this->belongsToMany('App\Models\Theme')->published()->withActiveTranslations();
+        return $this->belongsToMany(Theme::class)->published()->withActiveTranslations();
     }
 }

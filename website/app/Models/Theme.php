@@ -30,34 +30,34 @@ class Theme extends AbstractModel
 
     public function modules()
     {
-        return $this->belongsToMany('App\Models\Module')->orderBy('position', 'asc');
+        return $this->belongsToMany(Module::class)->orderBy('position', 'asc');
     }
 
     public function availableModules()
     {
-        return $this->belongsToMany('App\Models\Module')->orderBy('position', 'asc')
+        return $this->belongsToMany(Module::class)->orderBy('position', 'asc')
             ->published()->withActiveTranslations();
     }
 
     public function questionnaires()
     {
-        return $this->belongsToMany('App\Models\Questionnaire')->orderBy('position', 'asc');
+        return $this->belongsToMany(Questionnaire::class)->orderBy('position', 'asc');
     }
 
     public function availableQuestionnaires()
     {
-        return $this->belongsToMany('App\Models\Questionnaire')->orderBy('position', 'asc')
+        return $this->belongsToMany(Questionnaire::class)->orderBy('position', 'asc')
             ->published()->withActiveTranslations();
     }
 
     public function courses()
     {
-        return $this->belongsToMany('App\Models\Course')->orderBy('position', 'asc');
+        return $this->belongsToMany(Course::class)->orderBy('position', 'asc');
     }
 
     public function availableCourses()
     {
-        return $this->belongsToMany('App\Models\Course')->orderBy('position', 'asc')
+        return $this->belongsToMany(Course::class)->orderBy('position', 'asc')
             ->published()->withActiveTranslations();
     }
 }

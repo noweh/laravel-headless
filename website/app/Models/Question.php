@@ -37,27 +37,27 @@ class Question extends AbstractModel
 
     public function questionnaire()
     {
-        return $this->belongsTo('App\Models\Questionnaire', 'questionnaire_id');
+        return $this->belongsTo(Questionnaire::class, 'questionnaire_id');
     }
 
     public function type()
     {
-        return $this->belongsTo('App\Models\QuestionType', 'question_type_id');
+        return $this->belongsTo(QuestionType::class, 'question_type_id');
     }
 
     public function possibleAnswers()
     {
-        return $this->hasMany('App\Models\PossibleAnswer')->orderBy('position', 'asc');
+        return $this->hasMany(PossibleAnswer::class)->orderBy('position', 'asc');
     }
 
     public function availablePossibleAnswers()
     {
-        return $this->hasMany('App\Models\PossibleAnswer')->orderBy('position', 'asc')
+        return $this->hasMany(PossibleAnswer::class)->orderBy('position', 'asc')
             ->published()->withActiveTranslations();
     }
 
     public function goodAnswer()
     {
-        return $this->hasOne('App\Models\PossibleAnswer', 'id', 'good_answer_id');
+        return $this->hasOne(PossibleAnswer::class, 'id', 'good_answer_id');
     }
 }

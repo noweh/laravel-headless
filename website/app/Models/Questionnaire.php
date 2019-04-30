@@ -34,26 +34,26 @@ class Questionnaire extends AbstractModel
 
     public function module()
     {
-        return $this->belongsTo('App\Models\Module', 'module_id');
+        return $this->belongsTo(Module::class, 'module_id');
     }
 
     public function themes()
     {
-        return $this->belongsToMany('App\Models\Theme');
+        return $this->belongsToMany(Theme::class);
     }
 
     public function availableThemes()
     {
-        return $this->belongsToMany('App\Models\Theme')->published()->withActiveTranslations();
+        return $this->belongsToMany(Theme::class)->published()->withActiveTranslations();
     }
 
     public function questions()
     {
-        return $this->hasMany('App\Models\Question')->orderBy('position', 'asc');
+        return $this->hasMany(Question::class)->orderBy('position', 'asc');
     }
 
     public function availableQuestions()
     {
-        return $this->hasMany('App\Models\Question')->orderBy('position', 'asc')->published()->withActiveTranslations();
+        return $this->hasMany(Question::class)->orderBy('position', 'asc')->published()->withActiveTranslations();
     }
 }

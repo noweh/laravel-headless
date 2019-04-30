@@ -30,6 +30,6 @@ class QuestionType extends AbstractModel
 
     public function questions()
     {
-        $this->hasMany('App\Models\Questions');
+        return $this->hasMany(Question::class)->orderBy('position', 'asc');
     }
 }

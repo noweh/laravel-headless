@@ -33,6 +33,6 @@ class PossibleAnswer extends AbstractModel
 
     public function question()
     {
-        return $this->belongsTo('App\Models\Question', 'question_id');
+        return $this->belongsTo(Question::class, 'question_id');
     }
 }

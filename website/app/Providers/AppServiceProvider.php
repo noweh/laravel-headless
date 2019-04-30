@@ -19,8 +19,33 @@ class AppServiceProvider extends ServiceProvider
         // bindings with the application. As you can see, we are registering our
         // "Registrar" implementation here. You can add your own bindings too!
         $this->app->bind(
+            'App\Contracts\Repositories\CourseRepositoryInterface',
+            'App\Repositories\CourseRepository'
+        );
+
+        $this->app->bind(
+            'App\Contracts\Repositories\ModuleRepositoryInterface',
+            'App\Repositories\ModuleRepository'
+        );
+
+        $this->app->bind(
+            'App\Contracts\Repositories\PossibleAnswerRepositoryInterface',
+            'App\Repositories\PossibleAnswerRepository'
+        );
+
+        $this->app->bind(
             'App\Contracts\Repositories\QuestionnaireRepositoryInterface',
             'App\Repositories\QuestionnaireRepository'
+        );
+
+        $this->app->bind(
+            'App\Contracts\Repositories\QuestionRepositoryInterface',
+            'App\Repositories\QuestionRepository'
+        );
+
+        $this->app->bind(
+            'App\Contracts\Repositories\QuestionTypeRepositoryInterface',
+            'App\Repositories\QuestionTypeRepository'
         );
 
         $this->app->bind(

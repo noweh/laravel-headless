@@ -22,6 +22,9 @@ class QuestionTypeResource extends JsonResource
             'updated_at' => (string) $this->updated_at,
             'active' => $this->active,
             'label' => $this->label,
+            'questions' => $this->when($this->relationLoaded('questions'), function () {
+                return QuestionResource::collection($this->questions);
+            }),
         ];
     }
 }

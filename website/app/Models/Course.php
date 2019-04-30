@@ -33,16 +33,16 @@ class Course extends AbstractModel
 
     public function module()
     {
-        return $this->belongsTo('App\Models\Module', 'module_id');
+        return $this->belongsTo(Module::class, 'module_id');
     }
 
     public function themes()
     {
-        return $this->belongsToMany('App\Models\Theme');
+        return $this->belongsToMany(Theme::class);
     }
 
     public function availableThemes()
     {
-        return $this->belongsToMany('App\Models\Theme')->published()->withActiveTranslations();
+        return $this->belongsToMany(Theme::class)->published()->withActiveTranslations();
     }
 }
