@@ -9,6 +9,25 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
+/**
+ * Class AbstractController
+ * @package App\Http\Controllers
+ *
+ * @OA\Info(
+ *     version="1.0",
+ *     title="API",
+ * )
+ *
+ * @OA\Server(
+ *     description="API V1",
+ *     url=API_BASE
+ * )
+ *
+ * @OA\Tag(
+ *     name="Questionnaire",
+ *     description="Operations about Questionnaires"
+ * )
+ */
 abstract class AbstractController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -76,10 +95,10 @@ abstract class AbstractController extends BaseController
         foreach ($filters as $field) {
             if ($this->request->has($field)) {
                 $value = $this->request->$field;
-                if ($value == "true") {
+                if ($value == 'true') {
                     $value = 1;
                 }
-                if ($value == "false") {
+                if ($value == 'false') {
                     $value = 0;
                 }
                 if ($value == 0 || !empty($value)) {
@@ -96,8 +115,10 @@ abstract class AbstractController extends BaseController
     private function getOrderFilters()
     {
         $orders = [];
-        if ($this->request->has("sort") && $this->request->has("sortOrder")) {
-            $orders[$this->request->get("sort")] = $this->request->get("sortOrder");
+        if ($this->request->has('sort') && $this->request->has('sortOrder')) {
+            $orders[$this->request->get('sort')] = $this->request->get('sortOrder');
+        } elseif ($this->request->has('sort')) {
+            $orders[$this->request->get('sort')] = 'asc';
         }
         return $orders;
     }
@@ -119,7 +140,7 @@ abstract class AbstractController extends BaseController
     public function index()
     {
         return $this->getResource()::collection(
-            $this->getRepository()->getCollection(
+            $this->getRepository()->getPaginateCollection(
                 $this->nbPerPage,
                 $this->getScopeFilters(),
                 $this->parseIncludes(),

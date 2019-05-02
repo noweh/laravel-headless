@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.1.3",
         "barryvdh/laravel-ide-helper": "v2.6.2",
+        "darkaonline/l5-swagger": "5.8.*",
         "dimsav/laravel-translatable": "^9.4",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.8.*",

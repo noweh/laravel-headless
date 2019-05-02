@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
-Route::group(['domain' => env('DOMAINE_API')], function () {
+Route::group(['domain' => env('DOMAIN_API')], function () {
     Route::group(['prefix' => 'v1'], function () {
         Route::group(['middleware' => ['api.language']], function () {
             Route::apiResource('courses', 'CourseController');
