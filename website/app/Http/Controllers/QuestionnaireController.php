@@ -21,7 +21,9 @@ class QuestionnaireController extends AbstractController
      * @OA\Get(
      *     path="/questionnaires",
      *     tags={"Questionnaire"},
-     *     summary="Retrieve a listing of questionnaires.",
+     *     summary="Retrieve a listing of Questionnaires.",
+     *     description="Returns a listing of Questionnaires.",
+     *     operationId="getQuestionnaires",
      *     @OA\Parameter(
      *         name="lang",
      *         required=true,
@@ -81,6 +83,73 @@ class QuestionnaireController extends AbstractController
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error."
+     *     )
+     * )
+     */
+
+    /**
+     * @OA\Get(
+     *     path="/questionnaires/{questionnaireId}",
+     *     tags={"Questionnaire"},
+     *     summary="Find a Questionnaire by ID.",
+     *     description="Returns a single Questionnaire.",
+     *     operationId="getQuestionnaireById",
+     *     @OA\Parameter(
+     *         name="questionnaireId",
+     *         in="path",
+     *         description="ID of Questionnaire to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Questionnaire")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Questionnaire not found"
+     *     ),
+     * )
+     *
+     * @param int $id
+     */
+
+    /**
+     * @OA\Delete(
+     *     path="/questionnaires/{questionnaireId}",
+     *     tags={"Questionnaire"},
+     *     summary="Delete Questionnaire by ID.",
+     *     description="Delete a single Questionnaire.",
+     *     operationId="deleteQuestionnaireById",
+     *     @OA\Parameter(
+     *         name="questionnaireId",
+     *         in="path",
+     *         description="ID of Questionnaire that needs to be deleted",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Questionnaire not found",
      *     )
      * )
      */

@@ -19,6 +19,7 @@ class QuestionnaireResource extends JsonResource
             'published' => $this->published,
             'level' => $this->level,
             'note_max' => $this->note_max,
+            'module_id' => $this->module_id,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'active' => $this->active,

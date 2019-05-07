@@ -12,7 +12,7 @@
 */
 
 Route::group(['middleware' => ['api.language']], function () {
-    Route::get('/', function () {
+    /*Route::get('/', function () {
         return view('welcome');
-    });
+    });*/
 });
