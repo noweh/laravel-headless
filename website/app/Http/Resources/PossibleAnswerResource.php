@@ -17,6 +17,7 @@ class PossibleAnswerResource extends JsonResource
         return [
             'id' => $this->id,
             'published' => $this->published,
+            'question_id' => $this->question_id,
             'format' => $this->format,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,

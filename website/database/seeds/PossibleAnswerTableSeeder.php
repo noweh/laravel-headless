@@ -19,7 +19,7 @@ class PossibleAnswerTableSeeder extends Seeder
         // Create the Question for qcm
         factory(PossibleAnswer::class, 250)->create();
 
-        $this->command->info("Creating 250 possible answers for yes/no questions.");
+        $this->command->info("Creating possible answers for yes/no questions.");
 
         // Create the Question for yes/no
         $question_type_id = QuestionType::where('code', 'vrai/faux')->first()->id;

@@ -18,6 +18,7 @@ class QuestionResource extends JsonResource
             'id' => $this->id,
             'published' => $this->published,
             'format' => $this->format,
+            'questionnaire_id' => $this->questionnaire_id,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'duration_min' => $this->duration_min,

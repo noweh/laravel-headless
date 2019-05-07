@@ -18,6 +18,13 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $model = null;
 
     /**
+     * Fields listed in that array must be nullable
+     *
+     * @var array list of field name
+     */
+    protected $forceSetTranslateFieldBeforeSave = [];
+
+    /**
      * @return Model|null
      */
     public function getModel()
@@ -298,7 +305,6 @@ abstract class AbstractRepository implements RepositoryInterface
 
         $object = $this->model->findOrFail($id);
 
-        //
         $this->updateTranslations($object, $fields);
 
         //
@@ -361,6 +367,47 @@ abstract class AbstractRepository implements RepositoryInterface
         $fields = $this->getFormFieldsTranslations($object, $fields);
 
         return $this->getFormFieldsSlugs($object, $fields);
+    }
+
+    /**
+     * Transform the $fields dates from a user friendly string to a Carbon compatible string.
+     * return the altered $fields array
+     *
+     * @param array $fields
+     * @return array
+     */
+    protected function prepareDatesFields($fields)
+    {
+        foreach ($this->model->getDates() as $f) {
+            if (isset($fields[$f])) {
+                if (!empty($fields[$f])) {
+                    $fields = $this->prepareDatesField($fields, $f);
+                } else {
+                    $fields[$f] = null;
+                }
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Transform the $fields[$f] date from a user friendly string to a Carbon compatible string.
+     * return the altered $fields array
+     *
+     * @param array $fields
+     * @param string $f
+     * @return array
+     */
+    protected function prepareDatesField($fields, $f)
+    {
+        if (($datetime=DateTime::createFromFormat("d/m/Y", $fields[$f]))) {
+            $fields[$f] = $datetime->format("Y-m-d");
+        } else {
+            $fields[$f] = null;
+        }
+
+        return $fields;
     }
 
     /**

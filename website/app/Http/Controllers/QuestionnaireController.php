@@ -104,6 +104,16 @@ class QuestionnaireController extends AbstractController
      *             format="int64"
      *         )
      *     ),
+     *     @OA\Parameter(
+     *         name="lang",
+     *         required=true,
+     *         in="query",
+     *         description="Language",
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"fr","en"}
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
@@ -120,6 +130,112 @@ class QuestionnaireController extends AbstractController
      * )
      *
      * @param int $id
+     */
+
+    /**
+     * @OA\Patch(
+     *     path="/questionnaires/{questionnaireId}",
+     *     tags={"Questionnaire"},
+     *     summary="Update Questionnaire by ID",
+     *     description="Update a single Questionnaire.",
+     *     operationId="updateQuestionnaire",
+     *     @OA\Parameter(
+     *         name="questionnaireId",
+     *         in="path",
+     *         description="ID of Questionnaire that to be updated",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="lang",
+     *         required=true,
+     *         in="query",
+     *         description="Language",
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"fr","en"}
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Questionnaire not found"
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Updated Questionnaire object",
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="published",
+     *                 description="Updated published value",
+     *                 type="boolean",
+     *                 default=true
+     *             ),
+     *             @OA\Property(
+     *                 property="level",
+     *                 description="Updated level value",
+     *                 type="string",
+     *                 enum={1, 2, 3},
+     *                 default=2
+     *             ),
+     *             @OA\Property(
+     *                 property="active",
+     *                 description="Updated active value",
+     *                 type="boolean",
+     *                 default=true
+     *             ),
+     *             @OA\Property(
+     *                 property="title",
+     *                 description="Updated title value",
+     *                 type="string",
+     *                 example="un titre par défaut"
+     *             ),
+     *             @OA\Property(
+     *                 property="description",
+     *                 description="Updated description value",
+     *                 type="string",
+     *                 example="une description par défaut"
+     *             ),
+     *             @OA\Property(
+     *                 property="position",
+     *                 description="Updated position value",
+     *                 type="integer",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="module_id",
+     *                 description="Updated module_id value",
+     *                 type="integer",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="themes_id",
+     *                 description="Updated themes_id values",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="integer"
+     *                 ),
+     *                 example={1,2}
+     *             ),
+     *             @OA\Property(
+     *                 property="questions_id",
+     *                 description="Updated questions_id values",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="integer"
+     *                 ),
+     *                 example={2,5}
+     *             ),
+     *         )
+     *     )
+     * )
      */
 
     /**

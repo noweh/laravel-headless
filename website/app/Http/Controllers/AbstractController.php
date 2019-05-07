@@ -157,9 +157,15 @@ abstract class AbstractController extends BaseController
      */
     public function show($itemId)
     {
-        return $this->getResource()::make(
-            $this->getRepository()->getModel()::with($this->parseIncludes())->find($itemId)
-        );
+        $item = $this->getRepository()->getModel()::with($this->parseIncludes())->find($itemId);
+        if (!$item) {
+            throw new ModelNotFoundException(
+                'call to undefined id [' . $itemId . '] on model [' .
+                get_class($this->getRepository()->getModel()) . '}.'
+            );
+        }
+
+        return $this->getResource()::make($item);
     }
 
     /**
@@ -204,7 +210,8 @@ abstract class AbstractController extends BaseController
      */
     public function update(Request $request, $itemId)
     {
-        $this->getRepository()->getModel()::find($itemId)->update($request);
+        $this->getRepository()->update($itemId, $request->request->all());
+        //$this->getRepository()->getModel()::find($itemId)->update($request->request->all());
 
         return $this->show($itemId);
     }
@@ -217,7 +224,15 @@ abstract class AbstractController extends BaseController
      */
     public function destroy($itemId)
     {
-        $this->getRepository()->getModel()::find($itemId)->delete();
+        $item = $this->getRepository()->getModel()::with($this->parseIncludes())->find($itemId);
+        if (!$item) {
+            throw new ModelNotFoundException(
+                'call to undefined id [' . $itemId . '] on model [' .
+                get_class($this->getRepository()->getModel()) . '}.'
+            );
+        }
+
+        $item->delete();
 
         return response()->json(null, 204);
     }
