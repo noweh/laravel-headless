@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use App;
 
 /**
  * Class AbstractController
@@ -133,6 +134,26 @@ abstract class AbstractController extends BaseController
     }
 
     /**
+     * Retrieve all elements from Request and set translatedElements
+     * @param Request $request
+     * @return array
+     */
+    private function getElementsFromRequest(Request $request)
+    {
+        $elementsInRequest = $request->request->all();
+
+        $reconstructedElements = [];
+        foreach ($elementsInRequest as $elementKeyInRequest => $elementValueInRequest) {
+            if (in_array($elementKeyInRequest, $this->getRepository()->getModel()->getTranslatedAttributes())) {
+                $reconstructedElements[$elementKeyInRequest . '_' . App::getLocale()] = $elementValueInRequest;
+            } else {
+                $reconstructedElements[$elementKeyInRequest] = $elementValueInRequest;
+            }
+        }
+        return $reconstructedElements;
+    }
+
+    /**
      * Display a listing of the resource.
      * ex : http://academy.operadeparis.local/api/v1/themes?lang=fr&label=%%lu%%&sort=id&sortOrder=desc
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -157,15 +178,7 @@ abstract class AbstractController extends BaseController
      */
     public function show($itemId)
     {
-        $item = $this->getRepository()->getModel()::with($this->parseIncludes())->find($itemId);
-        if (!$item) {
-            throw new ModelNotFoundException(
-                'call to undefined id [' . $itemId . '] on model [' .
-                get_class($this->getRepository()->getModel()) . '}.'
-            );
-        }
-
-        return $this->getResource()::make($item);
+        return $this->getResource()::make($this->getRepository()->getById($itemId, $this->parseIncludes()));
     }
 
     /**
@@ -210,8 +223,7 @@ abstract class AbstractController extends BaseController
      */
     public function update(Request $request, $itemId)
     {
-        $this->getRepository()->update($itemId, $request->request->all());
-        //$this->getRepository()->getModel()::find($itemId)->update($request->request->all());
+        $this->getRepository()->update($itemId, $this->getElementsFromRequest($request));
 
         return $this->show($itemId);
     }
@@ -224,15 +236,7 @@ abstract class AbstractController extends BaseController
      */
     public function destroy($itemId)
     {
-        $item = $this->getRepository()->getModel()::with($this->parseIncludes())->find($itemId);
-        if (!$item) {
-            throw new ModelNotFoundException(
-                'call to undefined id [' . $itemId . '] on model [' .
-                get_class($this->getRepository()->getModel()) . '}.'
-            );
-        }
-
-        $item->delete();
+        $this->getRepository()->getById($itemId)->delete();
 
         return response()->json(null, 204);
     }

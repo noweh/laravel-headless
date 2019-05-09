@@ -123,6 +123,6 @@ class Course extends AbstractModel
 
     public function themes()
     {
-        return $this->belongsToMany(Theme::class);
+        return $this->belongsToMany(Theme::class)->orderBy('position', 'asc');
     }
 }

@@ -11,4 +11,17 @@ class QuestionnaireRepository extends AbstractRepository implements Questionnair
     {
         $this->model = $model;
     }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $object
+     * @param array $fields
+     * @throws \Exception
+     */
+    public function updateAfter($object, $fields)
+    {
+        parent::updateAfter($object, $fields);
+
+        $this->updateRelatedElements($object, $fields, 'themes_id');
+        $this->updateRelatedElements($object, $fields, 'questions_id');
+    }
 }

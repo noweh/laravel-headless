@@ -25,7 +25,8 @@ class CourseTableSeeder extends Seeder
         Course::all()->each(function ($course) use ($themes) {
             /** @var Course $course */
             $course->themes()->attach(
-                $themes->random(rand(1, 3))->pluck('id')->toArray()
+                $themes->random(rand(1, 3))->pluck('id')->toArray(),
+                ['position' => 1]
             );
         });
 

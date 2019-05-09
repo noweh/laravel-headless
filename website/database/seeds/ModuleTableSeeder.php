@@ -25,7 +25,8 @@ class ModuleTableSeeder extends Seeder
         Module::all()->each(function ($module) use ($themes) {
             /** @var Module $module */
             $module->themes()->attach(
-                $themes->random(rand(1, 3))->pluck('id')->toArray()
+                $themes->random(rand(1, 3))->pluck('id')->toArray(),
+                ['position' => 1]
             );
         });
 

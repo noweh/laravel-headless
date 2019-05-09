@@ -25,7 +25,8 @@ class QuestionnaireTableSeeder extends Seeder
         Questionnaire::all()->each(function ($questionnaire) use ($themes) {
             /** @var Questionnaire $questionnaire */
             $questionnaire->themes()->attach(
-                $themes->random(rand(1, 3))->pluck('id')->toArray()
+                $themes->random(rand(1, 3))->pluck('id')->toArray(),
+                ['position' => 1]
             );
         });
 

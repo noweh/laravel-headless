@@ -40,10 +40,6 @@ class CreateQuestionsTables extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->boolean('published')->nullable();
-                $table->integer('questionnaire_id')
-                    ->unsigned()->nullable()->index('ndx_questions_questionnaire_id');
-                $table->foreign('questionnaire_id', 'fk_questions_questionnaire_id')
-                    ->references('id')->on('questionnaires')->onUpdate('NO ACTION')->onDelete('cascade');
                 $table->integer('question_type_id')
                     ->unsigned()->nullable()->index('ndx_questions_question_type_id');
                 $table->foreign('question_type_id', 'fk_questions_question_type_id')
@@ -51,7 +47,6 @@ class CreateQuestionsTables extends Migration
                 $table->text('format')->nullable();
                 $table->integer('duration_min')->unsigned();
                 $table->integer('duration_max')->unsigned();
-                $table->integer("position")->unsigned();
             });
         }
 
@@ -66,6 +61,19 @@ class CreateQuestionsTables extends Migration
                     ->references('id')->on('questions')->onUpdate('NO ACTION')->onDelete('cascade');
                 $table->text('title')->nullable();
                 $table->text('description')->nullable();
+            });
+        }
+
+        if (!Schema::hasTable('question_questionnaire')) {
+            Schema::create('question_questionnaire', function (Blueprint $table) {
+                $table->integer('question_id')->unsigned()->index('question_questionnaire_question_id');
+                $table->integer('questionnaire_id')->unsigned()->index('question_questionnaire_questionnaire_id');
+                $table->primary(['question_id','questionnaire_id']);
+                $table->integer("position")->unsigned();
+                $table->foreign('question_id', 'fk_question_questionnaire_question_id')
+                    ->references('id')->on('questions')->onUpdate('NO ACTION')->onDelete('CASCADE');
+                $table->foreign('questionnaire_id', 'fk_question_questionnaire_questionnaire_id')
+                    ->references('id')->on('questionnaires')->onUpdate('NO ACTION')->onDelete('CASCADE');
             });
         }
 

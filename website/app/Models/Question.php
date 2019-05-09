@@ -131,7 +131,6 @@ class Question extends AbstractModel
         'duration_min',
         'duration_max',
         'position',
-        'questionnaire_id',
         'question_type_id',
         'good_answer_id'
     ];
@@ -147,9 +146,9 @@ class Question extends AbstractModel
         'description'
     ];
 
-    public function questionnaire()
+    public function questionnaires()
     {
-        return $this->belongsTo(Questionnaire::class, 'questionnaire_id');
+        return $this->belongsToMany(Questionnaire::class)->orderBy('position', 'asc');
     }
 
     public function type()

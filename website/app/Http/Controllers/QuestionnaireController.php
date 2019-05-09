@@ -127,6 +127,14 @@ class QuestionnaireController extends AbstractController
      *         response=404,
      *         description="Questionnaire not found"
      *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Unprocessable Entity. Undefined method or relationship."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error."
+     *     )
      * )
      *
      * @param int $id
@@ -166,6 +174,10 @@ class QuestionnaireController extends AbstractController
      *     @OA\Response(
      *         response=404,
      *         description="Questionnaire not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error."
      *     ),
      *     @OA\RequestBody(
      *         description="Updated Questionnaire object",
@@ -266,6 +278,10 @@ class QuestionnaireController extends AbstractController
      *     @OA\Response(
      *         response=404,
      *         description="Questionnaire not found",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error."
      *     )
      * )
      */

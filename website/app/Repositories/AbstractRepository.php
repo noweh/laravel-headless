@@ -307,17 +307,16 @@ abstract class AbstractRepository implements RepositoryInterface
 
         $this->updateTranslations($object, $fields);
 
-        //
         $this->updateSlugs($object, $fields);
 
-        # Set empty field to NULL
+        // Set empty field to NULL
         foreach ($fields as $key => $value) {
             if (empty($value)) {
                 $fields[$key] = null;
             }
         }
 
-        //fill others fields
+        // fill others fields
         $object->fill($fields);
         $object->push();
         $this->updateAfter($object, $fields);
@@ -670,58 +669,25 @@ abstract class AbstractRepository implements RepositoryInterface
      * @param string $relatedFieldName
      * @param array $pivotValues additional pivot field to set ['pivotfieldname' => value, ...]
      * @return void
+     * @throws \Exception
      */
     public function updateRelatedElements(Model $object, array $fields, $relatedFieldName, array $pivotValues = [])
     {
-        $relatedElements = isset($fields[$relatedFieldName]) && !empty($fields[$relatedFieldName]) ?
-            explode(',', $fields[$relatedFieldName]) : [];
-        $relatedElementsWithPosition = [];
-        $position = 1;
-        foreach ($relatedElements as $relatedElement) {
-            $relatedElementsWithPosition[$relatedElement] = ['position' => $position++] + $pivotValues;
-        }
-
-        $object->$relatedFieldName()->sync($relatedElementsWithPosition);
-    }
-
-    public function updateOrCreateRelatedElements(Model $object, array $fields, $relatedFieldName, $fieldName)
-    {
-        $relatedElements = isset($fields[$relatedFieldName]) && !empty($fields[$relatedFieldName]) ?
-            explode(',', $fields[$relatedFieldName]) : [];
-
-        $relatedElementsContent = [];
-        if (isset($fields[$fieldName])) {
-            $relatedElementsContent = $fields[$fieldName];
-        }
-
-        $relatedElementsWithPosition = [];
-        $position = 1;
-        foreach ($relatedElements as $relatedElement) {
-            foreach ($relatedElementsContent as $relatedElementContent) {
-                if ($relatedElementContent['id'] == $relatedElement) {
-                    $relatedElementContent['position'] = $position;
-                    $relatedElementsWithPosition[$relatedElement] = $relatedElementContent;
-                }
+        if (array_key_exists($relatedFieldName, $fields)) {
+            $relatedElements = [];
+            if (isset($fields[$relatedFieldName]) && !empty($fields[$relatedFieldName])) {
+                $relatedElements = (is_array($fields[$relatedFieldName])) ?
+                    $fields[$relatedFieldName] : explode(',', $fields[$relatedFieldName]);
             }
-            ++$position;
-        }
 
-        // Delete all elements not in this object
-        $object->$relatedFieldName()->whereNotIn('id', $relatedElements)->delete();
-
-        // Update or Create Elements
-        foreach ($relatedElementsWithPosition as $relatedElementWithPosition) {
-            if (isset($relatedElementWithPosition['id']) && is_numeric($relatedElementWithPosition['id'])) {
-                // This entry exists in database, do an update
-                $object->$relatedFieldName()->where('id', $relatedElementWithPosition['id'])
-                    ->update($relatedElementWithPosition);
-            } else {
-                // This entry does not exists in database, remove id and do a create
-                $relatedElementWithPosition[mb_strtolower((new \ReflectionClass($object))->getShortName()) . '_id'] =
-                    $object->id;
-                unset($relatedElementWithPosition['id']);
-                $object->$relatedFieldName()->insert($relatedElementWithPosition);
+            $relatedElementsWithPosition = [];
+            $position = 1;
+            foreach ($relatedElements as $relatedElement) {
+                $relatedElementsWithPosition[$relatedElement] = ['position' => $position++] + $pivotValues;
             }
+
+            $relatedObjectName = str_replace('_id', '', $relatedFieldName);
+            $object->$relatedObjectName()->sync($relatedElementsWithPosition);
         }
     }
 }
