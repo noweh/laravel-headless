@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -48,7 +49,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof ModelNotFoundException) {
+        if ($exception instanceof ModelNotFoundException || $exception instanceof RelationNotFoundException) {
             return response()->json(['error' => $exception->getMessage()], 422);
         } elseif ($exception instanceof Exception) {
             if ($exception->getMessage()) {

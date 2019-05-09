@@ -22,10 +22,10 @@ Route::group(['domain' => env('DOMAIN_API')], function () {
         Route::group(['middleware' => ['api.language']], function () {
             Route::apiResource('courses', 'CourseController');
             Route::apiResource('modules', 'ModuleController');
-            Route::apiResource('possible-answers', 'PossibleAnswerController');
+            Route::apiResource('possibleAnswers', 'PossibleAnswerController');
             Route::apiResource('questions', 'QuestionController');
             Route::apiResource('questionnaires', 'QuestionnaireController');
-            Route::apiResource('question-types', 'QuestionTypeController');
+            Route::apiResource('questionTypes', 'QuestionTypeController');
             Route::apiResource('themes', 'ThemeController');
         });
     });

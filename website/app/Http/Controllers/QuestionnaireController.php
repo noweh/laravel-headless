@@ -33,6 +33,15 @@ class QuestionnaireController extends AbstractController
      *         )
      *     ),
      *     @OA\Parameter(
+     *         name="include",
+     *         required=false,
+     *         in="query",
+     *         description="Include relationship in results. String=themes,questions,questions.possibleAnswers,questions.goodAnswer",
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
      *         name="published",
      *         required=false,
      *         in="query",
@@ -63,7 +72,15 @@ class QuestionnaireController extends AbstractController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Display a listing of questionnaires."
+     *         description="Display a listing of Questionnaires."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Unprocessable Entity. Undefined method or relationship."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error."
      *     )
      * )
      */
