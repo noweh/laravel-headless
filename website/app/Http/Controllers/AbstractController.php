@@ -28,6 +28,11 @@ use App;
  *     name="Questionnaire",
  *     description="Operations about Questionnaires"
  * )
+ *
+ * @OA\Tag(
+ *     name="Theme",
+ *     description="Operations about Themes"
+ * )
  */
 abstract class AbstractController extends BaseController
 {
@@ -185,40 +190,19 @@ abstract class AbstractController extends BaseController
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
+     * @return mixed
      */
-    /*public function store(Request $request)
+    public function store(Request $request)
     {
-        $theme = Theme::where('code', $request->theme_code)->firstOrFail();
-
-        if (!$theme) {
-            return response()->json([
-                'error' => 'Theme not found'
-            ], 404);
-        }
-
-        $questionnaire = Questionnaire::create([
-            'published' => $request->published,
-            'level' => $request->level,
-            'note_max' => $request->note_max,
-            'active:fr' => $request->{'active:fr'},
-            'title:fr' => $request->{'title:fr'},
-            'description:fr' => $request->{'description:fr'},
-            'active:en' => $request->{'active:en'},
-            'title:en' => $request->{'title:en'},
-            'description:en' => $request->{'description:en'},
-        ]);
-
-        $questionnaire->themes()->attach($theme->toArray());
-
-        die();
-        //return new (QuestionnaireResource($questionnaire))->response()->setStatusCode(201);
-    }*/
+        $item = $this->getRepository()->create($this->getElementsFromRequest($request));
+        return response()->json($this->getResource()::make($item), 201);
+    }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param $itemId
+     * @param int $itemId
      * @return mixed
      */
     public function update(Request $request, $itemId)

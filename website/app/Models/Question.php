@@ -53,10 +53,19 @@ class Question extends AbstractModel
     private $duration_max;
 
     /**
-     * @OA\Property(),
-     * @var integer
+     * @OA\Property(
+     *     description="Question Questionnaires",
+     *     title="Question Questionnaires",
+     *     additionalItems=true,
+     *     @OA\Xml(
+     *         name="questionnaires",
+     *         wrapped=true
+     *     ),
+     * )
+     *
+     * @var Questionnaire[]
      */
-    private $questionnaire_id;
+    private $questionnaires;
 
     /**
      * @OA\Property(),
