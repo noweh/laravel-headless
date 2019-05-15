@@ -38,7 +38,7 @@ class ThemeController extends AbstractController
      *         name="include",
      *         required=false,
      *         in="query",
-     *         description="Include relationship in results. String=modules,questionnaires,courses",
+     *         description="Include relationship in results. String=sessions,questionnaires,courses",
      *         @OA\Schema(
      *             type="string"
      *         )

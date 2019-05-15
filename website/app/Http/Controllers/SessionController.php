@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\Repositories\ModuleRepositoryInterface;
+use App\Contracts\Repositories\SessionRepositoryInterface;
 use Illuminate\Http\Request;
 
-class ModuleController extends AbstractController
+class SessionController extends AbstractController
 {
     public function __construct(
         Request $request,
-        ModuleRepositoryInterface $repository
+        SessionRepositoryInterface $repository
     ) {
         $this->request = $request;
         $this->repository = $repository;

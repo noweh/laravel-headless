@@ -2,7 +2,7 @@
 
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
-use App\Models\Module;
+use App\Models\Session;
 use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 
@@ -10,7 +10,7 @@ $fakerFr = FakerFactory::create('fr_FR');
 $autoIncrement = autoIncrement();
 $autoIncrement->rewind();
 
-$factory->define(Module::class, function (Faker $faker) use ($fakerFr, $autoIncrement) {
+$factory->define(Session::class, function (Faker $faker) use ($fakerFr, $autoIncrement) {
     $autoIncrement->next();
 
     return [

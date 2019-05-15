@@ -496,9 +496,12 @@ abstract class AbstractRepository implements RepositoryInterface
             $query->whereHas('translations', function ($q) use ($scopes, $attributes) {
                 $q->where('locale', isset($scopes['locale']) ? $scopes['locale'] : App::getLocale());
                 foreach ($attributes as $attribute) {
-                    if (isset($scopes[$attribute]) && is_string($scopes[$attribute])) {
+                    if (array_key_exists($attribute, $scopes) &&
+                        (is_string($scopes[$attribute]) || $scopes[$attribute] == null)) {
                         if (strpos($scopes[$attribute], '%%') !== false) {
                             $q->where($attribute, 'LIKE', str_replace('%%', '%', $scopes[$attribute]));
+                        } elseif ($scopes[$attribute] == null) {
+                            $q->where($attribute, $scopes[$attribute]);
                         } else {
                             $q->where($attribute, 'LIKE', '%'.$scopes[$attribute].'%');
                         }
@@ -508,7 +511,7 @@ abstract class AbstractRepository implements RepositoryInterface
 
             #clear relations fields
             foreach ($attributes as $attribute) {
-                if (isset($scopes[$attribute])) {
+                if (array_key_exists($attribute, $scopes)) {
                     unset($scopes[$attribute]);
                 }
             }

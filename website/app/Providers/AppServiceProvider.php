@@ -24,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            'App\Contracts\Repositories\ModuleRepositoryInterface',
-            'App\Repositories\ModuleRepository'
+            'App\Contracts\Repositories\SessionRepositoryInterface',
+            'App\Repositories\SessionRepository'
         );
 
         $this->app->bind(

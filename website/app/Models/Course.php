@@ -11,7 +11,7 @@ use Dimsav\Translatable\Translatable;
  * @OA\Schema(
  *     description="Course model",
  *     title="Course model",
- *     required={"published", "format", "position", "module_id", "title", "description"},
+ *     required={"published", "format", "position", "session_id", "title", "description"},
  *     @OA\Xml(
  *         name="Course"
  *     ),
@@ -41,7 +41,7 @@ class Course extends AbstractModel
      * @OA\Property(),
      * @var integer
      */
-    private $module_id;
+    private $session_id;
 
     /**
      * @OA\Property(
@@ -102,7 +102,7 @@ class Course extends AbstractModel
         'published',
         'format',
         'position',
-        'module_id'
+        'session_id'
     ];
 
     /**
@@ -116,9 +116,9 @@ class Course extends AbstractModel
         'description'
     ];
 
-    public function module()
+    public function session()
     {
-        return $this->belongsTo(Module::class, 'module_id');
+        return $this->belongsTo(Session::class, 'session_id');
     }
 
     public function themes()

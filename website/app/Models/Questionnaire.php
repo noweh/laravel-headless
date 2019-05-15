@@ -11,7 +11,7 @@ use Dimsav\Translatable\Translatable;
  * @OA\Schema(
  *     description="Questionnaire model",
  *     title="Questionnaire model",
- *     required={"published", "level", "position", "module_id", "title"},
+ *     required={"published", "level", "position", "session_id", "title"},
  *     @OA\Xml(
  *         name="Questionnaire"
  *     ),
@@ -49,7 +49,7 @@ class Questionnaire extends AbstractModel
      * @OA\Property(),
      * @var integer
      */
-    private $module_id;
+    private $session_id;
 
     /**
      * @OA\Property(
@@ -141,7 +141,7 @@ class Questionnaire extends AbstractModel
         'level',
         'note_max',
         'position',
-        'module_id'
+        'session_id'
     ];
 
     /**
@@ -155,9 +155,9 @@ class Questionnaire extends AbstractModel
         'description'
     ];
 
-    public function module()
+    public function session()
     {
-        return $this->belongsTo(Module::class, 'module_id');
+        return $this->belongsTo(Session::class, 'session_id');
     }
 
     public function themes()

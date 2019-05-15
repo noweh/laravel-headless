@@ -95,9 +95,9 @@ class Theme extends AbstractModel
         'label'
     ];
 
-    public function modules()
+    public function sessions()
     {
-        return $this->belongsToMany(Module::class)->orderBy('position', 'asc');
+        return $this->belongsToMany(Session::class)->orderBy('position', 'asc');
     }
 
     public function questionnaires()

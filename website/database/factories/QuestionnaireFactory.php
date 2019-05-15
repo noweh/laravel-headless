@@ -3,7 +3,7 @@
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
 use App\Models\Questionnaire;
-use App\Models\Module;
+use App\Models\Session;
 use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 
@@ -25,9 +25,9 @@ $factory->define(Questionnaire::class, function (Faker $faker) use ($fakerFr, $a
         'title:en' => $faker->sentence(5),
         'description:en' => $faker->realText(rand(80, 600)),
         'note_max' => 20,
-        'module_id' => function () {
-            // Get random module id
-            return Module::inRandomOrder()->first()->id;
+        'session_id' => function () {
+            // Get random session id
+            return Session::inRandomOrder()->first()->id;
         }
     ];
 });

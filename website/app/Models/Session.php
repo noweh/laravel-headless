@@ -5,19 +5,19 @@ namespace App\Models;
 use Dimsav\Translatable\Translatable;
 
 /**
- * Class Module
+ * Class Session
  * @package App\Models
  *
  * @OA\Schema(
- *     description="Module model",
- *     title="Module model",
+ *     description="Session model",
+ *     title="Session model",
  *     required={"published", "position", "title"},
  *     @OA\Xml(
- *         name="Module"
+ *         name="Session"
  *     ),
  * )
  */
-class Module extends AbstractModel
+class Session extends AbstractModel
 {
     /**
      * @OA\Property(),

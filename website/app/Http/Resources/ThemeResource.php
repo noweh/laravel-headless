@@ -25,8 +25,8 @@ class ThemeResource extends JsonResource
             'courses' => $this->when($this->relationLoaded('courses'), function () {
                 return CourseResource::collection($this->courses);
             }),
-            'modules' => $this->when($this->relationLoaded('modules'), function () {
-                return ModuleResource::collection($this->modules);
+            'sessions' => $this->when($this->relationLoaded('sessions'), function () {
+                return SessionResource::collection($this->sessions);
             }),
             'questionnaires' => $this->when($this->relationLoaded('questionnaires'), function () {
                 return QuestionnaireResource::collection($this->questionnaires);

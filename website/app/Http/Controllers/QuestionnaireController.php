@@ -210,8 +210,8 @@ class QuestionnaireController extends AbstractController
      *                 example=1
      *             ),
      *             @OA\Property(
-     *                 property="module_id",
-     *                 description="Create a module_id value",
+     *                 property="session_id",
+     *                 description="Create a session_id value",
      *                 type="integer",
      *                 example=1
      *             ),

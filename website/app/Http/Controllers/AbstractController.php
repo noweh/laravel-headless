@@ -112,6 +112,7 @@ abstract class AbstractController extends BaseController
                 }
             }
         }
+
         return $scope;
     }
 
@@ -160,7 +161,7 @@ abstract class AbstractController extends BaseController
 
     /**
      * Display a listing of the resource.
-     * ex : http://academy.operadeparis.backstage.test/api/v1/themes?lang=fr&label=%%lu%%&sort=id&sortOrder=desc
+     * ex : http://academy.operadeparis.backstage.test/api/v1/themes?lang=fr&include=sessions&label=%%lu%%&sort=id&sortOrder=desc
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()

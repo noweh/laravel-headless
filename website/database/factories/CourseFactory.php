@@ -3,7 +3,7 @@
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
 use App\Models\Course;
-use App\Models\Module;
+use App\Models\Session;
 use Faker\Generator as Faker;
 use Faker\Factory as FakerFactory;
 
@@ -24,9 +24,9 @@ $factory->define(Course::class, function (Faker $faker) use ($fakerFr, $autoIncr
         'active:en' => $faker->boolean(50),
         'title:en' => $faker->sentence(5),
         'description:en' => $faker->realText(rand(80, 600)),
-        'module_id' => function () {
-            // Get random module id
-            return Module::inRandomOrder()->first()->id;
+        'session_id' => function () {
+            // Get random session id
+            return Session::inRandomOrder()->first()->id;
         }
     ];
 });
