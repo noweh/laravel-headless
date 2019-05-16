@@ -29,6 +29,9 @@ class QuestionnaireResource extends JsonResource
                 return ThemeResource::collection($this->themes);
             }),
             'questions' => $this->when($this->relationLoaded('questions'), function () {
+                $this->questions->each(function ($question) {
+                    $question->position = $question->pivot->position;
+                });
                 return QuestionResource::collection($this->questions);
             }),
             'position' => $this->position

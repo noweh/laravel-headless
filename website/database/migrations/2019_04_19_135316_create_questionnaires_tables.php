@@ -43,7 +43,6 @@ class CreateQuestionnairesTables extends Migration
                 $table->integer('questionnaire_id')->unsigned()->index('questionnaire_theme_questionnaire_id');
                 $table->integer('theme_id')->unsigned()->index('questionnaire_theme_theme_id');
                 $table->primary(['questionnaire_id','theme_id']);
-                $table->integer("position")->unsigned();
                 $table->foreign('questionnaire_id', 'fk_questionnaire_theme_questionnaire_id')
                     ->references('id')->on('questionnaires')->onUpdate('NO ACTION')->onDelete('CASCADE');
                 $table->foreign('theme_id', 'fk_questionnaire_theme_theme_id')

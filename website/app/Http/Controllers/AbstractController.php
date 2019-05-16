@@ -25,8 +25,23 @@ use App;
  * )
  *
  * @OA\Tag(
+ *     name="Course",
+ *     description="Operations about Courses"
+ * )
+ *
+ * @OA\Tag(
+ *     name="Session",
+ *     description="Operations about Sessions"
+ * )
+ *
+ * @OA\Tag(
  *     name="Questionnaire",
  *     description="Operations about Questionnaires"
+ * )
+ *
+ * @OA\Tag(
+ *     name="QuestionType",
+ *     description="Operations about QuestionTypes"
  * )
  *
  * @OA\Tag(

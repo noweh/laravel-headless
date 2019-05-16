@@ -33,6 +33,51 @@ class Session extends AbstractModel
 
     /**
      * @OA\Property(
+     *     description="Session Themes",
+     *     title="Session Themes",
+     *     additionalItems=true,
+     *     @OA\Xml(
+     *         name="themes",
+     *         wrapped=true
+     *     ),
+     * )
+     *
+     * @var Theme[]
+     */
+    private $themes;
+
+    /**
+     * @OA\Property(
+     *     description="Session Questionnaires",
+     *     title="Session Questionnaires",
+     *     additionalItems=true,
+     *     @OA\Xml(
+     *         name="questionnaires",
+     *         wrapped=true
+     *     ),
+     * )
+     *
+     * @var Questionnaire[]
+     */
+    private $questionnaires;
+
+    /**
+     * @OA\Property(
+     *     description="Session Courses",
+     *     title="Session Courses",
+     *     additionalItems=true,
+     *     @OA\Xml(
+     *         name="courses",
+     *         wrapped=true
+     *     ),
+     * )
+     *
+     * @var Course[]
+     */
+    private $courses;
+
+    /**
+     * @OA\Property(
      *     example="2017-02-02 18:31:45",
      *     format="datetime",
      *     type="string"
@@ -114,6 +159,6 @@ class Session extends AbstractModel
 
     public function themes()
     {
-        return $this->belongsToMany(Theme::class)->orderBy('position', 'asc');
+        return $this->belongsToMany(Theme::class);
     }
 }

@@ -74,7 +74,11 @@ class QuestionnaireController extends AbstractController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Display a listing of Questionnaires."
+     *         description="Display a listing of Questionnaires.",
+     *         @OA\Schema(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Questionnaire")
+     *         ),
      *     ),
      *     @OA\Response(
      *         response=422,
@@ -112,6 +116,15 @@ class QuestionnaireController extends AbstractController
      *         @OA\Schema(
      *             type="string",
      *             enum={"fr","en"}
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="include",
+     *         required=false,
+     *         in="query",
+     *         description="Include relationship in results. String=themes,questions,questions.possibleAnswers,questions.goodAnswer",
+     *         @OA\Schema(
+     *             type="string"
      *         )
      *     ),
      *     @OA\Response(

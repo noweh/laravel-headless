@@ -35,7 +35,9 @@ class QuestionResource extends JsonResource
             'goodAnswer' => $this->when($this->relationLoaded('goodAnswer'), function () {
                 return PossibleAnswerResource::make($this->goodAnswer);
             }),
-            'position' => $this->position
+            'position' => $this->when($this->position, function () {
+                return $this->position;
+            })
         ];
     }
 }

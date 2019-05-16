@@ -162,11 +162,11 @@ class Questionnaire extends AbstractModel
 
     public function themes()
     {
-        return $this->belongsToMany(Theme::class)->orderBy('position', 'asc');
+        return $this->belongsToMany(Theme::class);
     }
 
     public function questions()
     {
-        return $this->belongsToMany(Question::class)->orderBy('position', 'asc');
+        return $this->belongsToMany(Question::class)->orderBy('position', 'asc')->withPivot('position');
     }
 }

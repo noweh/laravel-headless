@@ -18,7 +18,7 @@ Here are the requirements for the project:
 - In website, run the script :
 
 ```
-sh scripts/install.sh
+sh scripts/reset_database.sh
 ```
 
 If for some reason your project stop working do these:

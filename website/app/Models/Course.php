@@ -45,6 +45,21 @@ class Course extends AbstractModel
 
     /**
      * @OA\Property(
+     *     description="Course Themes",
+     *     title="Course Themes",
+     *     additionalItems=true,
+     *     @OA\Xml(
+     *         name="themes",
+     *         wrapped=true
+     *     ),
+     * )
+     *
+     * @var Theme[]
+     */
+    private $themes;
+
+    /**
+     * @OA\Property(
      *     example="2017-02-02 18:31:45",
      *     format="datetime",
      *     type="string"
@@ -123,6 +138,6 @@ class Course extends AbstractModel
 
     public function themes()
     {
-        return $this->belongsToMany(Theme::class)->orderBy('position', 'asc');
+        return $this->belongsToMany(Theme::class);
     }
 }

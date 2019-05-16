@@ -74,7 +74,11 @@ class ThemeController extends AbstractController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Display a listing of Themes."
+     *         description="Display a listing of Themes.",
+     *         @OA\Schema(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Theme")
+     *         ),
      *     ),
      *     @OA\Response(
      *         response=422,
@@ -92,7 +96,7 @@ class ThemeController extends AbstractController
      *     path="/themes/{themeId}",
      *     tags={"Theme"},
      *     summary="Find a Theme by ID.",
-     *     description="Returns a single Thele.",
+     *     description="Returns a single Theme.",
      *     operationId="getThemeById",
      *     @OA\Parameter(
      *         name="themeId",
@@ -112,6 +116,15 @@ class ThemeController extends AbstractController
      *         @OA\Schema(
      *             type="string",
      *             enum={"fr","en"}
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="include",
+     *         required=false,
+     *         in="query",
+     *         description="Include relationship in results. String=sessions,questionnaires,courses",
+     *         @OA\Schema(
+     *             type="string"
      *         )
      *     ),
      *     @OA\Response(

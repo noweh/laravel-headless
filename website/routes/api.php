@@ -21,11 +21,11 @@ Route::group(['domain' => env('DOMAIN_API')], function () {
     Route::group(['prefix' => 'v1'], function () {
         Route::group(['middleware' => ['api.language']], function () {
             Route::apiResource('courses', 'CourseController');
-            Route::apiResource('modules', 'ModuleController');
             Route::apiResource('possibleAnswers', 'PossibleAnswerController');
             Route::apiResource('questions', 'QuestionController');
             Route::apiResource('questionnaires', 'QuestionnaireController');
             Route::apiResource('questionTypes', 'QuestionTypeController');
+            Route::apiResource('sessions', 'SessionController');
             Route::apiResource('themes', 'ThemeController');
         });
     });

@@ -41,7 +41,6 @@ class CreateCoursesAndSessionsTables extends Migration
                 $table->integer('session_id')->unsigned()->index('session_theme_session_id');
                 $table->integer('theme_id')->unsigned()->index('session_theme_theme_id');
                 $table->primary(['session_id','theme_id']);
-                $table->integer("position")->unsigned();
                 $table->foreign('session_id', 'fk_session_theme_session_id')
                     ->references('id')->on('sessions')->onUpdate('NO ACTION')->onDelete('CASCADE');
                 $table->foreign('theme_id', 'fk_session_theme_theme_id')
@@ -82,7 +81,6 @@ class CreateCoursesAndSessionsTables extends Migration
                 $table->integer('course_id')->unsigned()->index('course_theme_course_id');
                 $table->integer('theme_id')->unsigned()->index('course_theme_theme_id');
                 $table->primary(['course_id','theme_id']);
-                $table->integer("position")->unsigned();
                 $table->foreign('course_id', 'fk_course_theme_course_id')
                     ->references('id')->on('sessions')->onUpdate('NO ACTION')->onDelete('CASCADE');
                 $table->foreign('course_id', 'fk_course_themes_theme_id')

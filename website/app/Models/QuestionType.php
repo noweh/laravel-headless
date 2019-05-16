@@ -39,6 +39,21 @@ class QuestionType extends AbstractModel
 
     /**
      * @OA\Property(
+     *     description="QuestionTypes Questions",
+     *     title="QuestionTypes Questions",
+     *     additionalItems=true,
+     *     @OA\Xml(
+     *         name="questions",
+     *         wrapped=true
+     *     ),
+     * )
+     *
+     * @var Question[]
+     */
+    private $questions;
+
+    /**
+     * @OA\Property(
      *     example="2017-02-02 18:31:45",
      *     format="datetime",
      *     type="string"
@@ -97,6 +112,6 @@ class QuestionType extends AbstractModel
 
     public function questions()
     {
-        return $this->hasMany(Question::class)->orderBy('position', 'asc');
+        return $this->hasMany(Question::class);
     }
 }
