@@ -26,9 +26,15 @@ class SessionResource extends JsonResource
                 return ThemeResource::collection($this->themes);
             }),
             'courses' => $this->when($this->relationLoaded('courses'), function () {
+                $this->courses->each(function ($course) {
+                    $course->position = $course->pivot->position;
+                });
                 return CourseResource::collection($this->courses);
             }),
             'questionnaires' => $this->when($this->relationLoaded('questionnaires'), function () {
+                $this->questionnaires->each(function ($questionnaire) {
+                    $questionnaire->position = $questionnaire->pivot->position;
+                });
                 return QuestionnaireResource::collection($this->questionnaires);
             }),
             'position' => $this->position

@@ -53,12 +53,7 @@ class CreateCoursesAndSessionsTables extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->boolean('published')->nullable();
-                $table->integer('session_id')
-                    ->unsigned()->nullable()->index('ndx_courses_session_id');
-                $table->foreign('session_id', 'fk_courses_session_id')
-                    ->references('id')->on('sessions')->onUpdate('NO ACTION')->onDelete('cascade');
                 $table->text('format')->nullable();
-                $table->integer("position")->unsigned();
             });
         }
 
@@ -82,18 +77,35 @@ class CreateCoursesAndSessionsTables extends Migration
                 $table->integer('theme_id')->unsigned()->index('course_theme_theme_id');
                 $table->primary(['course_id','theme_id']);
                 $table->foreign('course_id', 'fk_course_theme_course_id')
-                    ->references('id')->on('sessions')->onUpdate('NO ACTION')->onDelete('CASCADE');
-                $table->foreign('course_id', 'fk_course_themes_theme_id')
+                    ->references('id')->on('courses')->onUpdate('NO ACTION')->onDelete('CASCADE');
+                $table->foreign('theme_id', 'fk_course_theme_theme_id')
                     ->references('id')->on('themes')->onUpdate('NO ACTION')->onDelete('CASCADE');
             });
         }
 
-        if (!Schema::hasColumn('questionnaires', 'session_id')) {
-            Schema::table('questionnaires', function (Blueprint $table) {
-                $table->integer('session_id')
-                    ->unsigned()->nullable()->index('ndx_questionnaires_session_id');
-                $table->foreign('session_id', 'fk_questionnaires_session_id')
-                    ->references('id')->on('sessions')->onUpdate('NO ACTION')->onDelete('set null');
+        if (!Schema::hasTable('course_session')) {
+            Schema::create('course_session', function (Blueprint $table) {
+                $table->integer('course_id')->unsigned()->index('session_course_course_id');
+                $table->integer('session_id')->unsigned()->index('session_course_session_id');
+                $table->primary(['course_id', 'session_id']);
+                $table->foreign('course_id', 'fk_course_session_course_id')
+                    ->references('id')->on('courses')->onUpdate('NO ACTION')->onDelete('CASCADE');
+                $table->foreign('session_id', 'fk_course_session_session_id')
+                    ->references('id')->on('sessions')->onUpdate('NO ACTION')->onDelete('CASCADE');
+                $table->integer("position")->unsigned();
+            });
+        }
+
+        if (!Schema::hasTable('questionnaire_session')) {
+            Schema::create('questionnaire_session', function (Blueprint $table) {
+                $table->integer('questionnaire_id')->unsigned()->index('questionnaire_session_questionnaire_id');
+                $table->integer('session_id')->unsigned()->index('questionnaire_session_session_id');
+                $table->primary(['questionnaire_id', 'session_id']);
+                $table->foreign('questionnaire_id', 'fk_questionnaire_session_questionnaire_id')
+                    ->references('id')->on('questionnaires')->onUpdate('NO ACTION')->onDelete('CASCADE');
+                $table->foreign('session_id', 'fk_questionnaire_session_session_id')
+                    ->references('id')->on('sessions')->onUpdate('NO ACTION')->onDelete('CASCADE');
+                $table->integer("position")->unsigned();
             });
         }
     }
@@ -111,5 +123,7 @@ class CreateCoursesAndSessionsTables extends Migration
         Schema::dropIfExists('courses');
         Schema::dropIfExists('course_translations');
         Schema::dropIfExists('course_theme');
+        Schema::dropIfExists('course_session');
+        Schema::dropIfExists('questionnaire_session');
     }
 }

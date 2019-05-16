@@ -18,7 +18,7 @@ class QuestionnaireTableSeeder extends Seeder
         // Create the Questionnaire
         factory(Questionnaire::class, 10)->create();
 
-        // Get all the themes attaching up to 10 random themes to each questionnaire
+        // Get all the themes attaching up to 3 random themes to each questionnaire
         $themes = Theme::all();
 
         // Populate the pivot table

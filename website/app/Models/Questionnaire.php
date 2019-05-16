@@ -46,12 +46,6 @@ class Questionnaire extends AbstractModel
     private $note_max;
 
     /**
-     * @OA\Property(),
-     * @var integer
-     */
-    private $session_id;
-
-    /**
      * @OA\Property(
      *     description="Questionnaire Themes",
      *     title="Questionnaire Themes",
@@ -65,6 +59,21 @@ class Questionnaire extends AbstractModel
      * @var Theme[]
      */
     private $themes;
+
+    /**
+     * @OA\Property(
+     *     description="Questionnaire Sessions",
+     *     title="Questionnaire Sessions",
+     *     additionalItems=true,
+     *     @OA\Xml(
+     *         name="sessions",
+     *         wrapped=true
+     *     ),
+     * )
+     *
+     * @var Session[]
+     */
+    private $sessions;
 
     /**
      * @OA\Property(
@@ -155,9 +164,9 @@ class Questionnaire extends AbstractModel
         'description'
     ];
 
-    public function session()
+    public function sessions()
     {
-        return $this->belongsTo(Session::class, 'session_id');
+        return $this->belongsToMany(Session::class);
     }
 
     public function themes()

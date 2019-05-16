@@ -149,12 +149,12 @@ class Session extends AbstractModel
 
     public function courses()
     {
-        return $this->hasMany(Course::class)->orderBy('position', 'asc');
+        return $this->belongsToMany(Course::class)->orderBy('position', 'asc')->withPivot(['position']);
     }
 
     public function questionnaires()
     {
-        return $this->hasMany(Questionnaire::class)->orderBy('position', 'asc');
+        return $this->belongsToMany(Questionnaire::class)->orderBy('position', 'asc')->withPivot(['position']);
     }
 
     public function themes()

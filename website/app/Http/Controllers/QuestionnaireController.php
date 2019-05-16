@@ -217,18 +217,6 @@ class QuestionnaireController extends AbstractController
      *                 example="a default description"
      *             ),
      *             @OA\Property(
-     *                 property="position",
-     *                 description="Create a position value",
-     *                 type="integer",
-     *                 example=1
-     *             ),
-     *             @OA\Property(
-     *                 property="session_id",
-     *                 description="Create a session_id value",
-     *                 type="integer",
-     *                 example=1
-     *             ),
-     *             @OA\Property(
      *                 property="themes_id",
      *                 description="Create a themes_id values",
      *                 type="array",
@@ -326,12 +314,6 @@ class QuestionnaireController extends AbstractController
      *                 description="Updated description value",
      *                 type="string",
      *                 example="une description par défaut"
-     *             ),
-     *             @OA\Property(
-     *                 property="position",
-     *                 description="Updated position value",
-     *                 type="integer",
-     *                 example=1
      *             ),
      *             @OA\Property(
      *                 property="themes_id",

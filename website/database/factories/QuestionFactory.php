@@ -9,7 +9,7 @@ use Faker\Factory as FakerFactory;
 
 $fakerFr = FakerFactory::create('fr_FR');
 
-$factory->define(Question::class, function (Faker $faker) use ($fakerFr, $autoIncrement) {
+$factory->define(Question::class, function (Faker $faker) use ($fakerFr) {
     return [
         'published' => $faker->boolean(50),
         'format' => 'text',

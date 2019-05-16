@@ -14,16 +14,30 @@ Here are the requirements for the project:
 
 - Create one vhost with documentRoot positionned on "website/public"
 - Duplicate **website/.env.example** to **website/.env** 
-- Modify **website/.env** with good datas (mainly DB parameters)
-- In website, run the script :
+- Modify **website/.env** with expected data (mainly DB parameters)
+- Run the script:
 
 ```
-sh scripts/reset_database.sh
+sh scripts/install.sh
 ```
 
 If for some reason your project stop working do these:
 
 ```
+cd webiste
 composer install
 php artisan migrate
+```
+
+## Commands
+
+- For refresh cache, do these:
+```
+cd webiste
+sh scripts/refresh_cache.sh
+```
+- For generate fake data:
+```
+cd webiste
+sh scripts/reset_database.sh
 ```

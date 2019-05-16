@@ -32,3 +32,10 @@ $factory->define(PossibleAnswer::class, function (Faker $faker) use ($fakerFr, $
         },
     ];
 });
+
+function autoIncrement()
+{
+    for ($i = 0; $i < 1000; ++$i) {
+        yield $i;
+    }
+}

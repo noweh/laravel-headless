@@ -20,7 +20,6 @@ class CreateQuestionnairesTables extends Migration
                 $table->boolean('published')->nullable();
                 $table->integer('level')->unsigned();
                 $table->float('note_max')->nullable();
-                $table->integer("position")->unsigned();
             });
         }
 

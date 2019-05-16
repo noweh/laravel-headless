@@ -27,7 +27,9 @@ class CourseResource extends JsonResource
             'themes' => $this->when($this->relationLoaded('themes'), function () {
                 return ThemeResource::collection($this->themes);
             }),
-            'position' => $this->position
+            'position' => $this->when($this->position, function () {
+                return $this->position;
+            })
         ];
     }
 }

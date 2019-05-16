@@ -38,12 +38,6 @@ class Course extends AbstractModel
     private $format;
 
     /**
-     * @OA\Property(),
-     * @var integer
-     */
-    private $session_id;
-
-    /**
      * @OA\Property(
      *     description="Course Themes",
      *     title="Course Themes",
@@ -57,6 +51,21 @@ class Course extends AbstractModel
      * @var Theme[]
      */
     private $themes;
+
+    /**
+     * @OA\Property(
+     *     description="Course Sessions",
+     *     title="Course Sessions",
+     *     additionalItems=true,
+     *     @OA\Xml(
+     *         name="sessions",
+     *         wrapped=true
+     *     ),
+     * )
+     *
+     * @var Session[]
+     */
+    private $sessions;
 
     /**
      * @OA\Property(
@@ -116,8 +125,7 @@ class Course extends AbstractModel
     protected $fillable = [
         'published',
         'format',
-        'position',
-        'session_id'
+        'position'
     ];
 
     /**
@@ -131,9 +139,9 @@ class Course extends AbstractModel
         'description'
     ];
 
-    public function session()
+    public function sessions()
     {
-        return $this->belongsTo(Session::class, 'session_id');
+        return $this->belongsToMany(Session::class);
     }
 
     public function themes()
