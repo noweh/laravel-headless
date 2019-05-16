@@ -11,7 +11,7 @@ use Dimsav\Translatable\Translatable;
  * @OA\Schema(
  *     description="Course model",
  *     title="Course model",
- *     required={"published", "format", "position", "session_id", "title", "description"},
+ *     required={"published", "format", "title", "description"},
  *     @OA\Xml(
  *         name="Course"
  *     ),

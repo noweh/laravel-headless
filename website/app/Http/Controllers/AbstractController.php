@@ -30,8 +30,13 @@ use App;
  * )
  *
  * @OA\Tag(
- *     name="Session",
- *     description="Operations about Sessions"
+ *     name="PossibleAnswer",
+ *     description="Operations about PossibleAnswer"
+ * )
+ *
+ * @OA\Tag(
+ *     name="Question",
+ *     description="Operations about Question"
  * )
  *
  * @OA\Tag(
@@ -42,6 +47,11 @@ use App;
  * @OA\Tag(
  *     name="QuestionType",
  *     description="Operations about QuestionTypes"
+ * )
+ *
+ * @OA\Tag(
+ *     name="Session",
+ *     description="Operations about Sessions"
  * )
  *
  * @OA\Tag(

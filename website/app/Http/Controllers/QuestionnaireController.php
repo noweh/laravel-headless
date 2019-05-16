@@ -176,7 +176,7 @@ class QuestionnaireController extends AbstractController
      *             @OA\Property(
      *                 property="level",
      *                 description="Create a level value",
-     *                 type="string",
+     *                 type="integer",
      *                 enum={1, 2, 3},
      *                 default=2
      *             ),
@@ -293,7 +293,7 @@ class QuestionnaireController extends AbstractController
      *             @OA\Property(
      *                 property="level",
      *                 description="Updated level value",
-     *                 type="string",
+     *                 type="integer",
      *                 enum={1, 2, 3},
      *                 default=2
      *             ),

@@ -11,7 +11,7 @@ use Dimsav\Translatable\Translatable;
  * @OA\Schema(
  *     description="Question model",
  *     title="Question model",
- *     required={"published", "format", "position", "questionnaire_id",
+ *     required={"published", "format", "questionnaire_id",
  *     "question_type_id", "good_answer_id", "title", "description"},
  *     @OA\Xml(
  *         name="Question"
