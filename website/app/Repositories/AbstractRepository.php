@@ -663,6 +663,66 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     /**
+     * Reorganize positions in a collection of items for a $parent_field_name given
+     * @param array $fields
+     * @param string $parent_field_name
+     * @param integer $id
+     */
+    protected function organizePositions($fields, $parent_field_name, $id = null)
+    {
+        $newPosition = $fields['position'];
+        $oldPosition = ($id) ? $this->getById($id)->position : null;
+
+        $objectParentId = ($id) ? $this->getById($id)->$parent_field_name : $this->getById($fields['id'])->question_id;
+
+        // New entry, add +1 after new position Entities
+        // Old entry, position up, add +1 between old and new positions Entities
+        // Old entry, position down, add -1 between old and new positions Entities
+        if ($newPosition != $oldPosition) {
+            $filteredItemsCollection = $this->getManyBy($parent_field_name, $objectParentId);
+
+            if (!$oldPosition) {
+                $filteredItemsCollection->filter(function ($item) use ($newPosition) {
+                    return $item['position'] >= $newPosition;
+                });
+
+                foreach ($filteredItemsCollection as $item) {
+                    $item->position = ++$item->position;
+                    $item->save();
+                }
+            } elseif ($newPosition < $oldPosition) {
+                $filteredItemsCollection
+                    ->filter(function ($item) use ($newPosition) {
+                        return $item['position'] >= $newPosition;
+                    })
+                    ->filter(function ($item) use ($oldPosition) {
+                        return $item['position'] < $oldPosition;
+                    })
+                ;
+
+                foreach ($filteredItemsCollection as $item) {
+                    $item->position = ++$item->position;
+                    $item->save();
+                }
+            } elseif ($newPosition > $oldPosition) {
+                $filteredItemsCollection
+                    ->filter(function ($item) use ($oldPosition) {
+                        return $item['position'] > $oldPosition;
+                    })
+                    ->filter(function ($item) use ($newPosition) {
+                        return $item['position'] <= $newPosition;
+                    })
+                ;
+
+                foreach ($filteredItemsCollection as $item) {
+                    $item->position = --$item->position;
+                    $item->save();
+                }
+            }
+        }
+    }
+
+    /**
      * sync the $object model many to many relation specified by $relatedFieldName
      * according to the comma separated list of id specified in $fields[$relatedFieldName]
      * the position pivot field is also updated according to the list ordering.

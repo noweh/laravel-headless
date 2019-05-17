@@ -217,7 +217,7 @@ class PossibleAnswerController extends AbstractController
 
     /**
      * @OA\Patch(
-     *     path="/possibleAnswers/{possibleAnswersId}",
+     *     path="/possibleAnswers/{possibleAnswerId}",
      *     tags={"PossibleAnswer"},
      *     summary="Update PossibleAnswer by ID",
      *     description="Update a single PossibleAnswer.",
