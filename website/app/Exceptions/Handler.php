@@ -49,9 +49,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof ModelNotFoundException || $exception instanceof RelationNotFoundException) {
+        if ($exception instanceof ModelNotFoundException ||
+            $exception instanceof RelationNotFoundException ||
+            $exception instanceof ValidationException
+        ) {
             return response()->json(['error' => $exception->getMessage()], 422);
-        } elseif ($exception instanceof Exception) {
+        } else {
             if ($exception->getMessage()) {
                 return response()->json(
                     [
@@ -65,7 +68,5 @@ class Handler extends ExceptionHandler
                 return response()->json(null, $exception->getStatusCode());
             }
         }
-
-        return parent::render($request, $exception);
     }
 }

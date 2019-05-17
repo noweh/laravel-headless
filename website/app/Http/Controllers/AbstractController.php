@@ -9,6 +9,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App;
+use Illuminate\Support\Facades\Input;
 
 /**
  * Class AbstractController
@@ -66,6 +67,7 @@ abstract class AbstractController extends BaseController
     private $resource;
     protected $repository;
     protected $request;
+    protected $validator;
     protected $nbPerPage = 25;
 
     /**
@@ -220,6 +222,9 @@ abstract class AbstractController extends BaseController
      */
     public function store(Request $request)
     {
+        $input = $this->getElementsFromRequest($request);
+        $validateData = $this->validator->validate($input);
+        die("okk");
         $item = $this->getRepository()->create($this->getElementsFromRequest($request));
         return response()->json($this->getResource()::make($item), 201);
     }

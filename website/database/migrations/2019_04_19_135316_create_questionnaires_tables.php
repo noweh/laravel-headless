@@ -18,7 +18,7 @@ class CreateQuestionnairesTables extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->boolean('published')->nullable();
-                $table->integer('level')->unsigned();
+                $table->integer('level')->unsigned()->default(2);
                 $table->float('note_max')->nullable();
             });
         }
