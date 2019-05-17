@@ -18,7 +18,6 @@ class CourseResource extends JsonResource
             'id' => $this->id,
             'published' => $this->published,
             'format' => $this->format,
-            'session_id' => $this->session_id,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'active' => $this->active,
@@ -26,6 +25,9 @@ class CourseResource extends JsonResource
             'description' => $this->description,
             'themes' => $this->when($this->relationLoaded('themes'), function () {
                 return ThemeResource::collection($this->themes);
+            }),
+            'sessions' => $this->when($this->relationLoaded('sessions'), function () {
+                return SessionResource::collection($this->sessions);
             }),
             'position' => $this->when($this->position, function () {
                 return $this->position;

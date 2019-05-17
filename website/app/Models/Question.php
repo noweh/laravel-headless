@@ -68,6 +68,21 @@ class Question extends AbstractModel
     private $questionnaires;
 
     /**
+     * @OA\Property(
+     *     description="Question PossibleAnswers",
+     *     title="Question PossibleAnswers",
+     *     additionalItems=true,
+     *     @OA\Xml(
+     *         name="possible_answers",
+     *         wrapped=true
+     *     ),
+     * )
+     *
+     * @var PossibleAnswer[]
+     */
+    private $possible_answers;
+
+    /**
      * @OA\Property(),
      * @var integer
      */

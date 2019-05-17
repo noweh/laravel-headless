@@ -229,6 +229,15 @@ class QuestionController extends AbstractController
      *                 example="a default description"
      *             ),
      *             @OA\Property(
+     *                 property="possible_answers_id",
+     *                 description="Updated possible_answers_id values",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="integer"
+     *                 ),
+     *                 example={1,2}
+     *             ),
+     *             @OA\Property(
      *                 property="question_type_id",
      *                 description="Create a question_type_id value",
      *                 type="integer",
@@ -338,6 +347,15 @@ class QuestionController extends AbstractController
      *                 description="Create a question_type_id value",
      *                 type="integer",
      *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="possible_answers_id",
+     *                 description="Updated possible_answers_id values",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="integer"
+     *                 ),
+     *                 example={1,2}
      *             ),
      *             @OA\Property(
      *                 property="good_answer_id",

@@ -203,12 +203,6 @@ class PossibleAnswerController extends AbstractController
      *                 description="Updated position value",
      *                 type="integer",
      *                 example=1
-     *             ),
-     *             @OA\Property(
-     *                 property="question_id",
-     *                 description="Create a question_id value",
-     *                 type="integer",
-     *                 example=1
      *             )
      *         )
      *     )
@@ -294,12 +288,6 @@ class PossibleAnswerController extends AbstractController
      *             @OA\Property(
      *                 property="position",
      *                 description="Updated position value",
-     *                 type="integer",
-     *                 example=1
-     *             ),
-     *             @OA\Property(
-     *                 property="question_id",
-     *                 description="Create a question_id value",
      *                 type="integer",
      *                 example=1
      *             )

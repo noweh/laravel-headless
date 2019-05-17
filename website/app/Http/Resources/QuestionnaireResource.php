@@ -19,7 +19,6 @@ class QuestionnaireResource extends JsonResource
             'published' => $this->published,
             'level' => $this->level,
             'note_max' => $this->note_max,
-            'session_id' => $this->session_id,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'active' => $this->active,
@@ -27,6 +26,9 @@ class QuestionnaireResource extends JsonResource
             'description' => $this->description,
             'themes' => $this->when($this->relationLoaded('themes'), function () {
                 return ThemeResource::collection($this->themes);
+            }),
+            'sessions' => $this->when($this->relationLoaded('sessions'), function () {
+                return SessionResource::collection($this->sessions);
             }),
             'questions' => $this->when($this->relationLoaded('questions'), function () {
                 $this->questions->each(function ($question) {

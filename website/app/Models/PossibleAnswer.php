@@ -11,7 +11,7 @@ use Dimsav\Translatable\Translatable;
  * @OA\Schema(
  *     description="PossibleAnswer model",
  *     title="PossibleAnswer model",
- *     required={"published", "format", "question_id", "text"},
+ *     required={"published", "format", "text"},
  *     @OA\Xml(
  *         name="PossibleAnswer"
  *     ),

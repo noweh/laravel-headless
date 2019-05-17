@@ -11,4 +11,14 @@ class QuestionRepository extends AbstractRepository implements QuestionRepositor
     {
         $this->model = $model;
     }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $object
+     * @param array $fields
+     * @throws \Exception
+     */
+    public function updateAfter($object, $fields)
+    {
+        parent::updateAfter($object, $fields);
+    }
 }

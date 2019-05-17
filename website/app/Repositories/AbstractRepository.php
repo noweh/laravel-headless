@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App;
 use Config;
+use Schema;
 
 abstract class AbstractRepository implements RepositoryInterface
 {
@@ -683,14 +684,25 @@ abstract class AbstractRepository implements RepositoryInterface
                     $fields[$relatedFieldName] : explode(',', $fields[$relatedFieldName]);
             }
 
-            $relatedElementsWithPosition = [];
-            $position = 1;
-            foreach ($relatedElements as $relatedElement) {
-                $relatedElementsWithPosition[$relatedElement] = ['position' => $position++] + $pivotValues;
-            }
-
+            // Reformat $relatedFieldName in expected $relatedObjectName
             $relatedObjectName = str_replace('_id', '', $relatedFieldName);
-            $object->$relatedObjectName()->sync($relatedElementsWithPosition);
+            // Camelize field
+            $relatedObjectName = str_replace('_', '', ucwords($relatedObjectName, '_'));
+
+            $relatedObjectRelation = $object->$relatedObjectName();
+
+            // Check if relatedElement needs to be updated with position or not
+            if (Schema::hasColumn($relatedObjectRelation->getTable(), 'position')) {
+                $relatedElementsWithPosition = [];
+                $position = 1;
+                foreach ($relatedElements as $relatedElement) {
+                    $relatedElementsWithPosition[$relatedElement] = ['position' => $position++] + $pivotValues;
+                }
+
+                $relatedObjectRelation->sync($relatedElementsWithPosition);
+            } else {
+                $relatedObjectRelation->sync($relatedElements);
+            }
         }
     }
 }
