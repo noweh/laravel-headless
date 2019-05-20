@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\SessionRepositoryInterface;
+use App\Services\Validation\SessionValidator;
 use Illuminate\Http\Request;
 
 class SessionController extends AbstractController
 {
     public function __construct(
         Request $request,
-        SessionRepositoryInterface $repository
+        SessionRepositoryInterface $repository,
+        SessionValidator $validator
     ) {
         $this->request = $request;
         $this->repository = $repository;
+        $this->validator = $validator;
 
         parent::__construct();
     }

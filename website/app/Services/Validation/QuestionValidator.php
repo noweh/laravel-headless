@@ -2,8 +2,8 @@
 
 namespace App\Services\Validation;
 
-class QuestionnaireValidator extends AbstractValidator
+class QuestionValidator extends AbstractValidator
 {
-    public $rules = [];
+    public $rules = ['format' => 'required'];
     public $translatedFieldsRules = ['title' => 'required|min:3'];
 }

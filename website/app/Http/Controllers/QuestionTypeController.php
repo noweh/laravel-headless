@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\QuestionTypeRepositoryInterface;
+use App\Services\Validation\QuestionTypeValidator;
 use Illuminate\Http\Request;
 
 class QuestionTypeController extends AbstractController
 {
     public function __construct(
         Request $request,
-        QuestionTypeRepositoryInterface $repository
+        QuestionTypeRepositoryInterface $repository,
+        QuestionTypeValidator $validator
     ) {
         $this->request = $request;
         $this->repository = $repository;
+        $this->validator = $validator;
 
         parent::__construct();
     }

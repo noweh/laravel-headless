@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\ThemeRepositoryInterface;
+use App\Services\Validation\ThemeValidator;
 use Illuminate\Http\Request;
 
 class ThemeController extends AbstractController
 {
     public function __construct(
         Request $request,
-        ThemeRepositoryInterface $repository
+        ThemeRepositoryInterface $repository,
+        ThemeValidator $validator
     ) {
         $this->request = $request;
         $this->repository = $repository;
+        $this->validator = $validator;
 
         parent::__construct();
     }

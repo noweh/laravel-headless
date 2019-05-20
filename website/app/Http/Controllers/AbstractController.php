@@ -223,10 +223,13 @@ abstract class AbstractController extends BaseController
     public function store(Request $request)
     {
         $input = $this->getElementsFromRequest($request);
-        $validateData = $this->validator->validate($input);
-        die("okk");
-        $item = $this->getRepository()->create($this->getElementsFromRequest($request));
-        return response()->json($this->getResource()::make($item), 201);
+
+        // If a validator is setted, check if input is validate
+        if (!$this->validator || $this->validator->validate($input)) {
+            return response()->json($this->getResource()::make(
+                $this->getRepository()->create($this->getElementsFromRequest($request))
+            ), 201);
+        }
     }
 
     /**

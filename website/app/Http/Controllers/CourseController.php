@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\CourseRepositoryInterface;
+use App\Services\Validation\CourseValidator;
 use Illuminate\Http\Request;
 
 class CourseController extends AbstractController
 {
     public function __construct(
         Request $request,
-        CourseRepositoryInterface $repository
+        CourseRepositoryInterface $repository,
+        CourseValidator $validator
     ) {
         $this->request = $request;
         $this->repository = $repository;
+        $this->validator = $validator;
 
         parent::__construct();
     }

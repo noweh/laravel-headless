@@ -40,23 +40,27 @@ abstract class AbstractValidator
             $rules = $this->rules;
         }
 
-        if (!empty($this->translatedFieldsRules) && is_array($this->translatedFieldsRules)) {
-            $languages = array_keys(Config::get('app.locales', []));
-            foreach ($languages as $locale) {
-                if (!empty($data["active_{$locale}"]) && $data["active_{$locale}"]) {
-                    foreach ($this->translatedFieldsRules as $field => $field_rules) {
-                        $rules["{$field}_{$locale}"] = $field_rules;
+        $rules['published'] = ['boolean'];
+        if (isset($data['published'])) {
+            if (!empty($this->translatedFieldsRules) && is_array($this->translatedFieldsRules)) {
+                $languages = array_keys(Config::get('app.locales', []));
+                foreach ($languages as $locale) {
+                    $rules["active_{$locale}"] = "required|boolean";
+                    if (!empty($data["active_{$locale}"]) && $data["active_{$locale}"]) {
+                        foreach ($this->translatedFieldsRules as $field => $field_rules) {
+                            $rules["{$field}_{$locale}"] = $field_rules;
+                        }
                     }
                 }
             }
-        }
 
-        //use Laravel's Validator and validate the data
-        $validation = $this->validator->make($data, $rules, $custom_errors);
+            //use Laravel's Validator and validate the data
+            $validation = $this->validator->make($data, $rules, $custom_errors);
 
-        if ($validation->fails()) {
-            //validation failed, throw an exception
-            throw new ValidationException($validation->messages(), json_encode($validation->messages()->getMessages()));
+            if ($validation->fails()) {
+                //validation failed, throw an exception
+                throw new ValidationException($validation->messages(), json_encode($validation->messages()->getMessages()));
+            }
         }
 
         return true;
