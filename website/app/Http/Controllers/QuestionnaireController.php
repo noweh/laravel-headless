@@ -4,16 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\QuestionnaireRepositoryInterface;
 use App\Services\Validation\QuestionnaireValidator;
-use Illuminate\Http\Request;
 
 class QuestionnaireController extends AbstractController
 {
     public function __construct(
-        Request $request,
         QuestionnaireRepositoryInterface $repository,
         QuestionnaireValidator $validator
     ) {
-        $this->request = $request;
         $this->repository = $repository;
         $this->validator = $validator;
 

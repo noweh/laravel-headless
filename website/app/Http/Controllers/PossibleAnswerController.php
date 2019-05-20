@@ -4,16 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\PossibleAnswerRepositoryInterface;
 use App\Services\Validation\PossibleAnswerValidator;
-use Illuminate\Http\Request;
 
 class PossibleAnswerController extends AbstractController
 {
     public function __construct(
-        Request $request,
         PossibleAnswerRepositoryInterface $repository,
         PossibleAnswerValidator $validator
     ) {
-        $this->request = $request;
         $this->repository = $repository;
         $this->validator = $validator;
 

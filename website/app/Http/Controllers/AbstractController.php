@@ -117,17 +117,18 @@ abstract class AbstractController extends BaseController
     }
 
     /**
+     * @param Request $request
      * @return array
      */
-    protected function getScopeFilters()
+    protected function getScopeFilters(Request $request)
     {
         $scope = [];
         $model = $this->getRepository()->getModel();
         $filters = array_merge($model->getFillable(), $model->getTranslatedAttributes());
 
         foreach ($filters as $field) {
-            if ($this->request->has($field)) {
-                $value = $this->request->$field;
+            if ($request->has($field)) {
+                $value = $request->$field;
                 if ($value == 'true') {
                     $value = 1;
                 }
@@ -144,26 +145,28 @@ abstract class AbstractController extends BaseController
     }
 
     /**
+     * @param Request $request
      * @return array
      */
-    private function getOrderFilters()
+    private function getOrderFilters(Request $request)
     {
         $orders = [];
-        if ($this->request->has('sort') && $this->request->has('sortOrder')) {
-            $orders[$this->request->get('sort')] = $this->request->get('sortOrder');
-        } elseif ($this->request->has('sort')) {
-            $orders[$this->request->get('sort')] = 'asc';
+        if ($request->has('sort') && $request->has('sortOrder')) {
+            $orders[$request->get('sort')] = $request->get('sortOrder');
+        } elseif ($request->has('sort')) {
+            $orders[$request->get('sort')] = 'asc';
         }
         return $orders;
     }
 
     /**
      * Get all includes to set for the Model Collection
+     * @param Request $request
      * @return array
      */
-    private function parseIncludes()
+    private function parseIncludes(Request $request)
     {
-        return $this->request->get('include') ? explode(',', $this->request->get('include')) : [];
+        return $request->get('include') ? explode(',', $request->get('include')) : [];
     }
 
     /**
@@ -189,16 +192,17 @@ abstract class AbstractController extends BaseController
     /**
      * Display a listing of the resource.
      * ex : http://academy.operadeparis.backstage.test/api/v1/themes?lang=fr&include=sessions&label=%%lu%%&sort=id&sortOrder=desc
+     * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         return $this->getResource()::collection(
             $this->getRepository()->getPaginateCollection(
                 $this->nbPerPage,
-                $this->getScopeFilters(),
-                $this->parseIncludes(),
-                $this->getOrderFilters()
+                $this->getScopeFilters($request),
+                $this->parseIncludes($request),
+                $this->getOrderFilters($request)
             )
         );
     }
@@ -206,12 +210,13 @@ abstract class AbstractController extends BaseController
     /**
      * Display the specified resource.
      *
+     * @param Request $request
      * @param $itemId
      * @return mixed
      */
-    public function show($itemId)
+    public function show(Request $request, $itemId)
     {
-        return $this->getResource()::make($this->getRepository()->getById($itemId, $this->parseIncludes()));
+        return $this->getResource()::make($this->getRepository()->getById($itemId, $this->parseIncludes($request)));
     }
 
     /**
@@ -243,7 +248,7 @@ abstract class AbstractController extends BaseController
     {
         $this->getRepository()->update($itemId, $this->getElementsFromRequest($request));
 
-        return $this->show($itemId);
+        return $this->show($request, $itemId);
     }
 
     /**
