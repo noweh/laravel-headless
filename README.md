@@ -1,4 +1,4 @@
-# ONP ACADEMY - Backstage
+# API LARAVEL
 
 ### Requirements
 
@@ -10,7 +10,7 @@ Here are the requirements for the project:
 
 ## Procedures
 
-####Install the project:
+#### Install the project:
 
 - Create one vhost with documentRoot positionned on "website/public"
 - Duplicate **website/.env.example** to **website/.env** 
@@ -24,20 +24,20 @@ sh scripts/install.sh
 If for some reason your project stop working do these:
 
 ```
-cd webiste
+cd website
 composer install
 php artisan migrate
 ```
 
 ## Commands
 
-- For refresh cache, do these:
+- To refresh cache, do these:
 ```
-cd webiste
+cd website
 sh scripts/refresh_cache.sh
 ```
-- For generate fake data:
+- To generate fake data:
 ```
-cd webiste
+cd website
 sh scripts/reset_database.sh
 ```
