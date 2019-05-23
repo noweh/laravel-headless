@@ -113,7 +113,7 @@ class Course extends AbstractModel
      * @OA\Property(),
      * @var integer
      */
-    private $position;
+    private $position_in_session;
 
     use Translatable;
 
@@ -125,7 +125,7 @@ class Course extends AbstractModel
     protected $fillable = [
         'published',
         'format',
-        'position'
+        'position_in_session'
     ];
 
     /**

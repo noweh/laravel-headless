@@ -37,11 +37,11 @@ class SessionTableSeeder extends Seeder
             );
             $session->courses()->attach(
                 $courses->random(rand(1, 3))->pluck('id')->toArray(),
-                ['position' => 1]
+                ['position_in_session' => 1]
             );
             $session->questionnaires()->attach(
                 $questionnaires->random(rand(1, 3))->pluck('id')->toArray(),
-                ['position' => 1]
+                ['position_in_session' => 1]
             );
         });
 

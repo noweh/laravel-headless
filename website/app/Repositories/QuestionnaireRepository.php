@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Contracts\Repositories\QuestionnaireRepositoryInterface;
 use App\Models\Questionnaire;
+use Illuminate\Database\Eloquent\RelationNotFoundException;
 
 class QuestionnaireRepository extends AbstractRepository implements QuestionnaireRepositoryInterface
 {
@@ -15,7 +16,7 @@ class QuestionnaireRepository extends AbstractRepository implements Questionnair
     /**
      * @param \Illuminate\Database\Eloquent\Model $object
      * @param array $fields
-     * @throws \Exception
+     * @throws RelationNotFoundException
      */
     public function updateAfter($object, $fields)
     {

@@ -27,13 +27,13 @@ class SessionResource extends JsonResource
             }),
             'courses' => $this->when($this->relationLoaded('courses'), function () {
                 $this->courses->each(function ($course) {
-                    $course->position = $course->pivot->position;
+                    $course->position_in_session = $course->pivot->position_in_session;
                 });
                 return CourseResource::collection($this->courses);
             }),
             'questionnaires' => $this->when($this->relationLoaded('questionnaires'), function () {
                 $this->questionnaires->each(function ($questionnaire) {
-                    $questionnaire->position = $questionnaire->pivot->position;
+                    $questionnaire->position_in_session = $questionnaire->pivot->position_in_session;
                 });
                 return QuestionnaireResource::collection($this->questionnaires);
             }),

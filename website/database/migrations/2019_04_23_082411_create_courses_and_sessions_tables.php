@@ -17,7 +17,7 @@ class CreateCoursesAndSessionsTables extends Migration
             Schema::create('sessions', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
-                $table->boolean('published')->nullable();
+                $table->boolean('published')->nullable()->default(0);
                 $table->integer("position")->unsigned();
             });
         }
@@ -25,7 +25,7 @@ class CreateCoursesAndSessionsTables extends Migration
         if (!Schema::hasTable('session_translations')) {
             Schema::create('session_translations', function (Blueprint $table) {
                 $table->increments('id');
-                $table->boolean('active')->nullable()->default(1);
+                $table->boolean('active')->nullable()->default(0);
                 $table->string('locale', 3)->nullable();
                 $table->integer('session_id')
                     ->unsigned()->nullable()->index('ndx_session_translations_session_id');
@@ -52,7 +52,7 @@ class CreateCoursesAndSessionsTables extends Migration
             Schema::create('courses', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
-                $table->boolean('published')->nullable();
+                $table->boolean('published')->nullable()->default(0);
                 $table->text('format')->nullable();
             });
         }
@@ -60,7 +60,7 @@ class CreateCoursesAndSessionsTables extends Migration
         if (!Schema::hasTable('course_translations')) {
             Schema::create('course_translations', function (Blueprint $table) {
                 $table->increments('id');
-                $table->boolean('active')->nullable()->default(1);
+                $table->boolean('active')->nullable()->default(0);
                 $table->string('locale', 3)->nullable();
                 $table->integer('course_id')
                     ->unsigned()->nullable()->index('ndx_course_translations_course_id');
@@ -92,7 +92,7 @@ class CreateCoursesAndSessionsTables extends Migration
                     ->references('id')->on('courses')->onUpdate('NO ACTION')->onDelete('CASCADE');
                 $table->foreign('session_id', 'fk_course_session_session_id')
                     ->references('id')->on('sessions')->onUpdate('NO ACTION')->onDelete('CASCADE');
-                $table->integer("position")->unsigned();
+                $table->integer("position_in_session")->unsigned();
             });
         }
 
@@ -105,7 +105,7 @@ class CreateCoursesAndSessionsTables extends Migration
                     ->references('id')->on('questionnaires')->onUpdate('NO ACTION')->onDelete('CASCADE');
                 $table->foreign('session_id', 'fk_questionnaire_session_session_id')
                     ->references('id')->on('sessions')->onUpdate('NO ACTION')->onDelete('CASCADE');
-                $table->integer("position")->unsigned();
+                $table->integer("position_in_session")->unsigned();
             });
         }
     }

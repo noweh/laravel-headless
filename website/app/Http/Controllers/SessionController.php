@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repositories\SessionRepositoryInterface;
-use App\Services\Validation\SessionValidator;
+use App\Services\Validators\SessionValidator;
 
 class SessionController extends AbstractController
 {
@@ -222,22 +222,40 @@ class SessionController extends AbstractController
      *                 example={1,2}
      *             ),
      *             @OA\Property(
-     *                 property="questionnaires_id",
-     *                 description="Create a questionnaires_id values",
+     *                 property="questionnaires",
+     *                 description="Create a questionnaires values",
      *                 type="array",
      *                 @OA\Items(
-     *                     type="integer"
-     *                 ),
-     *                 example={2,5}
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="id",
+     *                         type="integer",
+     *                         example=2
+     *                     ),
+     *                     @OA\Property(
+     *                         property="position",
+     *                         type="integer",
+     *                         example=1
+     *                     )
+     *                 )
      *             ),
      *             @OA\Property(
-     *                 property="courses_id",
-     *                 description="Create a courses_id values",
+     *                 property="courses",
+     *                 description="Create a courses values",
      *                 type="array",
      *                 @OA\Items(
-     *                     type="integer"
-     *                 ),
-     *                 example={3,6}
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="id",
+     *                         type="integer",
+     *                         example=3
+     *                     ),
+     *                     @OA\Property(
+     *                         property="position",
+     *                         type="integer",
+     *                         example=2
+     *                     )
+     *                 )
      *             )
      *         )
      *     )
@@ -329,22 +347,40 @@ class SessionController extends AbstractController
      *                 example={1,2}
      *             ),
      *             @OA\Property(
-     *                 property="questionnaires_id",
-     *                 description="Updated questionnaires_id values",
+     *                 property="questionnaires",
+     *                 description="Updated questionnaires values",
      *                 type="array",
      *                 @OA\Items(
-     *                     type="integer"
-     *                 ),
-     *                 example={2,5}
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="id",
+     *                         type="integer",
+     *                         example=2
+     *                     ),
+     *                     @OA\Property(
+     *                         property="position",
+     *                         type="integer",
+     *                         example=1
+     *                     )
+     *                 )
      *             ),
      *             @OA\Property(
-     *                 property="courses_id",
-     *                 description="Updated courses_id values",
+     *                 property="courses",
+     *                 description="Updated courses values",
      *                 type="array",
      *                 @OA\Items(
-     *                     type="integer"
-     *                 ),
-     *                 example={3,6}
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="id",
+     *                         type="integer",
+     *                         example=3
+     *                     ),
+     *                     @OA\Property(
+     *                         property="position",
+     *                         type="integer",
+     *                         example=2
+     *                     )
+     *                 )
      *             )
      *         )
      *     )

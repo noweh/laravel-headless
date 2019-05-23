@@ -136,7 +136,7 @@ class Questionnaire extends AbstractModel
      * @OA\Property(),
      * @var integer
      */
-    private $position;
+    private $position_in_session;
 
     use Translatable;
 
@@ -149,7 +149,7 @@ class Questionnaire extends AbstractModel
         'published',
         'level',
         'note_max',
-        'position',
+        'position_in_session',
         'session_id'
     ];
 

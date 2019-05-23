@@ -5,6 +5,7 @@ namespace App\Services\Validation;
 use Illuminate\Validation\Factory as IlluminateValidator;
 use App\Exceptions\ValidationException;
 use Config;
+use App;
 
 /**
  * Base Validation class. All entity specific validation classes inherit
@@ -43,7 +44,10 @@ abstract class AbstractValidator
         $rules['published'] = ['boolean'];
         if (isset($data['published'])) {
             if (!empty($this->translatedFieldsRules) && is_array($this->translatedFieldsRules)) {
-                $languages = array_keys(Config::get('app.locales', []));
+                // If it's a creation : all locales are checked, else, only current locale
+                $languages = (isset($data['id'])) && $data['id'] ?
+                    [App::getLocale()] : array_keys(Config::get('app.locales', []))
+                ;
                 foreach ($languages as $locale) {
                     $rules["active_{$locale}"] = "required|boolean";
                     if (!empty($data["active_{$locale}"]) && $data["active_{$locale}"]) {

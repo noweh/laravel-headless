@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App;
 use Config;
+use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Schema;
 
 abstract class AbstractRepository implements RepositoryInterface
@@ -302,7 +303,7 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function update($id, $fields)
     {
-        $fields = $this->prepareFieldsBeforeSave($this->prepareDatesFields($fields));
+        $fields = $this->prepareDatesFields($fields);
 
         $object = $this->model->findOrFail($id);
 
@@ -312,7 +313,7 @@ abstract class AbstractRepository implements RepositoryInterface
 
         // Set empty field to NULL
         foreach ($fields as $key => $value) {
-            if (empty($value)) {
+            if (empty($value) && $value !== false && $value !== 0) {
                 $fields[$key] = null;
             }
         }
@@ -401,8 +402,8 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     protected function prepareDatesField($fields, $f)
     {
-        if (($datetime=DateTime::createFromFormat("d/m/Y", $fields[$f]))) {
-            $fields[$f] = $datetime->format("Y-m-d");
+        if (($datetime = \DateTime::createFromFormat("Y-m-d h:i:s", $fields[$f]))) {
+            $fields[$f] = $datetime->format("Y-m-d h:i:s");
         } else {
             $fields[$f] = null;
         }
@@ -454,7 +455,20 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function createTranslations($object, $fields)
     {
-        $this->updateTranslations($object, $fields);
+        if (property_exists($this->model, 'translatedAttributes')) {
+            $languages = array_keys(Config::get('app.locales', []));
+            foreach ($languages as $locale) {
+                //find active langue
+                $translate = $object->translateOrNew($locale);
+                if (!isset($fields['active_'.$locale])) {
+                    $translate->active = 0;
+                } else {
+                    $translate->active = 1;
+                }
+
+                $this->setTranslateFields($object, $translate, $fields, $locale);
+            }
+        }
     }
 
     /**
@@ -470,15 +484,7 @@ abstract class AbstractRepository implements RepositoryInterface
         if (property_exists($this->model, 'translatedAttributes')) {
             $languages = array_keys(Config::get('app.locales', []));
             foreach ($languages as $locale) {
-                //find active langue
-                $translate = $object->translateOrNew($locale);
-                if (!isset($fields['active_'.$locale])) {
-                    $translate->active = 0;
-                } else {
-                    $translate->active = 1;
-                }
-
-                $this->setTranslateFields($object, $translate, $fields, $locale);
+                $this->setTranslateFields($object, $object->translateOrNew($locale), $fields, $locale);
             }
         }
     }
@@ -733,7 +739,7 @@ abstract class AbstractRepository implements RepositoryInterface
      * @param string $relatedFieldName
      * @param array $pivotValues additional pivot field to set ['pivotfieldname' => value, ...]
      * @return void
-     * @throws \Exception
+     * @throws RelationNotFoundException
      */
     public function updateRelatedElements(Model $object, array $fields, $relatedFieldName, array $pivotValues = [])
     {
@@ -751,17 +757,24 @@ abstract class AbstractRepository implements RepositoryInterface
 
             $relatedObjectRelation = $object->$relatedObjectName();
 
-            // Check if relatedElement needs to be updated with position or not
-            if (Schema::hasColumn($relatedObjectRelation->getTable(), 'position')) {
-                $relatedElementsWithPosition = [];
-                $position = 1;
-                foreach ($relatedElements as $relatedElement) {
-                    $relatedElementsWithPosition[$relatedElement] = ['position' => $position++] + $pivotValues;
-                }
+            try {
+                // Check if relatedElement needs to be updated with position or not
+                if (Schema::hasColumn($relatedObjectRelation->getTable(), 'position')) {
+                    $relatedElementsWithPosition = [];
+                    $position = 1;
+                    foreach ($relatedElements as $relatedElement) {
+                        $relatedElementsWithPosition[$relatedElement] = ['position' => $position++] + $pivotValues;
+                    }
 
-                $relatedObjectRelation->sync($relatedElementsWithPosition);
-            } else {
-                $relatedObjectRelation->sync($relatedElements);
+                    $relatedObjectRelation->sync($relatedElementsWithPosition);
+                } else {
+                    $relatedObjectRelation->sync($relatedElements);
+                }
+            } catch (\Exception $e) {
+                throw new RelationNotFoundException(
+                    'No query result for model [' . get_class($object->$relatedFieldName()->getRelated()) .
+                    '] ' . implode(' or ', array_keys($relatedElements))
+                );
             }
         }
     }

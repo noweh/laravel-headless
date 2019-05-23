@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Contracts\Repositories\CourseRepositoryInterface;
 use App\Models\Course;
+use Illuminate\Database\Eloquent\RelationNotFoundException;
 
 class CourseRepository extends AbstractRepository implements CourseRepositoryInterface
 {
@@ -15,7 +16,7 @@ class CourseRepository extends AbstractRepository implements CourseRepositoryInt
     /**
      * @param \Illuminate\Database\Eloquent\Model $object
      * @param array $fields
-     * @throws \Exception
+     * @throws RelationNotFoundException
      */
     public function updateAfter($object, $fields)
     {

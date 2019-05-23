@@ -36,8 +36,8 @@ class QuestionnaireResource extends JsonResource
                 });
                 return QuestionResource::collection($this->questions);
             }),
-            'position' => $this->when($this->position, function () {
-                return $this->position;
+            'position' => $this->when($this->position_in_session, function () {
+                return $this->position_in_session;
             })
         ];
     }

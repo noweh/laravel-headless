@@ -9,7 +9,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App;
-use Illuminate\Support\Facades\Input;
 
 /**
  * Class AbstractController
@@ -58,6 +57,11 @@ use Illuminate\Support\Facades\Input;
  * @OA\Tag(
  *     name="Theme",
  *     description="Operations about Themes"
+ * )
+ *
+ * @OA\Tag(
+ *     name="Video",
+ *     description="Operations about Videos"
  * )
  */
 abstract class AbstractController extends BaseController
@@ -173,13 +177,25 @@ abstract class AbstractController extends BaseController
      * Retrieve all elements from Request and set translatedElements
      * @param Request $request
      * @return array
+     * @throws App\Exceptions\ValidationException
      */
     private function getElementsFromRequest(Request $request)
     {
-        $elementsInRequest = $request->request->all();
+        if (!$request->request->all()) {
+            throw new App\Exceptions\ValidationException(null, 'No data in input or invalid format for data');
+        }
+        return $this->getElementsFromData($request->request->all());
+    }
 
+    /**
+     * Retrieve all elements from array and set translatedElements
+     * @param array $data
+     * @return array
+     */
+    private function getElementsFromData(array $data)
+    {
         $reconstructedElements = [];
-        foreach ($elementsInRequest as $elementKeyInRequest => $elementValueInRequest) {
+        foreach ($data as $elementKeyInRequest => $elementValueInRequest) {
             if (in_array($elementKeyInRequest, $this->getRepository()->getModel()->getTranslatedAttributes())) {
                 $reconstructedElements[$elementKeyInRequest . '_' . App::getLocale()] = $elementValueInRequest;
             } else {
@@ -224,6 +240,7 @@ abstract class AbstractController extends BaseController
      *
      * @param  \Illuminate\Http\Request $request
      * @return mixed
+     * @throws App\Exceptions\ValidationException
      */
     public function store(Request $request)
     {
@@ -243,12 +260,18 @@ abstract class AbstractController extends BaseController
      * @param  \Illuminate\Http\Request $request
      * @param int $itemId
      * @return mixed
+     * @throws App\Exceptions\ValidationException
      */
     public function update(Request $request, $itemId)
     {
-        $this->getRepository()->update($itemId, $this->getElementsFromRequest($request));
+        $existingData = $this->getElementsFromData($this->show($request, $itemId)->toArray([]));
+        $input = $this->getElementsFromRequest($request);
 
-        return $this->show($request, $itemId);
+        // If a validator is setted, check if existingData + input are validate
+        if (!$this->validator || $this->validator->validate(array_merge($existingData, $input))) {
+            $this->getRepository()->update($itemId, $input);
+            return $this->show($request, $itemId);
+        }
     }
 
     /**

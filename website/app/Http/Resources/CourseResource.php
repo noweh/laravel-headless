@@ -29,8 +29,8 @@ class CourseResource extends JsonResource
             'sessions' => $this->when($this->relationLoaded('sessions'), function () {
                 return SessionResource::collection($this->sessions);
             }),
-            'position' => $this->when($this->position, function () {
-                return $this->position;
+            'position' => $this->when($this->position_in_session, function () {
+                return $this->position_in_session;
             })
         ];
     }
