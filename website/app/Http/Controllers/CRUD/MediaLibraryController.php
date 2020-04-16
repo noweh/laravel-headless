@@ -214,7 +214,7 @@ class MediaLibraryController extends AbstractCRUDController
      *     @OA\Response(
      *         response=201,
      *         description="Created.",
-     *         @OA\JsonContent(ref="#/components/schemas/AudioLibrary")
+     *         @OA\JsonContent(ref="#/components/schemas/MediaLibrary")
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -282,7 +282,7 @@ class MediaLibraryController extends AbstractCRUDController
      *         description="Internal Server Error."
      *     ),
      *     @OA\RequestBody(
-     *         description="Updated AudioLibrary object",
+     *         description="Updated MediaLibrary object",
      *         required=true,
      *         @OA\JsonContent(
      *             type="object",
@@ -339,7 +339,7 @@ class MediaLibraryController extends AbstractCRUDController
      * )
      * @param Request $request
      * @param $itemId
-     * @return \Illuminate\Http\Resources\Json\Resource
+     * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      */
     public function update(Request $request, $itemId)

@@ -54,6 +54,16 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
  * )
  *
  * @OA\Tag(
+ *     name="CRUD\MediaLibrary",
+ *     description="Operations about MediaLibraries"
+ * )
+ *
+ * @OA\Tag(
+ *     name="CRUD\Show",
+ *     description="Operations about Shows"
+ * )
+ *
+ * @OA\Tag(
  *     name="Setting",
  *     description="Operations about Settings"
  * )
