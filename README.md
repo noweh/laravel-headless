@@ -1,4 +1,4 @@
-# FUTURE PLAYER - Backstage
+# Backstage
 
 ### Requirements
 
