@@ -16,7 +16,10 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => env('EMAIL_DRIVER', 'smtp'),
+
+    'email_no_reply' => env('EMAIL_NO_REPLY', 'ne_pas_repondre@app-name.com'),
+    'name_no_reply' => env('NAME_NO_REPLY', 'No reply'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +32,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('EMAIL_HOST', 'smtp.mailgun.org'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +45,7 @@ return [
     |
     */
 
-    'port' => env('MAIL_PORT', 587),
+    'port' => env('EMAIL_PORT', 587),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +59,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'mailfrom@app-name.com'),
+        'name' => env('MAIL_FROM_NAME', 'Julien SCHMITT'),
     ],
 
     /*
@@ -71,7 +74,7 @@ return [
     |
     */
 
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+    'encryption' => env('EMAIL_ENCRYPTION', 'tls'),
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +87,9 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+    'username' => env('EMAIL_USERNAME', null),
 
-    'password' => env('MAIL_PASSWORD'),
+    'password' => env('EMAIL_PASSWORD', null),
 
     /*
     |--------------------------------------------------------------------------

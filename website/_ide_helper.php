@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.8.12 on 2019-04-18 13:11:48.
+ * Generated for Laravel 5.8.32 on 2019-09-05 15:31:54.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -349,6 +349,18 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Foundation\Application $instance */
                         return $instance->isLocal();
+        }
+        
+        /**
+         * Determine if application is in production environment.
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function isProduction()
+        {
+                        /** @var \Illuminate\Foundation\Application $instance */
+                        return $instance->isProduction();
         }
         
         /**
@@ -1469,7 +1481,7 @@ namespace Illuminate\Support\Facades {
          * Run the console application.
          *
          * @param \Symfony\Component\Console\Input\InputInterface $input
-         * @param \Symfony\Component\Console\Output\OutputInterface $output
+         * @param \Symfony\Component\Console\Output\OutputInterface|null $output
          * @return int 
          * @static 
          */ 
@@ -1529,7 +1541,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $command
          * @param array $parameters
-         * @param \Symfony\Component\Console\Output\OutputInterface $outputBuffer
+         * @param \Symfony\Component\Console\Output\OutputInterface|null $outputBuffer
          * @return int 
          * @throws \Symfony\Component\Console\Exception\CommandNotFoundException
          * @static 
@@ -1614,6 +1626,13 @@ namespace Illuminate\Support\Facades {
     /**
      * 
      *
+     * @method static bool attempt(array $credentials = [], bool $remember = false)
+     * @method static void login(\Illuminate\Contracts\Auth\Authenticatable $user, bool $remember = false)
+     * @method static \Illuminate\Contracts\Auth\Authenticatable loginUsingId(mixed $id, bool $remember = false)
+     * @method static bool viaRemember()
+     * @method static void logout()
+     * @method static \Symfony\Component\HttpFoundation\Response|null onceBasic(string $field = 'email',array $extraConditions = [])
+     * @method static null|bool logoutOtherDevices(string $password, string $attribute = 'password')
      * @see \Illuminate\Auth\AuthManager
      * @see \Illuminate\Contracts\Auth\Factory
      * @see \Illuminate\Contracts\Auth\Guard
@@ -1624,7 +1643,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Attempt to get the guard from the local cache.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard 
          * @static 
          */ 
@@ -1794,30 +1813,6 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * Get the currently authenticated user.
-         *
-         * @return \App\User|null 
-         * @static 
-         */ 
-        public static function user()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->user();
-        }
-        
-        /**
-         * Get the ID for the currently authenticated user.
-         *
-         * @return int|null 
-         * @static 
-         */ 
-        public static function id()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->id();
-        }
-        
-        /**
          * Log a user into the application without sessions or cookies.
          *
          * @param array $credentials
@@ -1826,331 +1821,21 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function once($credentials = array())
         {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
+                        /** @var \App\Services\Auth\SecutixGuard $instance */
                         return $instance->once($credentials);
         }
         
         /**
-         * Log the given user ID into the application without sessions or cookies.
+         * Log a user into the application without sessions or cookies.
          *
-         * @param mixed $id
-         * @return \App\User|false 
+         * @param $id
+         * @return bool 
          * @static 
          */ 
         public static function onceUsingId($id)
         {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
+                        /** @var \App\Services\Auth\SecutixGuard $instance */
                         return $instance->onceUsingId($id);
-        }
-        
-        /**
-         * Validate a user's credentials.
-         *
-         * @param array $credentials
-         * @return bool 
-         * @static 
-         */ 
-        public static function validate($credentials = array())
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->validate($credentials);
-        }
-        
-        /**
-         * Attempt to authenticate using HTTP Basic Auth.
-         *
-         * @param string $field
-         * @param array $extraConditions
-         * @return \Symfony\Component\HttpFoundation\Response|null 
-         * @static 
-         */ 
-        public static function basic($field = 'email', $extraConditions = array())
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->basic($field, $extraConditions);
-        }
-        
-        /**
-         * Perform a stateless HTTP Basic login attempt.
-         *
-         * @param string $field
-         * @param array $extraConditions
-         * @return \Symfony\Component\HttpFoundation\Response|null 
-         * @static 
-         */ 
-        public static function onceBasic($field = 'email', $extraConditions = array())
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->onceBasic($field, $extraConditions);
-        }
-        
-        /**
-         * Attempt to authenticate a user using the given credentials.
-         *
-         * @param array $credentials
-         * @param bool $remember
-         * @return bool 
-         * @static 
-         */ 
-        public static function attempt($credentials = array(), $remember = false)
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->attempt($credentials, $remember);
-        }
-        
-        /**
-         * Log the given user ID into the application.
-         *
-         * @param mixed $id
-         * @param bool $remember
-         * @return \App\User|false 
-         * @static 
-         */ 
-        public static function loginUsingId($id, $remember = false)
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->loginUsingId($id, $remember);
-        }
-        
-        /**
-         * Log a user into the application.
-         *
-         * @param \Illuminate\Contracts\Auth\Authenticatable $user
-         * @param bool $remember
-         * @return void 
-         * @static 
-         */ 
-        public static function login($user, $remember = false)
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        $instance->login($user, $remember);
-        }
-        
-        /**
-         * Log the user out of the application.
-         *
-         * @return void 
-         * @static 
-         */ 
-        public static function logout()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        $instance->logout();
-        }
-        
-        /**
-         * Invalidate other sessions for the current user.
-         * 
-         * The application must be using the AuthenticateSession middleware.
-         *
-         * @param string $password
-         * @param string $attribute
-         * @return bool|null 
-         * @static 
-         */ 
-        public static function logoutOtherDevices($password, $attribute = 'password')
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->logoutOtherDevices($password, $attribute);
-        }
-        
-        /**
-         * Register an authentication attempt event listener.
-         *
-         * @param mixed $callback
-         * @return void 
-         * @static 
-         */ 
-        public static function attempting($callback)
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        $instance->attempting($callback);
-        }
-        
-        /**
-         * Get the last user we attempted to authenticate.
-         *
-         * @return \App\User 
-         * @static 
-         */ 
-        public static function getLastAttempted()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->getLastAttempted();
-        }
-        
-        /**
-         * Get a unique identifier for the auth session value.
-         *
-         * @return string 
-         * @static 
-         */ 
-        public static function getName()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->getName();
-        }
-        
-        /**
-         * Get the name of the cookie used to store the "recaller".
-         *
-         * @return string 
-         * @static 
-         */ 
-        public static function getRecallerName()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->getRecallerName();
-        }
-        
-        /**
-         * Determine if the user was authenticated via "remember me" cookie.
-         *
-         * @return bool 
-         * @static 
-         */ 
-        public static function viaRemember()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->viaRemember();
-        }
-        
-        /**
-         * Get the cookie creator instance used by the guard.
-         *
-         * @return \Illuminate\Contracts\Cookie\QueueingFactory 
-         * @throws \RuntimeException
-         * @static 
-         */ 
-        public static function getCookieJar()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->getCookieJar();
-        }
-        
-        /**
-         * Set the cookie creator instance used by the guard.
-         *
-         * @param \Illuminate\Contracts\Cookie\QueueingFactory $cookie
-         * @return void 
-         * @static 
-         */ 
-        public static function setCookieJar($cookie)
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        $instance->setCookieJar($cookie);
-        }
-        
-        /**
-         * Get the event dispatcher instance.
-         *
-         * @return \Illuminate\Contracts\Events\Dispatcher 
-         * @static 
-         */ 
-        public static function getDispatcher()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->getDispatcher();
-        }
-        
-        /**
-         * Set the event dispatcher instance.
-         *
-         * @param \Illuminate\Contracts\Events\Dispatcher $events
-         * @return void 
-         * @static 
-         */ 
-        public static function setDispatcher($events)
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        $instance->setDispatcher($events);
-        }
-        
-        /**
-         * Get the session store used by the guard.
-         *
-         * @return \Illuminate\Contracts\Session\Session 
-         * @static 
-         */ 
-        public static function getSession()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->getSession();
-        }
-        
-        /**
-         * Return the currently cached user.
-         *
-         * @return \App\User|null 
-         * @static 
-         */ 
-        public static function getUser()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->getUser();
-        }
-        
-        /**
-         * Set the current user.
-         *
-         * @param \Illuminate\Contracts\Auth\Authenticatable $user
-         * @return \Illuminate\Auth\SessionGuard 
-         * @static 
-         */ 
-        public static function setUser($user)
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->setUser($user);
-        }
-        
-        /**
-         * Get the current request instance.
-         *
-         * @return \Symfony\Component\HttpFoundation\Request 
-         * @static 
-         */ 
-        public static function getRequest()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->getRequest();
-        }
-        
-        /**
-         * Set the current request instance.
-         *
-         * @param \Symfony\Component\HttpFoundation\Request $request
-         * @return \Illuminate\Auth\SessionGuard 
-         * @static 
-         */ 
-        public static function setRequest($request)
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->setRequest($request);
-        }
-        
-        /**
-         * Determine if current user is authenticated. If not, throw an exception.
-         *
-         * @return \App\User 
-         * @throws \Illuminate\Auth\AuthenticationException
-         * @static 
-         */ 
-        public static function authenticate()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->authenticate();
-        }
-        
-        /**
-         * Determine if the guard has a user instance.
-         *
-         * @return bool 
-         * @static 
-         */ 
-        public static function hasUser()
-        {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->hasUser();
         }
         
         /**
@@ -2161,7 +1846,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function check()
         {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
+                        /** @var \App\Services\Auth\SecutixGuard $instance */
                         return $instance->check();
         }
         
@@ -2173,72 +1858,57 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function guest()
         {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
+                        /** @var \App\Services\Auth\SecutixGuard $instance */
                         return $instance->guest();
         }
         
         /**
-         * Get the user provider used by the guard.
+         * Get the currently authenticated user.
          *
-         * @return \Illuminate\Contracts\Auth\UserProvider 
+         * @return \App\Models\AdminUser|null 
          * @static 
          */ 
-        public static function getProvider()
+        public static function user()
         {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        return $instance->getProvider();
+                        /** @var \App\Services\Auth\SecutixGuard $instance */
+                        return $instance->user();
         }
         
         /**
-         * Set the user provider used by the guard.
+         * Get the ID for the currently authenticated user.
          *
-         * @param \Illuminate\Contracts\Auth\UserProvider $provider
-         * @return void 
+         * @return string|null 
          * @static 
          */ 
-        public static function setProvider($provider)
+        public static function id()
         {
-                        /** @var \Illuminate\Auth\SessionGuard $instance */
-                        $instance->setProvider($provider);
+                        /** @var \App\Services\Auth\SecutixGuard $instance */
+                        return $instance->id();
         }
         
         /**
-         * Register a custom macro.
+         * Validate a user's credentials.
          *
-         * @param string $name
-         * @param object|callable $macro
-         * @return void 
-         * @static 
-         */ 
-        public static function macro($name, $macro)
-        {
-                        \Illuminate\Auth\SessionGuard::macro($name, $macro);
-        }
-        
-        /**
-         * Mix another object into the class.
-         *
-         * @param object $mixin
-         * @param bool $replace
-         * @return void 
-         * @throws \ReflectionException
-         * @static 
-         */ 
-        public static function mixin($mixin, $replace = true)
-        {
-                        \Illuminate\Auth\SessionGuard::mixin($mixin, $replace);
-        }
-        
-        /**
-         * Checks if macro is registered.
-         *
-         * @param string $name
          * @return bool 
          * @static 
          */ 
-        public static function hasMacro($name)
+        public static function validate($credentials = array())
         {
-                        return \Illuminate\Auth\SessionGuard::hasMacro($name);
+                        /** @var \App\Services\Auth\SecutixGuard $instance */
+                        return $instance->validate($credentials);
+        }
+        
+        /**
+         * Set the current user.
+         *
+         * @param \App\Services\Auth\Authenticatable $user User info
+         * @return \App\Services\Auth\SecutixGuard 
+         * @static 
+         */ 
+        public static function setUser($user)
+        {
+                        /** @var \App\Services\Auth\SecutixGuard $instance */
+                        return $instance->setUser($user);
         }
          
     }
@@ -2253,7 +1923,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Compile the view at the given path.
          *
-         * @param string $path
+         * @param string|null $path
          * @return void 
          * @static 
          */ 
@@ -2371,7 +2041,7 @@ namespace Illuminate\Support\Facades {
          * Register a component alias directive.
          *
          * @param string $path
-         * @param string $alias
+         * @param string|null $alias
          * @return void 
          * @static 
          */ 
@@ -2385,7 +2055,7 @@ namespace Illuminate\Support\Facades {
          * Register an include alias directive.
          *
          * @param string $path
-         * @param string $alias
+         * @param string|null $alias
          * @return void 
          * @static 
          */ 
@@ -2552,7 +2222,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a driver instance.
          *
-         * @param string $driver
+         * @param string|null $driver
          * @return mixed 
          * @static 
          */ 
@@ -3571,8 +3241,8 @@ namespace Illuminate\Support\Facades {
          * @param string $name
          * @param string $value
          * @param int $minutes
-         * @param string $path
-         * @param string $domain
+         * @param string|null $path
+         * @param string|null $domain
          * @param bool|null $secure
          * @param bool $httpOnly
          * @param bool $raw
@@ -3591,8 +3261,8 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $name
          * @param string $value
-         * @param string $path
-         * @param string $domain
+         * @param string|null $path
+         * @param string|null $domain
          * @param bool|null $secure
          * @param bool $httpOnly
          * @param bool $raw
@@ -3610,8 +3280,8 @@ namespace Illuminate\Support\Facades {
          * Expire the given cookie.
          *
          * @param string $name
-         * @param string $path
-         * @param string $domain
+         * @param string|null $path
+         * @param string|null $domain
          * @return \Symfony\Component\HttpFoundation\Cookie 
          * @static 
          */ 
@@ -3680,7 +3350,7 @@ namespace Illuminate\Support\Facades {
          * @param string $path
          * @param string $domain
          * @param bool $secure
-         * @param string $sameSite
+         * @param string|null $sameSite
          * @return \Illuminate\Cookie\CookieJar 
          * @static 
          */ 
@@ -3807,7 +3477,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Decrypt the given value.
          *
-         * @param mixed $payload
+         * @param string $payload
          * @param bool $unserialize
          * @return mixed 
          * @throws \Illuminate\Contracts\Encryption\DecryptException
@@ -3858,7 +3528,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a database connection instance.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Database\Connection 
          * @static 
          */ 
@@ -3871,7 +3541,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Disconnect from the given database and remove from local cache.
          *
-         * @param string $name
+         * @param string|null $name
          * @return void 
          * @static 
          */ 
@@ -3884,7 +3554,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Disconnect from the given database.
          *
-         * @param string $name
+         * @param string|null $name
          * @return void 
          * @static 
          */ 
@@ -3897,7 +3567,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Reconnect to the given database.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Database\Connection 
          * @static 
          */ 
@@ -4595,7 +4265,7 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * Determine if the connection in a "dry run".
+         * Determine if the connection is in a "dry run".
          *
          * @return bool 
          * @static 
@@ -5242,7 +4912,7 @@ namespace Illuminate\Support\Facades {
          * Get or set UNIX mode of a file or directory.
          *
          * @param string $path
-         * @param int $mode
+         * @param int|null $mode
          * @return mixed 
          * @static 
          */ 
@@ -5554,7 +5224,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $directory
          * @param string $destination
-         * @param int $options
+         * @param int|null $options
          * @return bool 
          * @static 
          */ 
@@ -5867,6 +5537,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object|string $class
          * @return mixed 
+         * @throws \Illuminate\Contracts\Container\BindingResolutionException
          * @static 
          */ 
         public static function resolvePolicy($class)
@@ -6111,7 +5782,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $key
          * @param array $replace
-         * @param string $locale
+         * @param string|null $locale
          * @return string|array 
          * @static 
          */ 
@@ -6142,7 +5813,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $key
          * @param array $replace
-         * @param string $locale
+         * @param string|null $locale
          * @return string|array 
          * @static 
          */ 
@@ -6158,7 +5829,7 @@ namespace Illuminate\Support\Facades {
          * @param string $key
          * @param int|array|\Countable $number
          * @param array $replace
-         * @param string $locale
+         * @param string|null $locale
          * @return string 
          * @static 
          */ 
@@ -6174,7 +5845,7 @@ namespace Illuminate\Support\Facades {
          * @param string $key
          * @param int|array|\Countable $number
          * @param array $replace
-         * @param string $locale
+         * @param string|null $locale
          * @return string 
          * @static 
          */ 
@@ -6788,7 +6459,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string|array|\Illuminate\Contracts\Mail\Mailable $view
          * @param array $data
-         * @param \Closure|string $callback
+         * @param \Closure|string|null $callback
          * @return void 
          * @static 
          */ 
@@ -7534,7 +7205,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if the driver is connected.
          *
-         * @param string $name
+         * @param string|null $name
          * @return bool 
          * @static 
          */ 
@@ -7547,7 +7218,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Resolve a queue connection instance.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Contracts\Queue\Queue 
          * @static 
          */ 
@@ -7613,7 +7284,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the full name for the given connection.
          *
-         * @param string $connection
+         * @param string|null $connection
          * @return string 
          * @static 
          */ 
@@ -7735,7 +7406,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the size of the queue.
          *
-         * @param string $queue
+         * @param string|null $queue
          * @return int 
          * @static 
          */ 
@@ -7750,7 +7421,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $job
          * @param mixed $data
-         * @param string $queue
+         * @param string|null $queue
          * @return mixed 
          * @static 
          */ 
@@ -7764,7 +7435,7 @@ namespace Illuminate\Support\Facades {
          * Push a raw payload onto the queue.
          *
          * @param string $payload
-         * @param string $queue
+         * @param string|null $queue
          * @param array $options
          * @return mixed 
          * @static 
@@ -7781,7 +7452,7 @@ namespace Illuminate\Support\Facades {
          * @param \DateTimeInterface|\DateInterval|int $delay
          * @param string $job
          * @param mixed $data
-         * @param string $queue
+         * @param string|null $queue
          * @return mixed 
          * @static 
          */ 
@@ -7825,7 +7496,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Pop the next job off of the queue.
          *
-         * @param string $queue
+         * @param string|null $queue
          * @return \Illuminate\Contracts\Queue\Job|null 
          * @static 
          */ 
@@ -7840,7 +7511,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param array $jobs
          * @param mixed $data
-         * @param string $queue
+         * @param string|null $queue
          * @return mixed 
          * @static 
          */ 
@@ -7885,6 +7556,20 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Support\Testing\Fakes\QueueFake $instance */
                         return $instance->setConnectionName($name);
+        }
+        
+        /**
+         * Get the retry delay for an object-based queue handler.
+         *
+         * @param mixed $job
+         * @return mixed 
+         * @static 
+         */ 
+        public static function getJobRetryDelay($job)
+        {
+            //Method inherited from \Illuminate\Queue\Queue            
+                        /** @var \Illuminate\Queue\SyncQueue $instance */
+                        return $instance->getJobRetryDelay($job);
         }
         
         /**
@@ -7985,7 +7670,7 @@ namespace Illuminate\Support\Facades {
          * @param string $path
          * @param int $status
          * @param array $headers
-         * @param bool $secure
+         * @param bool|null $secure
          * @return \Illuminate\Http\RedirectResponse 
          * @static 
          */ 
@@ -8001,7 +7686,7 @@ namespace Illuminate\Support\Facades {
          * @param string $default
          * @param int $status
          * @param array $headers
-         * @param bool $secure
+         * @param bool|null $secure
          * @return \Illuminate\Http\RedirectResponse 
          * @static 
          */ 
@@ -8030,7 +7715,7 @@ namespace Illuminate\Support\Facades {
          * @param string $path
          * @param int $status
          * @param array $headers
-         * @param bool $secure
+         * @param bool|null $secure
          * @return \Illuminate\Http\RedirectResponse 
          * @static 
          */ 
@@ -8164,6 +7849,106 @@ namespace Illuminate\Support\Facades {
         public static function hasMacro($name)
         {
                         return \Illuminate\Routing\Redirector::hasMacro($name);
+        }
+         
+    }
+
+    /**
+     * 
+     *
+     * @see \Illuminate\Redis\RedisManager
+     * @see \Illuminate\Contracts\Redis\Factory
+     */ 
+    class Redis {
+        
+        /**
+         * Get a Redis connection by name.
+         *
+         * @param string|null $name
+         * @return \Illuminate\Redis\Connections\Connection 
+         * @static 
+         */ 
+        public static function connection($name = null)
+        {
+                        /** @var \Illuminate\Redis\RedisManager $instance */
+                        return $instance->connection($name);
+        }
+        
+        /**
+         * Resolve the given connection by name.
+         *
+         * @param string|null $name
+         * @return \Illuminate\Redis\Connections\Connection 
+         * @throws \InvalidArgumentException
+         * @static 
+         */ 
+        public static function resolve($name = null)
+        {
+                        /** @var \Illuminate\Redis\RedisManager $instance */
+                        return $instance->resolve($name);
+        }
+        
+        /**
+         * Return all of the created connections.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function connections()
+        {
+                        /** @var \Illuminate\Redis\RedisManager $instance */
+                        return $instance->connections();
+        }
+        
+        /**
+         * Enable the firing of Redis command events.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function enableEvents()
+        {
+                        /** @var \Illuminate\Redis\RedisManager $instance */
+                        $instance->enableEvents();
+        }
+        
+        /**
+         * Disable the firing of Redis command events.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function disableEvents()
+        {
+                        /** @var \Illuminate\Redis\RedisManager $instance */
+                        $instance->disableEvents();
+        }
+        
+        /**
+         * Set the default driver.
+         *
+         * @param string $driver
+         * @return void 
+         * @static 
+         */ 
+        public static function setDriver($driver)
+        {
+                        /** @var \Illuminate\Redis\RedisManager $instance */
+                        $instance->setDriver($driver);
+        }
+        
+        /**
+         * Register a custom driver creator Closure.
+         *
+         * @param string $driver
+         * @param \Closure $callback
+         * @return \Illuminate\Redis\RedisManager 
+         * @static 
+         */ 
+        public static function extend($driver, $callback)
+        {
+                        /** @var \Illuminate\Redis\RedisManager $instance */
+                        return $instance->extend($driver, $callback);
         }
          
     }
@@ -8477,7 +8262,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the JSON payload for the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param mixed $default
          * @return \Symfony\Component\HttpFoundation\ParameterBag|mixed 
          * @static 
@@ -9872,7 +9657,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve an old input item.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array 
          * @static 
@@ -9936,7 +9721,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a server variable from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -9963,7 +9748,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a header from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -10066,7 +9851,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get all of the input and files for the request.
          *
-         * @param array|mixed $keys
+         * @param array|mixed|null $keys
          * @return array 
          * @static 
          */ 
@@ -10119,7 +9904,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a query string item from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -10133,7 +9918,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a request payload item from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -10160,7 +9945,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a cookie from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -10199,7 +9984,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a file from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param mixed $default
          * @return \Illuminate\Http\UploadedFile|\Illuminate\Http\UploadedFile[]|array|null 
          * @static 
@@ -11160,7 +10945,7 @@ namespace Illuminate\Support\Facades {
          * Get a route parameter for the current route.
          *
          * @param string $key
-         * @param string $default
+         * @param string|null $default
          * @return mixed 
          * @static 
          */ 
@@ -11626,6 +11411,20 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Drop all types from the database.
+         *
+         * @return void 
+         * @throws \LogicException
+         * @static 
+         */ 
+        public static function dropAllTypes()
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder            
+                        /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+                        $instance->dropAllTypes();
+        }
+        
+        /**
          * Rename a table on the schema.
          *
          * @param string $from
@@ -11664,6 +11463,23 @@ namespace Illuminate\Support\Facades {
             //Method inherited from \Illuminate\Database\Schema\Builder            
                         /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
                         return $instance->disableForeignKeyConstraints();
+        }
+        
+        /**
+         * Register a custom Doctrine mapping type.
+         *
+         * @param string $class
+         * @param string $name
+         * @param string $type
+         * @return void 
+         * @throws \Doctrine\DBAL\DBALException
+         * @static 
+         */ 
+        public static function registerCustomDoctrineType($class, $name, $type)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder            
+                        /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+                        $instance->registerCustomDoctrineType($class, $name, $type);
         }
         
         /**
@@ -11812,13 +11628,13 @@ namespace Illuminate\Support\Facades {
         /**
          * Save the session data to storage.
          *
-         * @return bool 
+         * @return void 
          * @static 
          */ 
         public static function save()
         {
                         /** @var \Illuminate\Session\Store $instance */
-                        return $instance->save();
+                        $instance->save();
         }
         
         /**
@@ -11843,6 +11659,19 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Session\Store $instance */
                         return $instance->all();
+        }
+        
+        /**
+         * Get a subset of the session data.
+         *
+         * @param array $keys
+         * @return array 
+         * @static 
+         */ 
+        public static function only($keys)
+        {
+                        /** @var \Illuminate\Session\Store $instance */
+                        return $instance->only($keys);
         }
         
         /**
@@ -11889,7 +11718,7 @@ namespace Illuminate\Support\Facades {
          * Get the value of a given key and then forget it.
          *
          * @param string $key
-         * @param string $default
+         * @param string|null $default
          * @return mixed 
          * @static 
          */ 
@@ -11902,7 +11731,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if the session contains old input.
          *
-         * @param string $key
+         * @param string|null $key
          * @return bool 
          * @static 
          */ 
@@ -11915,7 +11744,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the requested item from the flashed input array.
          *
-         * @param string $key
+         * @param string|null $key
          * @param mixed $default
          * @return mixed 
          * @static 
@@ -12337,7 +12166,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a filesystem instance.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Filesystem\FilesystemAdapter 
          * @static 
          */ 
@@ -12350,7 +12179,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a filesystem instance.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Filesystem\FilesystemAdapter 
          * @static 
          */ 
@@ -13114,7 +12943,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $name
          * @param array $parameters
-         * @param \DateTimeInterface|\DateInterval|int $expiration
+         * @param \DateTimeInterface|\DateInterval|int|null $expiration
          * @param bool $absolute
          * @return string 
          * @static 
@@ -13204,7 +13033,7 @@ namespace Illuminate\Support\Facades {
          * Get the base URL for the request.
          *
          * @param string $scheme
-         * @param string $root
+         * @param string|null $root
          * @return string 
          * @static 
          */ 
@@ -13494,7 +13323,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $rule
          * @param \Closure|string $extension
-         * @param string $message
+         * @param string|null $message
          * @return void 
          * @static 
          */ 
@@ -13509,7 +13338,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $rule
          * @param \Closure|string $extension
-         * @param string $message
+         * @param string|null $message
          * @return void 
          * @static 
          */ 
@@ -13524,7 +13353,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $rule
          * @param \Closure|string $extension
-         * @param string $message
+         * @param string|null $message
          * @return void 
          * @static 
          */ 
@@ -13716,7 +13545,7 @@ namespace Illuminate\Support\Facades {
          * Add a piece of shared data to the environment.
          *
          * @param array|string $key
-         * @param mixed $value
+         * @param mixed|null $value
          * @return mixed 
          * @static 
          */ 
@@ -13822,7 +13651,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $extension
          * @param string $engine
-         * @param \Closure $resolver
+         * @param \Closure|null $resolver
          * @return void 
          * @static 
          */ 
@@ -14047,6 +13876,20 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Get the first view that actually exists from the given list, and start a component.
+         *
+         * @param array $names
+         * @param array $data
+         * @return void 
+         * @static 
+         */ 
+        public static function startComponentFirst($names, $data = array())
+        {
+                        /** @var \Illuminate\View\Factory $instance */
+                        $instance->startComponentFirst($names, $data);
+        }
+        
+        /**
          * Render the current component.
          *
          * @return string 
@@ -14261,7 +14104,7 @@ namespace Illuminate\Support\Facades {
          * Get the contents of a section.
          *
          * @param string $name
-         * @param string $default
+         * @param string|null $default
          * @return mixed 
          * @static 
          */ 
@@ -14485,6 +14328,1931 @@ namespace Illuminate\Support {
  
 }
 
+namespace Barryvdh\Debugbar { 
+
+    /**
+     * 
+     *
+     * @method static void alert(string $message)
+     * @method static void critical(string $message)
+     * @method static void debug(string $message)
+     * @method static void emergency(string $message)
+     * @method static void error(string $message)
+     * @method static void info(string $message)
+     * @method static void log(string $message)
+     * @method static void notice(string $message)
+     * @method static void warning(string $message)
+     * @see \Barryvdh\Debugbar\LaravelDebugbar
+     */ 
+    class Facade {
+        
+        /**
+         * Enable the Debugbar and boot, if not already booted.
+         *
+         * @static 
+         */ 
+        public static function enable()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->enable();
+        }
+        
+        /**
+         * Boot the debugbar (add collectors, renderer and listener)
+         *
+         * @static 
+         */ 
+        public static function boot()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->boot();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function shouldCollect($name, $default = false)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->shouldCollect($name, $default);
+        }
+        
+        /**
+         * Adds a data collector
+         *
+         * @param \Barryvdh\Debugbar\DataCollectorInterface $collector
+         * @throws DebugBarException
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function addCollector($collector)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addCollector($collector);
+        }
+        
+        /**
+         * Handle silenced errors
+         *
+         * @param $level
+         * @param $message
+         * @param string $file
+         * @param int $line
+         * @param array $context
+         * @throws \ErrorException
+         * @static 
+         */ 
+        public static function handleError($level, $message, $file = '', $line = 0, $context = array())
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->handleError($level, $message, $file, $line, $context);
+        }
+        
+        /**
+         * Starts a measure
+         *
+         * @param string $name Internal name, used to stop the measure
+         * @param string $label Public name
+         * @static 
+         */ 
+        public static function startMeasure($name, $label = null)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->startMeasure($name, $label);
+        }
+        
+        /**
+         * Stops a measure
+         *
+         * @param string $name
+         * @static 
+         */ 
+        public static function stopMeasure($name)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->stopMeasure($name);
+        }
+        
+        /**
+         * Adds an exception to be profiled in the debug bar
+         *
+         * @param \Exception $e
+         * @deprecated in favor of addThrowable
+         * @static 
+         */ 
+        public static function addException($e)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addException($e);
+        }
+        
+        /**
+         * Adds an exception to be profiled in the debug bar
+         *
+         * @param \Exception $e
+         * @static 
+         */ 
+        public static function addThrowable($e)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addThrowable($e);
+        }
+        
+        /**
+         * Returns a JavascriptRenderer for this instance
+         *
+         * @param string $baseUrl
+         * @param string $basePathng
+         * @return \Barryvdh\Debugbar\JavascriptRenderer 
+         * @static 
+         */ 
+        public static function getJavascriptRenderer($baseUrl = null, $basePath = null)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getJavascriptRenderer($baseUrl, $basePath);
+        }
+        
+        /**
+         * Modify the response and inject the debugbar (or data in headers)
+         *
+         * @param \Symfony\Component\HttpFoundation\Request $request
+         * @param \Symfony\Component\HttpFoundation\Response $response
+         * @return \Symfony\Component\HttpFoundation\Response 
+         * @static 
+         */ 
+        public static function modifyResponse($request, $response)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->modifyResponse($request, $response);
+        }
+        
+        /**
+         * Check if the Debugbar is enabled
+         *
+         * @return boolean 
+         * @static 
+         */ 
+        public static function isEnabled()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->isEnabled();
+        }
+        
+        /**
+         * Collects the data from the collectors
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function collect()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->collect();
+        }
+        
+        /**
+         * Injects the web debug toolbar into the given Response.
+         *
+         * @param \Symfony\Component\HttpFoundation\Response $response A Response instance
+         * Based on https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
+         * @static 
+         */ 
+        public static function injectDebugbar($response)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->injectDebugbar($response);
+        }
+        
+        /**
+         * Disable the Debugbar
+         *
+         * @static 
+         */ 
+        public static function disable()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->disable();
+        }
+        
+        /**
+         * Adds a measure
+         *
+         * @param string $label
+         * @param float $start
+         * @param float $end
+         * @static 
+         */ 
+        public static function addMeasure($label, $start, $end)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addMeasure($label, $start, $end);
+        }
+        
+        /**
+         * Utility function to measure the execution of a Closure
+         *
+         * @param string $label
+         * @param \Closure $closure
+         * @static 
+         */ 
+        public static function measure($label, $closure)
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->measure($label, $closure);
+        }
+        
+        /**
+         * Collect data in a CLI request
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function collectConsole()
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->collectConsole();
+        }
+        
+        /**
+         * Adds a message to the MessagesCollector
+         * 
+         * A message can be anything from an object to a string
+         *
+         * @param mixed $message
+         * @param string $label
+         * @static 
+         */ 
+        public static function addMessage($message, $label = 'info')
+        {
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->addMessage($message, $label);
+        }
+        
+        /**
+         * Checks if a data collector has been added
+         *
+         * @param string $name
+         * @return boolean 
+         * @static 
+         */ 
+        public static function hasCollector($name)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->hasCollector($name);
+        }
+        
+        /**
+         * Returns a data collector
+         *
+         * @param string $name
+         * @return \DebugBar\DataCollectorInterface 
+         * @throws DebugBarException
+         * @static 
+         */ 
+        public static function getCollector($name)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getCollector($name);
+        }
+        
+        /**
+         * Returns an array of all data collectors
+         *
+         * @return \DebugBar\array[DataCollectorInterface] 
+         * @static 
+         */ 
+        public static function getCollectors()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getCollectors();
+        }
+        
+        /**
+         * Sets the request id generator
+         *
+         * @param \DebugBar\RequestIdGeneratorInterface $generator
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setRequestIdGenerator($generator)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setRequestIdGenerator($generator);
+        }
+        
+        /**
+         * 
+         *
+         * @return \DebugBar\RequestIdGeneratorInterface 
+         * @static 
+         */ 
+        public static function getRequestIdGenerator()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getRequestIdGenerator();
+        }
+        
+        /**
+         * Returns the id of the current request
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getCurrentRequestId()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getCurrentRequestId();
+        }
+        
+        /**
+         * Sets the storage backend to use to store the collected data
+         *
+         * @param \DebugBar\StorageInterface $storage
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setStorage($storage = null)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setStorage($storage);
+        }
+        
+        /**
+         * 
+         *
+         * @return \DebugBar\StorageInterface 
+         * @static 
+         */ 
+        public static function getStorage()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getStorage();
+        }
+        
+        /**
+         * Checks if the data will be persisted
+         *
+         * @return boolean 
+         * @static 
+         */ 
+        public static function isDataPersisted()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->isDataPersisted();
+        }
+        
+        /**
+         * Sets the HTTP driver
+         *
+         * @param \DebugBar\HttpDriverInterface $driver
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setHttpDriver($driver)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setHttpDriver($driver);
+        }
+        
+        /**
+         * Returns the HTTP driver
+         * 
+         * If no http driver where defined, a PhpHttpDriver is automatically created
+         *
+         * @return \DebugBar\HttpDriverInterface 
+         * @static 
+         */ 
+        public static function getHttpDriver()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getHttpDriver();
+        }
+        
+        /**
+         * Returns collected data
+         * 
+         * Will collect the data if none have been collected yet
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getData()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getData();
+        }
+        
+        /**
+         * Returns an array of HTTP headers containing the data
+         *
+         * @param string $headerName
+         * @param integer $maxHeaderLength
+         * @return array 
+         * @static 
+         */ 
+        public static function getDataAsHeaders($headerName = 'phpdebugbar', $maxHeaderLength = 4096, $maxTotalHeaderLength = 250000)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getDataAsHeaders($headerName, $maxHeaderLength, $maxTotalHeaderLength);
+        }
+        
+        /**
+         * Sends the data through the HTTP headers
+         *
+         * @param bool $useOpenHandler
+         * @param string $headerName
+         * @param integer $maxHeaderLength
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function sendDataInHeaders($useOpenHandler = null, $headerName = 'phpdebugbar', $maxHeaderLength = 4096)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->sendDataInHeaders($useOpenHandler, $headerName, $maxHeaderLength);
+        }
+        
+        /**
+         * Stacks the data in the session for later rendering
+         *
+         * @static 
+         */ 
+        public static function stackData()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->stackData();
+        }
+        
+        /**
+         * Checks if there is stacked data in the session
+         *
+         * @return boolean 
+         * @static 
+         */ 
+        public static function hasStackedData()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->hasStackedData();
+        }
+        
+        /**
+         * Returns the data stacked in the session
+         *
+         * @param boolean $delete Whether to delete the data in the session
+         * @return array 
+         * @static 
+         */ 
+        public static function getStackedData($delete = true)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getStackedData($delete);
+        }
+        
+        /**
+         * Sets the key to use in the $_SESSION array
+         *
+         * @param string $ns
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setStackDataSessionNamespace($ns)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setStackDataSessionNamespace($ns);
+        }
+        
+        /**
+         * Returns the key used in the $_SESSION array
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getStackDataSessionNamespace()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->getStackDataSessionNamespace();
+        }
+        
+        /**
+         * Sets whether to only use the session to store stacked data even
+         * if a storage is enabled
+         *
+         * @param boolean $enabled
+         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @static 
+         */ 
+        public static function setStackAlwaysUseSessionStorage($enabled = true)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->setStackAlwaysUseSessionStorage($enabled);
+        }
+        
+        /**
+         * Checks if the session is always used to store stacked data
+         * even if a storage is enabled
+         *
+         * @return boolean 
+         * @static 
+         */ 
+        public static function isStackAlwaysUseSessionStorage()
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->isStackAlwaysUseSessionStorage();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function offsetSet($key, $value)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->offsetSet($key, $value);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function offsetGet($key)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->offsetGet($key);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function offsetExists($key)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->offsetExists($key);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function offsetUnset($key)
+        {
+            //Method inherited from \DebugBar\DebugBar            
+                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        return $instance->offsetUnset($key);
+        }
+         
+    }
+ 
+}
+
+namespace Tymon\JWTAuth\Facades { 
+
+    /**
+     * 
+     *
+     */ 
+    class JWTAuth {
+        
+        /**
+         * Attempt to authenticate the user and return the token.
+         *
+         * @param array $credentials
+         * @return false|string 
+         * @static 
+         */ 
+        public static function attempt($credentials)
+        {
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->attempt($credentials);
+        }
+        
+        /**
+         * Authenticate a user via a token.
+         *
+         * @return \Tymon\JWTAuth\Contracts\JWTSubject|false 
+         * @static 
+         */ 
+        public static function authenticate()
+        {
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->authenticate();
+        }
+        
+        /**
+         * Alias for authenticate().
+         *
+         * @return \Tymon\JWTAuth\Contracts\JWTSubject|false 
+         * @static 
+         */ 
+        public static function toUser()
+        {
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->toUser();
+        }
+        
+        /**
+         * Get the authenticated user.
+         *
+         * @return \Tymon\JWTAuth\Contracts\JWTSubject 
+         * @static 
+         */ 
+        public static function user()
+        {
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->user();
+        }
+        
+        /**
+         * Generate a token for a given subject.
+         *
+         * @param \Tymon\JWTAuth\Contracts\JWTSubject $subject
+         * @return string 
+         * @static 
+         */ 
+        public static function fromSubject($subject)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->fromSubject($subject);
+        }
+        
+        /**
+         * Alias to generate a token for a given user.
+         *
+         * @param \Tymon\JWTAuth\Contracts\JWTSubject $user
+         * @return string 
+         * @static 
+         */ 
+        public static function fromUser($user)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->fromUser($user);
+        }
+        
+        /**
+         * Refresh an expired token.
+         *
+         * @param bool $forceForever
+         * @param bool $resetClaims
+         * @return string 
+         * @static 
+         */ 
+        public static function refresh($forceForever = false, $resetClaims = false)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->refresh($forceForever, $resetClaims);
+        }
+        
+        /**
+         * Invalidate a token (add it to the blacklist).
+         *
+         * @param bool $forceForever
+         * @return \Tymon\JWTAuth\JWTAuth 
+         * @static 
+         */ 
+        public static function invalidate($forceForever = false)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->invalidate($forceForever);
+        }
+        
+        /**
+         * Alias to get the payload, and as a result checks that
+         * the token is valid i.e. not expired or blacklisted.
+         *
+         * @throws \Tymon\JWTAuth\Exceptions\JWTException
+         * @return \Tymon\JWTAuth\Payload 
+         * @static 
+         */ 
+        public static function checkOrFail()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->checkOrFail();
+        }
+        
+        /**
+         * Check that the token is valid.
+         *
+         * @param bool $getPayload
+         * @return \Tymon\JWTAuth\Payload|bool 
+         * @static 
+         */ 
+        public static function check($getPayload = false)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->check($getPayload);
+        }
+        
+        /**
+         * Get the token.
+         *
+         * @return \Tymon\JWTAuth\Token|null 
+         * @static 
+         */ 
+        public static function getToken()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->getToken();
+        }
+        
+        /**
+         * Parse the token from the request.
+         *
+         * @throws \Tymon\JWTAuth\Exceptions\JWTException
+         * @return \Tymon\JWTAuth\JWTAuth 
+         * @static 
+         */ 
+        public static function parseToken()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->parseToken();
+        }
+        
+        /**
+         * Get the raw Payload instance.
+         *
+         * @return \Tymon\JWTAuth\Payload 
+         * @static 
+         */ 
+        public static function getPayload()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->getPayload();
+        }
+        
+        /**
+         * Alias for getPayload().
+         *
+         * @return \Tymon\JWTAuth\Payload 
+         * @static 
+         */ 
+        public static function payload()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->payload();
+        }
+        
+        /**
+         * Convenience method to get a claim value.
+         *
+         * @param string $claim
+         * @return mixed 
+         * @static 
+         */ 
+        public static function getClaim($claim)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->getClaim($claim);
+        }
+        
+        /**
+         * Create a Payload instance.
+         *
+         * @param \Tymon\JWTAuth\Contracts\JWTSubject $subject
+         * @return \Tymon\JWTAuth\Payload 
+         * @static 
+         */ 
+        public static function makePayload($subject)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->makePayload($subject);
+        }
+        
+        /**
+         * Check if the subject model matches the one saved in the token.
+         *
+         * @param string|object $model
+         * @return bool 
+         * @static 
+         */ 
+        public static function checkSubjectModel($model)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->checkSubjectModel($model);
+        }
+        
+        /**
+         * Set the token.
+         *
+         * @param \Tymon\JWTAuth\Token|string $token
+         * @return \Tymon\JWTAuth\JWTAuth 
+         * @static 
+         */ 
+        public static function setToken($token)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->setToken($token);
+        }
+        
+        /**
+         * Unset the current token.
+         *
+         * @return \Tymon\JWTAuth\JWTAuth 
+         * @static 
+         */ 
+        public static function unsetToken()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->unsetToken();
+        }
+        
+        /**
+         * Set the request instance.
+         *
+         * @param \Illuminate\Http\Request $request
+         * @return \Tymon\JWTAuth\JWTAuth 
+         * @static 
+         */ 
+        public static function setRequest($request)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->setRequest($request);
+        }
+        
+        /**
+         * Set whether the subject should be "locked".
+         *
+         * @param bool $lock
+         * @return \Tymon\JWTAuth\JWTAuth 
+         * @static 
+         */ 
+        public static function lockSubject($lock)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->lockSubject($lock);
+        }
+        
+        /**
+         * Get the Manager instance.
+         *
+         * @return \Tymon\JWTAuth\Manager 
+         * @static 
+         */ 
+        public static function manager()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->manager();
+        }
+        
+        /**
+         * Get the Parser instance.
+         *
+         * @return \Tymon\JWTAuth\Http\Parser\Parser 
+         * @static 
+         */ 
+        public static function parser()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->parser();
+        }
+        
+        /**
+         * Get the Payload Factory.
+         *
+         * @return \Tymon\JWTAuth\Factory 
+         * @static 
+         */ 
+        public static function factory()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->factory();
+        }
+        
+        /**
+         * Get the Blacklist.
+         *
+         * @return \Tymon\JWTAuth\Blacklist 
+         * @static 
+         */ 
+        public static function blacklist()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->blacklist();
+        }
+        
+        /**
+         * Set the custom claims.
+         *
+         * @param array $customClaims
+         * @return \Tymon\JWTAuth\JWTAuth 
+         * @static 
+         */ 
+        public static function customClaims($customClaims)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->customClaims($customClaims);
+        }
+        
+        /**
+         * Alias to set the custom claims.
+         *
+         * @param array $customClaims
+         * @return \Tymon\JWTAuth\JWTAuth 
+         * @static 
+         */ 
+        public static function claims($customClaims)
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->claims($customClaims);
+        }
+        
+        /**
+         * Get the custom claims.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getCustomClaims()
+        {
+            //Method inherited from \Tymon\JWTAuth\JWT            
+                        /** @var \Tymon\JWTAuth\JWTAuth $instance */
+                        return $instance->getCustomClaims();
+        }
+         
+    }
+
+    /**
+     * 
+     *
+     */ 
+    class JWTFactory {
+        
+        /**
+         * Create the Payload instance.
+         *
+         * @param bool $resetClaims
+         * @return \Tymon\JWTAuth\Payload 
+         * @static 
+         */ 
+        public static function make($resetClaims = false)
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->make($resetClaims);
+        }
+        
+        /**
+         * Empty the claims collection.
+         *
+         * @return \Tymon\JWTAuth\Factory 
+         * @static 
+         */ 
+        public static function emptyClaims()
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->emptyClaims();
+        }
+        
+        /**
+         * Build and get the Claims Collection.
+         *
+         * @return \Tymon\JWTAuth\Claims\Collection 
+         * @static 
+         */ 
+        public static function buildClaimsCollection()
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->buildClaimsCollection();
+        }
+        
+        /**
+         * Get a Payload instance with a claims collection.
+         *
+         * @param \Tymon\JWTAuth\Claims\Collection $claims
+         * @return \Tymon\JWTAuth\Payload 
+         * @static 
+         */ 
+        public static function withClaims($claims)
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->withClaims($claims);
+        }
+        
+        /**
+         * Set the default claims to be added to the Payload.
+         *
+         * @param array $claims
+         * @return \Tymon\JWTAuth\Factory 
+         * @static 
+         */ 
+        public static function setDefaultClaims($claims)
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->setDefaultClaims($claims);
+        }
+        
+        /**
+         * Helper to set the ttl.
+         *
+         * @param int $ttl
+         * @return \Tymon\JWTAuth\Factory 
+         * @static 
+         */ 
+        public static function setTTL($ttl)
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->setTTL($ttl);
+        }
+        
+        /**
+         * Helper to get the ttl.
+         *
+         * @return int 
+         * @static 
+         */ 
+        public static function getTTL()
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->getTTL();
+        }
+        
+        /**
+         * Get the default claims.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getDefaultClaims()
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->getDefaultClaims();
+        }
+        
+        /**
+         * Get the PayloadValidator instance.
+         *
+         * @return \Tymon\JWTAuth\Validators\PayloadValidator 
+         * @static 
+         */ 
+        public static function validator()
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->validator();
+        }
+        
+        /**
+         * Set the custom claims.
+         *
+         * @param array $customClaims
+         * @return \Tymon\JWTAuth\Factory 
+         * @static 
+         */ 
+        public static function customClaims($customClaims)
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->customClaims($customClaims);
+        }
+        
+        /**
+         * Alias to set the custom claims.
+         *
+         * @param array $customClaims
+         * @return \Tymon\JWTAuth\Factory 
+         * @static 
+         */ 
+        public static function claims($customClaims)
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->claims($customClaims);
+        }
+        
+        /**
+         * Get the custom claims.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getCustomClaims()
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->getCustomClaims();
+        }
+        
+        /**
+         * Set the refresh flow flag.
+         *
+         * @param bool $refreshFlow
+         * @return \Tymon\JWTAuth\Factory 
+         * @static 
+         */ 
+        public static function setRefreshFlow($refreshFlow = true)
+        {
+                        /** @var \Tymon\JWTAuth\Factory $instance */
+                        return $instance->setRefreshFlow($refreshFlow);
+        }
+         
+    }
+ 
+}
+
+namespace JD\Cloudder\Facades { 
+
+    /**
+     * 
+     *
+     */ 
+    class Cloudder {
+        
+        /**
+         * Get cloudinary class.
+         *
+         * @return \Cloudinary 
+         * @static 
+         */ 
+        public static function getCloudinary()
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->getCloudinary();
+        }
+        
+        /**
+         * Get cloudinary uploader.
+         *
+         * @return \Cloudinary\Uploader 
+         * @static 
+         */ 
+        public static function getUploader()
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->getUploader();
+        }
+        
+        /**
+         * Get cloudinary api
+         *
+         * @return \Cloudinary\Api 
+         * @static 
+         */ 
+        public static function getApi()
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->getApi();
+        }
+        
+        /**
+         * Upload image to cloud.
+         *
+         * @param mixed $source
+         * @param string $publicId
+         * @param array $uploadOptions
+         * @param array $tags
+         * @return \JD\Cloudder\CloudinaryWrapper 
+         * @static 
+         */ 
+        public static function upload($source, $publicId = null, $uploadOptions = array(), $tags = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->upload($source, $publicId, $uploadOptions, $tags);
+        }
+        
+        /**
+         * Upload image to cloud.
+         *
+         * @param mixed $source
+         * @param string $publicId
+         * @param array $uploadPresets
+         * @param array $uploadOptions
+         * @param array $tags
+         * @return \JD\Cloudder\CloudinaryWrapper 
+         * @static 
+         */ 
+        public static function unsignedUpload($source, $publicId = null, $uploadPresets = array(), $uploadOptions = array(), $tags = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->unsignedUpload($source, $publicId, $uploadPresets, $uploadOptions, $tags);
+        }
+        
+        /**
+         * Upload video to cloud.
+         *
+         * @param mixed $source
+         * @param string $publicId
+         * @param array $uploadOptions
+         * @param array $tags
+         * @return \JD\Cloudder\CloudinaryWrapper 
+         * @static 
+         */ 
+        public static function uploadVideo($source, $publicId = null, $uploadOptions = array(), $tags = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->uploadVideo($source, $publicId, $uploadOptions, $tags);
+        }
+        
+        /**
+         * Uploaded result.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getResult()
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->getResult();
+        }
+        
+        /**
+         * Uploaded public ID.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getPublicId()
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->getPublicId();
+        }
+        
+        /**
+         * Display resource through https.
+         *
+         * @param string $publicId
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function show($publicId, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->show($publicId, $options);
+        }
+        
+        /**
+         * Display resource through https.
+         *
+         * @param string $publicId
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function secureShow($publicId, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->secureShow($publicId, $options);
+        }
+        
+        /**
+         * Alias for privateDownloadUrl
+         *
+         * @param string $publicId
+         * @param string $format
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function showPrivateUrl($publicId, $format, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->showPrivateUrl($publicId, $format, $options);
+        }
+        
+        /**
+         * Display private image
+         *
+         * @param string $publicId
+         * @param string $format
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function privateDownloadUrl($publicId, $format, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->privateDownloadUrl($publicId, $format, $options);
+        }
+        
+        /**
+         * Rename public ID.
+         *
+         * @param string $publicId
+         * @param string $toPublicId
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function rename($publicId, $toPublicId, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->rename($publicId, $toPublicId, $options);
+        }
+        
+        /**
+         * Alias for destroy
+         *
+         * @param string $publicId
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function destroyImage($publicId, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->destroyImage($publicId, $options);
+        }
+        
+        /**
+         * Destroy resource from Cloudinary
+         *
+         * @param string $publicId
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function destroy($publicId, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->destroy($publicId, $options);
+        }
+        
+        /**
+         * Restore a resource
+         *
+         * @param array $publicIds
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function restore($publicIds = array(), $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->restore($publicIds, $options);
+        }
+        
+        /**
+         * Alias for deleteResources
+         *
+         * @param array $publicIds
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function destroyImages($publicIds, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->destroyImages($publicIds, $options);
+        }
+        
+        /**
+         * Destroy images from Cloudinary
+         *
+         * @param array $publicIds
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteResources($publicIds, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->deleteResources($publicIds, $options);
+        }
+        
+        /**
+         * Destroy a resource by its prefix
+         *
+         * @param string $prefix
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteResourcesByPrefix($prefix, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->deleteResourcesByPrefix($prefix, $options);
+        }
+        
+        /**
+         * Destroy all resources from Cloudinary
+         *
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteAllResources($options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->deleteAllResources($options);
+        }
+        
+        /**
+         * Delete all resources from one tag
+         *
+         * @param string $tag
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteResourcesByTag($tag, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->deleteResourcesByTag($tag, $options);
+        }
+        
+        /**
+         * Delete transformed images by IDs
+         *
+         * @param array $publicIds
+         * @param array $options
+         * @return null 
+         * @static 
+         */ 
+        public static function deleteDerivedResources($publicIds = array(), $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->deleteDerivedResources($publicIds, $options);
+        }
+        
+        /**
+         * Alias of destroy.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function delete($publicId, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->delete($publicId, $options);
+        }
+        
+        /**
+         * Add tag to images.
+         *
+         * @param string $tag
+         * @param array $publicIds
+         * @param array $options
+         * @static 
+         */ 
+        public static function addTag($tag, $publicIds = array(), $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->addTag($tag, $publicIds, $options);
+        }
+        
+        /**
+         * Remove tag from images.
+         *
+         * @param string $tag
+         * @param array $publicIds
+         * @param array $options
+         * @static 
+         */ 
+        public static function removeTag($tag, $publicIds = array(), $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->removeTag($tag, $publicIds, $options);
+        }
+        
+        /**
+         * Replace image's tag.
+         *
+         * @param string $tag
+         * @param array $publicIds
+         * @param array $options
+         * @static 
+         */ 
+        public static function replaceTag($tag, $publicIds = array(), $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->replaceTag($tag, $publicIds, $options);
+        }
+        
+        /**
+         * Create a zip file containing images matching options.
+         *
+         * @param array $options
+         * @param string $archiveName
+         * @param string $mode
+         * @static 
+         */ 
+        public static function createArchive($options = array(), $nameArchive = null, $mode = 'create')
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->createArchive($options, $nameArchive, $mode);
+        }
+        
+        /**
+         * Download a zip file containing images matching options.
+         *
+         * @param array $options
+         * @param string $archiveName
+         * @param string $mode
+         * @static 
+         */ 
+        public static function downloadArchiveUrl($options = array(), $nameArchive = null)
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->downloadArchiveUrl($options, $nameArchive);
+        }
+        
+        /**
+         * Show Resources
+         *
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function resources($options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->resources($options);
+        }
+        
+        /**
+         * Show Resources by id
+         *
+         * @param array $publicIds
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function resourcesByIds($publicIds, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->resourcesByIds($publicIds, $options);
+        }
+        
+        /**
+         * Show Resources by tag name
+         *
+         * @param string $tag
+         * @return array 
+         * @static 
+         */ 
+        public static function resourcesByTag($tag, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->resourcesByTag($tag, $options);
+        }
+        
+        /**
+         * Show Resources by moderation status
+         *
+         * @param string $kind
+         * @param string $status
+         * @return array 
+         * @static 
+         */ 
+        public static function resourcesByModeration($kind, $status, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->resourcesByModeration($kind, $status, $options);
+        }
+        
+        /**
+         * Display tags list
+         *
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function tags($options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->tags($options);
+        }
+        
+        /**
+         * Display a resource
+         *
+         * @param string $publicId
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function resource($publicId, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->resource($publicId, $options);
+        }
+        
+        /**
+         * Updates a resource
+         *
+         * @param string $publicId
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function update($publicId, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->update($publicId, $options);
+        }
+        
+        /**
+         * List transformations
+         *
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function transformations($options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->transformations($options);
+        }
+        
+        /**
+         * List single transformation
+         *
+         * @param string $transformation
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function transformation($transformation, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->transformation($transformation, $options);
+        }
+        
+        /**
+         * Delete single transformation
+         *
+         * @param string $transformation
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function deleteTransformation($transformation, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->deleteTransformation($transformation, $options);
+        }
+        
+        /**
+         * Update single transformation
+         *
+         * @param string $transformation
+         * @param array $updates
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function updateTransformation($transformation, $updates = array(), $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->updateTransformation($transformation, $updates, $options);
+        }
+        
+        /**
+         * Create transformation
+         *
+         * @param string $name
+         * @param string $definition
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function createTransformation($name, $definition, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->createTransformation($name, $definition, $options);
+        }
+        
+        /**
+         * List Upload Mappings
+         *
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function uploadMappings($options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->uploadMappings($options);
+        }
+        
+        /**
+         * Get upload mapping
+         *
+         * @param string $name
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function uploadMapping($name, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->uploadMapping($name, $options);
+        }
+        
+        /**
+         * Create upload mapping
+         *
+         * @param string $name
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function createUploadMapping($name, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->createUploadMapping($name, $options);
+        }
+        
+        /**
+         * Delete upload mapping
+         *
+         * @param string $name
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function deleteUploadMapping($name, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->deleteUploadMapping($name, $options);
+        }
+        
+        /**
+         * Update upload mapping
+         *
+         * @param string $name
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function updateUploadMapping($name, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->updateUploadMapping($name, $options);
+        }
+        
+        /**
+         * List Upload Presets
+         *
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function uploadPresets($options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->uploadPresets($options);
+        }
+        
+        /**
+         * Get upload mapping
+         *
+         * @param string $name
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function uploadPreset($name, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->uploadPreset($name, $options);
+        }
+        
+        /**
+         * Create upload preset
+         *
+         * @param string $name
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function createUploadPreset($name, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->createUploadPreset($name, $options);
+        }
+        
+        /**
+         * Delete upload preset
+         *
+         * @param string $name
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function deleteUploadPreset($name, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->deleteUploadPreset($name, $options);
+        }
+        
+        /**
+         * Update upload preset
+         *
+         * @param string $name
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function updateUploadPreset($name, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->updateUploadPreset($name, $options);
+        }
+        
+        /**
+         * List Root folders
+         *
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function rootFolders($options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->rootFolders($options);
+        }
+        
+        /**
+         * List subfolders
+         *
+         * @param string $name
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function subfolders($name, $options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->subfolders($name, $options);
+        }
+        
+        /**
+         * Get usage details
+         *
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function usage($options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->usage($options);
+        }
+        
+        /**
+         * Ping cloudinary servers
+         *
+         * @param array $options
+         * @return array 
+         * @static 
+         */ 
+        public static function ping($options = array())
+        {
+                        /** @var \JD\Cloudder\CloudinaryWrapper $instance */
+                        return $instance->ping($options);
+        }
+         
+    }
+ 
+}
+
 
 namespace  { 
 
@@ -14511,6 +16279,8 @@ namespace  {
     class Crypt extends \Illuminate\Support\Facades\Crypt {}
 
     class DB extends \Illuminate\Support\Facades\DB {}
+
+    class Debugbar extends \Barryvdh\Debugbar\Facade {}
 
     class Eloquent extends \Illuminate\Database\Eloquent\Model {         
             /**
@@ -15178,7 +16948,7 @@ namespace  {
              *
              * @param mixed $value
              * @param callable $callback
-             * @param callable $default
+             * @param callable|null $default
              * @return mixed|$this 
              * @static 
              */ 
@@ -15206,7 +16976,7 @@ namespace  {
              *
              * @param mixed $value
              * @param callable $callback
-             * @param callable $default
+             * @param callable|null $default
              * @return mixed|$this 
              * @static 
              */ 
@@ -15219,7 +16989,7 @@ namespace  {
             /**
              * Add a relationship count / exists condition to the query.
              *
-             * @param string $relation
+             * @param string|\Illuminate\Database\Eloquent\Relations\Relation $relation
              * @param string $operator
              * @param int $count
              * @param string $boolean
@@ -15334,6 +17104,134 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->orWhereDoesntHave($relation, $callback);
+            }
+         
+            /**
+             * Add a polymorphic relationship count / exists condition to the query.
+             *
+             * @param string $relation
+             * @param string|array $types
+             * @param string $operator
+             * @param int $count
+             * @param string $boolean
+             * @param \Closure|null $callback
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function hasMorph($relation, $types, $operator = '>=', $count = 1, $boolean = 'and', $callback = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->hasMorph($relation, $types, $operator, $count, $boolean, $callback);
+            }
+         
+            /**
+             * Add a polymorphic relationship count / exists condition to the query with an "or".
+             *
+             * @param string $relation
+             * @param string|array $types
+             * @param string $operator
+             * @param int $count
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function orHasMorph($relation, $types, $operator = '>=', $count = 1)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->orHasMorph($relation, $types, $operator, $count);
+            }
+         
+            /**
+             * Add a polymorphic relationship count / exists condition to the query.
+             *
+             * @param string $relation
+             * @param string|array $types
+             * @param string $boolean
+             * @param \Closure|null $callback
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function doesntHaveMorph($relation, $types, $boolean = 'and', $callback = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->doesntHaveMorph($relation, $types, $boolean, $callback);
+            }
+         
+            /**
+             * Add a polymorphic relationship count / exists condition to the query with an "or".
+             *
+             * @param string $relation
+             * @param string|array $types
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function orDoesntHaveMorph($relation, $types)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->orDoesntHaveMorph($relation, $types);
+            }
+         
+            /**
+             * Add a polymorphic relationship count / exists condition to the query with where clauses.
+             *
+             * @param string $relation
+             * @param string|array $types
+             * @param \Closure|null $callback
+             * @param string $operator
+             * @param int $count
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function whereHasMorph($relation, $types, $callback = null, $operator = '>=', $count = 1)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->whereHasMorph($relation, $types, $callback, $operator, $count);
+            }
+         
+            /**
+             * Add a polymorphic relationship count / exists condition to the query with where clauses and an "or".
+             *
+             * @param string $relation
+             * @param string|array $types
+             * @param \Closure $callback
+             * @param string $operator
+             * @param int $count
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function orWhereHasMorph($relation, $types, $callback = null, $operator = '>=', $count = 1)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->orWhereHasMorph($relation, $types, $callback, $operator, $count);
+            }
+         
+            /**
+             * Add a polymorphic relationship count / exists condition to the query with where clauses.
+             *
+             * @param string $relation
+             * @param string|array $types
+             * @param \Closure|null $callback
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function whereDoesntHaveMorph($relation, $types, $callback = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->whereDoesntHaveMorph($relation, $types, $callback);
+            }
+         
+            /**
+             * Add a polymorphic relationship count / exists condition to the query with where clauses and an "or".
+             *
+             * @param string $relation
+             * @param string|array $types
+             * @param \Closure $callback
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function orWhereDoesntHaveMorph($relation, $types, $callback = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->orWhereDoesntHaveMorph($relation, $types, $callback);
             }
          
             /**
@@ -15823,16 +17721,16 @@ namespace  {
             /**
              * Add a "where null" clause to the query.
              *
-             * @param string $column
+             * @param string|array $columns
              * @param string $boolean
              * @param bool $not
              * @return \Illuminate\Database\Query\Builder 
              * @static 
              */ 
-            public static function whereNull($column, $boolean = 'and', $not = false)
+            public static function whereNull($columns, $boolean = 'and', $not = false)
             {
                                 /** @var \Illuminate\Database\Query\Builder $instance */
-                                return $instance->whereNull($column, $boolean, $not);
+                                return $instance->whereNull($columns, $boolean, $not);
             }
          
             /**
@@ -15939,7 +17837,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -15955,7 +17853,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -15970,7 +17868,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -15986,7 +17884,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -16001,7 +17899,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -16017,7 +17915,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -16032,7 +17930,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -16048,7 +17946,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -16063,7 +17961,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string|int $value
+             * @param \DateTimeInterface|string|int|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -16079,7 +17977,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string|int $value
+             * @param \DateTimeInterface|string|int|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -16325,7 +18223,7 @@ namespace  {
              * Handles dynamic "where" clauses to the query.
              *
              * @param string $method
-             * @param string $parameters
+             * @param array $parameters
              * @return \Illuminate\Database\Query\Builder 
              * @static 
              */ 
@@ -17018,6 +18916,30 @@ namespace  {
             }
          
             /**
+             * Dump the current SQL and bindings.
+             *
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */ 
+            public static function dump()
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->dump();
+            }
+         
+            /**
+             * Die and dump the current SQL and bindings.
+             *
+             * @return void 
+             * @static 
+             */ 
+            public static function dd()
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                $instance->dd();
+            }
+         
+            /**
              * Register a custom macro.
              *
              * @param string $name
@@ -17080,6 +19002,10 @@ namespace  {
 
     class Hash extends \Illuminate\Support\Facades\Hash {}
 
+    class JWTAuth extends \Tymon\JWTAuth\Facades\JWTAuth {}
+
+    class JWTFactory extends \Tymon\JWTAuth\Facades\JWTFactory {}
+
     class Lang extends \Illuminate\Support\Facades\Lang {}
 
     class Log extends \Illuminate\Support\Facades\Log {}
@@ -17093,6 +19019,8 @@ namespace  {
     class Queue extends \Illuminate\Support\Facades\Queue {}
 
     class Redirect extends \Illuminate\Support\Facades\Redirect {}
+
+    class Redis extends \Illuminate\Support\Facades\Redis {}
 
     class Request extends \Illuminate\Support\Facades\Request {}
 
@@ -17113,6 +19041,8 @@ namespace  {
     class Validator extends \Illuminate\Support\Facades\Validator {}
 
     class View extends \Illuminate\Support\Facades\View {}
+
+    class Cloudder extends \JD\Cloudder\Facades\Cloudder {}
  
 }
 

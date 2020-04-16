@@ -13,20 +13,44 @@ use Illuminate\Http\Request;
 |
 */
 
-/*Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
+$pattern = '[0-9]+';
+Route::model('adminUser', 'AdminUser');
+Route::pattern('adminUser', $pattern);
+Route::model('show', 'Show');
+Route::pattern('show', $pattern);
 
-Route::group(['domain' => env('DOMAIN_API')], function () {
-    Route::group(['prefix' => 'v1'], function () {
-        Route::group(['middleware' => ['api.language']], function () {
-            Route::apiResource('courses', 'CourseController');
-            Route::apiResource('possibleAnswers', 'PossibleAnswerController');
-            Route::apiResource('questions', 'QuestionController');
-            Route::apiResource('questionnaires', 'QuestionnaireController');
-            Route::apiResource('questionTypes', 'QuestionTypeController');
-            Route::apiResource('sessions', 'SessionController');
-            Route::apiResource('themes', 'ThemeController');
+Route::group(
+    [
+        'domain' => Config::get('app.domain_api'),
+        'middleware' => ['cors', 'throttle:' . Config::get('app.rate_limit', 60) .',1', 'api.language', 'profile.jsonresponse']
+    ],
+    function () {
+        Route::group(['prefix' => 'v1'], function () {
+            Route::options('{any}', 'SettingController@options')->where('any', '(.*)');
+
+            Route::post('admin/auth/login', 'Auth\Admin\AuthController@login');
+            Route::get('admin/auth/logout', 'Auth\Admin\AuthController@logout');
+            Route::get('admin/auth/refresh', 'Auth\Admin\AuthController@refresh');
+            Route::get('admin/auth/user', 'Auth\Admin\AuthController@show');
+            Route::get('admin/auth/test', 'Auth\Admin\AuthController@test');
+
+            Route::group(
+                ['middleware' => ['headerCacheControl:' . Config::get('cache.cache_control_maxage.huge')]],
+                function () {
+                    Route::get('settings', 'SettingController@index');
+                }
+            );
+
+            Route::group(['middleware' => ['jwt.admin.verify']], function () {
+                Route::apiResource('adminUsers', 'CRUD\AdminUserController');
+
+                Route::group(
+                    ['middleware' => ['headerCacheControl:' . Config::get('cache.cache_control_maxage.medium')]],
+                    function () {
+                        Route::apiResource('shows', 'CRUD\ShowController');
+                    }
+                );
+            });
         });
-    });
-});
+    }
+);

@@ -222,6 +222,6 @@ return [
     |--------------------------------------------------------------------------
      */
     'constants' => [
-        'API_BASE' => env('APP_URL', 'http://academy.operadeparis.local') . '/api/v1',
+        'API_BASE' => env('APP_URL', 'http://future-player.backstage.test') . '/api/v1',
     ],
 ];

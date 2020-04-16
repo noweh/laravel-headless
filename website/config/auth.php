@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'frontstage',
         'passwords' => 'users',
     ],
 
@@ -40,11 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-
         'api' => [
-            'driver' => 'token',
+            'driver' => 'jwt',
             'provider' => 'users',
-            'hash' => false,
+            'hash' => true,
+        ],
+        'frontstage' => [
+            'driver' => 'frontstage',
+            'provider' => 'secutix_users',
         ],
     ],
 
@@ -68,13 +71,12 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => App\Models\AdminUser::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'secutix_users' => [
+            'driver' => 'secutix_users',
+            'model' => App\Models\User::class,
+        ],
     ],
 
     /*

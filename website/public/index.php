@@ -1,5 +1,7 @@
 <?php
 
+umask(0000);
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *

@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\AuthenticationException;
+use App\Models\AdminUser;
+use Auth;
+use Carbon\Carbon;
+use Config;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -9,6 +14,11 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App;
+use Str;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 /**
  * Class AbstractController
@@ -20,48 +30,32 @@ use App;
  * )
  *
  * @OA\Server(
- *     description="API V1",
+ *     description="API Local",
  *     url=API_BASE
  * )
  *
+ * @OA\SecurityScheme(
+ *      securityScheme="bearerAuth",
+ *      in="header",
+ *      name="bearerAuth",
+ *      type="http",
+ *      scheme="bearer",
+ *      bearerFormat="JWT",
+ * ),
+ *
  * @OA\Tag(
- *     name="Course",
- *     description="Operations about Courses"
+ *     name="Admin\Authentication",
+ *     description="Operations about admin users Authentication"
  * )
  *
  * @OA\Tag(
- *     name="PossibleAnswer",
- *     description="Operations about PossibleAnswer"
+ *     name="CRUD\AdminUser",
+ *     description="Operations about AdminUsers"
  * )
  *
  * @OA\Tag(
- *     name="Question",
- *     description="Operations about Question"
- * )
- *
- * @OA\Tag(
- *     name="Questionnaire",
- *     description="Operations about Questionnaires"
- * )
- *
- * @OA\Tag(
- *     name="QuestionType",
- *     description="Operations about QuestionTypes"
- * )
- *
- * @OA\Tag(
- *     name="Session",
- *     description="Operations about Sessions"
- * )
- *
- * @OA\Tag(
- *     name="Theme",
- *     description="Operations about Themes"
- * )
- *
- * @OA\Tag(
- *     name="Video",
- *     description="Operations about Videos"
+ *     name="Setting",
+ *     description="Operations about Settings"
  * )
  */
 abstract class AbstractController extends BaseController
@@ -72,15 +66,36 @@ abstract class AbstractController extends BaseController
     protected $repository;
     protected $request;
     protected $validator;
+    protected $page = 1;
     protected $nbPerPage = 25;
+    protected $slug;
+    protected $id;
+    protected $claim = 'frontend';
+    protected $authenticatedUser;
 
     /**
      * AbstractController constructor.
      */
     public function __construct()
     {
-        if (request('per_page')) {
+        if (request('page') && is_numeric(request('page'))) {
+            $this->page = request('page');
+        }
+
+        if (request('per_page') && is_numeric(request('per_page'))) {
             $this->nbPerPage = request('per_page');
+        }
+
+        if (request('slug')) {
+            $this->slug = request('slug');
+        }
+
+        if (request('id') && is_numeric(request('id'))) {
+            $this->id = request('id');
+        }
+
+        if ($this->claim == 'admin') {
+            Auth::shouldUse('api');
         }
     }
 
@@ -106,7 +121,7 @@ abstract class AbstractController extends BaseController
         }
 
         if (!class_exists($this->resource)) {
-            throw new ModelNotFoundException("Resource " . $this->resource . " not found");
+            throw new ModelNotFoundException('Resource ' . $this->resource . ' not found');
         }
 
         return $this->resource;
@@ -121,25 +136,99 @@ abstract class AbstractController extends BaseController
     }
 
     /**
-     * @param Request $request
      * @return array
      */
-    protected function getScopeFilters(Request $request)
+    protected function getScopeFilters()
     {
         $scope = [];
+
+        // Retrieve all filters for associated data
+        foreach (request()->all() as $parameter => $values) {
+            if (substr($parameter, 0, 1) === 'f' && strpos($parameter, '_') !== false) {
+                $scope += $this->getFilterValues(
+                    lcfirst(substr(str_replace('_', '.', $parameter), 1)),
+                    explode(',', $values)
+                );
+            }
+        }
+
+        // Retrieve all filters for current model
         $model = $this->getRepository()->getModel();
         $filters = array_merge($model->getFillable(), $model->getTranslatedAttributes());
 
         foreach ($filters as $field) {
-            if ($request->has($field)) {
-                $value = $request->$field;
-                if ($value == 'true') {
-                    $value = 1;
+            if (request('f' . ucfirst(Str::camel($field)))) {
+                $scope += $this->getFilterValues(
+                    $field,
+                    explode(',', request('f' . ucfirst(Str::camel($field))))
+                );
+            }
+        }
+
+        return $scope;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getScopeQueries()
+    {
+        $scope = [];
+
+        // Retrieve all filters for associated data
+        foreach (request()->all() as $parameter => $values) {
+            if (substr($parameter, 0, 1) === 'q' && strpos($parameter, '_') !== false) {
+                $scope += $this->getFilterValues(
+                    lcfirst(substr(str_replace('_', '.', $parameter), 1)),
+                    explode(',', $values)
+                );
+            }
+        }
+
+        // Retrieve all filters for current model
+        $model = $this->getRepository()->getModel();
+        $filters = array_merge($model->getFillable(), $model->getTranslatedAttributes());
+
+        foreach ($filters as $field) {
+            if (request('q' . ucfirst(Str::camel($field)))) {
+                $scope += $this->getFilterValues(
+                    $field,
+                    explode(',', request('q' . ucfirst(Str::camel($field))))
+                );
+            }
+        }
+
+        return $scope;
+    }
+
+    /**
+     * @param $field
+     * @param $values
+     * @return array
+     */
+    private function getFilterValues($field, $values)
+    {
+        $scope = [];
+
+        if (count($values) > 1) {
+            foreach ($values as $key => $value) {
+                if ($value == null) {
+                    unset($values[$key]);
                 }
-                if ($value == 'false') {
-                    $value = 0;
-                }
-                if ($value == 0 || !empty($value)) {
+            }
+        }
+
+        foreach ($values as $value) {
+            if ($value == 'true') {
+                $value = 1;
+            }
+            if ($value == 'false') {
+                $value = 0;
+            }
+            if ($value == 0 || !empty($value)) {
+                if (count($values) > 1) {
+                    $scope[$field][] = $value;
+                } else {
                     $scope[$field] = $value;
                 }
             }
@@ -149,42 +238,82 @@ abstract class AbstractController extends BaseController
     }
 
     /**
-     * @param Request $request
      * @return array
      */
-    private function getOrderFilters(Request $request)
+    protected function getOrderFilters()
     {
         $orders = [];
-        if ($request->has('sort') && $request->has('sortOrder')) {
-            $orders[$request->get('sort')] = $request->get('sortOrder');
-        } elseif ($request->has('sort')) {
-            $orders[$request->get('sort')] = 'asc';
+        if (request('sort')) {
+            $sortKey = request('sort');
+            $orders[
+                substr($sortKey, -3, 1) == '_' &&
+                in_array(substr($sortKey, -2), array_keys(Config::get('app.locales', []))) ?
+                substr($sortKey, 0, -3) : $sortKey
+            ] = strtolower(request('sortOrder')) == 'desc' ? 'desc' : 'asc';
         }
+
         return $orders;
     }
 
     /**
-     * Get all includes to set for the Model Collection
-     * @param Request $request
      * @return array
      */
-    private function parseIncludes(Request $request)
+    protected function getRelationshipOrderByQuantityFilters()
     {
-        return $request->get('include') ? explode(',', $request->get('include')) : [];
+        $relationshipOrdersByQuantity = [];
+        if (request('relSortByQuantity')) {
+            $relationshipOrdersByQuantity[request('relSortByQuantity')] =
+                strtolower(request('sortOrder')) == 'desc' ? 'desc' : 'asc';
+        }
+        return $relationshipOrdersByQuantity;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getExcludeIdsFilters()
+    {
+        $excludeIds = [];
+        if (request('excludeIds')) {
+            $excludeIds = explode(',', request('excludeIds'));
+        }
+
+        return $excludeIds;
+    }
+
+    /**
+     * Get all includes to set for the Model Collection
+     * @return array
+     */
+    protected function parseIncludes()
+    {
+        return request('include') ? explode(',', request('include')) : [];
     }
 
     /**
      * Retrieve all elements from Request and set translatedElements
      * @param Request $request
      * @return array
-     * @throws App\Exceptions\ValidationException
      */
-    private function getElementsFromRequest(Request $request)
+    protected function getElementsFromRequest(Request $request)
     {
-        if (!$request->request->all()) {
-            throw new App\Exceptions\ValidationException(null, 'No data in input or invalid format for data');
-        }
         return $this->getElementsFromData($request->request->all());
+    }
+
+    /**
+     * can be used in override, to add some verifications or rules on input
+     * @param array $input
+     * @param array|null $existingData
+     * @return array
+     */
+    protected function updateInputBeforeSave(array $input, array $existingData = null)
+    {
+        if ($input) {
+            // set updated_at with a value to force base model to update
+            $input['updated_at'] = Carbon::now();
+        }
+
+        return $input;
     }
 
     /**
@@ -192,7 +321,7 @@ abstract class AbstractController extends BaseController
      * @param array $data
      * @return array
      */
-    private function getElementsFromData(array $data)
+    protected function getElementsFromData(array $data)
     {
         $reconstructedElements = [];
         foreach ($data as $elementKeyInRequest => $elementValueInRequest) {
@@ -202,88 +331,54 @@ abstract class AbstractController extends BaseController
                 $reconstructedElements[$elementKeyInRequest] = $elementValueInRequest;
             }
         }
+
         return $reconstructedElements;
     }
 
     /**
-     * Display a listing of the resource.
-     * ex : http://academy.operadeparis.backstage.test/api/v1/themes?lang=fr&include=sessions&label=%%lu%%&sort=id&sortOrder=desc
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * Check if given token authenticate a user.
+     * @return AdminUser|\Tymon\JWTAuth\Contracts\JWTSubject
+     * @throws AuthenticationException
+     * @throws JWTException
      */
-    public function index(Request $request)
+    public function getAuthenticatedUser()
     {
-        return $this->getResource()::collection(
-            $this->getRepository()->getPaginateCollection(
-                $this->nbPerPage,
-                $this->getScopeFilters($request),
-                $this->parseIncludes($request),
-                $this->getOrderFilters($request)
-            )
-        );
-    }
+        if (!$this->authenticatedUser) {
+            try {
+                $jwtObject = JWTAuth::parseToken();
+                $this->authenticatedUser = $jwtObject->authenticate();
+            } catch (TokenInvalidException $tie) {
+                throw new AuthenticationException(null, 'Invalid Token');
+            } catch (TokenExpiredException $e) {
+                throw new AuthenticationException(null, 'Token expired');
+            } catch (JWTException $e) {
+                throw new AuthenticationException(null, 'Authorization Token not found');
+            }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Request $request
-     * @param $itemId
-     * @return mixed
-     */
-    public function show(Request $request, $itemId)
-    {
-        return $this->getResource()::make($this->getRepository()->getById($itemId, $this->parseIncludes($request)));
-    }
+            if (JWTAuth::parseToken()->getClaim('origin') != $this->claim) {
+                throw new AuthenticationException(null, 'Invalid Token');
+            }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return mixed
-     * @throws App\Exceptions\ValidationException
-     */
-    public function store(Request $request)
-    {
-        $input = $this->getElementsFromRequest($request);
-
-        // If a validator is setted, check if input is validate
-        if (!$this->validator || $this->validator->validate($input)) {
-            return response()->json($this->getResource()::make(
-                $this->getRepository()->create($this->getElementsFromRequest($request))
-            ), 201);
+            if (is_bool($this->authenticatedUser)) {
+                throw new AuthenticationException(null, 'User not found ('. $jwtObject->getPayload()->get('sub') .')');
+            }
         }
+
+
+        return $this->authenticatedUser;
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param int $itemId
      * @return mixed
-     * @throws App\Exceptions\ValidationException
+     * @throws AuthenticationException
+     * @throws JWTException
      */
-    public function update(Request $request, $itemId)
+    public function getSuperadminUser()
     {
-        $existingData = $this->getElementsFromData($this->show($request, $itemId)->toArray([]));
-        $input = $this->getElementsFromRequest($request);
-
-        // If a validator is setted, check if existingData + input are validate
-        if (!$this->validator || $this->validator->validate(array_merge($existingData, $input))) {
-            $this->getRepository()->update($itemId, $input);
-            return $this->show($request, $itemId);
+        if (!$this->getAuthenticatedUser()->is_superadmin) {
+            throw new AuthenticationException(null, 'Insufficient rights');
         }
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param $itemId
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($itemId)
-    {
-        $this->getRepository()->getById($itemId)->delete();
-
-        return response()->json(null, 204);
+        return $this->authenticatedUser;
     }
 }

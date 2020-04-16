@@ -38,7 +38,6 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:60,1',
             'bindings',
         ],
     ];
@@ -57,10 +56,15 @@ class Kernel extends HttpKernel
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'cors' => \App\Http\Middleware\Cors::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'headerCacheControl' => \App\Http\Middleware\HeaderCacheControl::class,
+        'profile.jsonresponse' => \App\Http\Middleware\ProfileJsonResponse::class,
+        'jwt.admin.verify' => \App\Http\Middleware\VerifyJwtAdminToken::class,
+        'jwt.frontstage.verify' => \App\Http\Middleware\VerifyJwtFrontstageToken::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class
     ];
 
     /**

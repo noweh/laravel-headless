@@ -19,6 +19,13 @@ return [
     */
 
     'default' => env('CACHE_DRIVER', 'file'),
+    'cache_control_maxage' => [
+        'very_small' => env('CACHECONTROL_MAXAGE_VERY_SMALL', 1),
+        'small' => env('CACHECONTROL_MAXAGE_SMALL', 15),
+        'medium' => env('CACHECONTROL_MAXAGE_MEDIUM', 180),
+        'big' => env('CACHECONTROL_MAXAGE_BIG', 360),
+        'huge' => env('CACHECONTROL_MAXAGE_HUGE', 1440),
+    ],
 
     /*
     |--------------------------------------------------------------------------

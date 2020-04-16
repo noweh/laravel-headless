@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use Schema;
 use Illuminate\Support\ServiceProvider;
 use Config;
 use View;
+use URL;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,43 +18,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // This service provider is a great spot to register your various container
-        // bindings with the application. As you can see, we are registering our
-        // "Registrar" implementation here. You can add your own bindings too!
-        $this->app->bind(
-            'App\Contracts\Repositories\CourseRepositoryInterface',
-            'App\Repositories\CourseRepository'
-        );
+        if ($this->app->environment() != 'production') {
+            /**
+             * Loader for registering facades.
+             */
+            $loader = \Illuminate\Foundation\AliasLoader::getInstance();
 
-        $this->app->bind(
-            'App\Contracts\Repositories\SessionRepositoryInterface',
-            'App\Repositories\SessionRepository'
-        );
+            /*
+            * Load third party local providers
+            */
 
-        $this->app->bind(
-            'App\Contracts\Repositories\PossibleAnswerRepositoryInterface',
-            'App\Repositories\PossibleAnswerRepository'
-        );
+            if (class_exists('\Barryvdh\Debugbar\ServiceProvider')) {
+                $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+                $loader->alias('Debugbar', \Barryvdh\Debugbar\Facade::class);
+            }
 
-        $this->app->bind(
-            'App\Contracts\Repositories\QuestionnaireRepositoryInterface',
-            'App\Repositories\QuestionnaireRepository'
-        );
 
-        $this->app->bind(
-            'App\Contracts\Repositories\QuestionRepositoryInterface',
-            'App\Repositories\QuestionRepository'
-        );
-
-        $this->app->bind(
-            'App\Contracts\Repositories\QuestionTypeRepositoryInterface',
-            'App\Repositories\QuestionTypeRepository'
-        );
-
-        $this->app->bind(
-            'App\Contracts\Repositories\ThemeRepositoryInterface',
-            'App\Repositories\ThemeRepository'
-        );
+        }
     }
 
     /**
@@ -61,7 +44,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Validator::extend('phone_number', 'App\\Rules\\PhoneNumber@passes');
+        Validator::extend('unique_email', 'App\\Rules\\UniqueEmail@passes');
         View::share('languages', array_keys(Config::get('app.locales', [])));
         View::share('language_names', Config::get('app.locale_names', []));
+        Schema::defaultStringLength(191);
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }

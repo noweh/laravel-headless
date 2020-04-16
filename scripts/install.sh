@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 cd website
+sh scripts/refresh_cache.sh
 rm -Rf vendor
 composer install
-sh scripts/reset_database.sh
-sh scripts/refresh_cache.sh
+sh scripts/set_jwt_secret.sh
+sh scripts/generate_fake_data.sh
