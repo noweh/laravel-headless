@@ -121,7 +121,7 @@ abstract class AbstractCRUDController extends AbstractController
     public function update(Request $request, $itemId)
     {
         $item = $this->doUpdateObject($request, $itemId);
-        return $this->show($item->id);
+        return $this->show($item->{$item->getKeyName()});
     }
 
     /**
@@ -146,7 +146,7 @@ abstract class AbstractCRUDController extends AbstractController
         // If a validator is setted, check if input is validate
         if (!$this->validator || $this->validator->validate($input)) {
             $item = $this->getRepository()->create($input);
-            return $this->getRepository()->getById($item->id);
+            return $this->getRepository()->getById($item->{$item->getKeyName()});
         }
 
         return null;

@@ -1108,7 +1108,7 @@ abstract class AbstractRepository
                 } else {
                     $filteredItemsCollection = $this->getCollection();
                     $filteredItemsCollection = $filteredItemsCollection->reject(function ($item) use ($id) {
-                        if ($item->id == $id) {
+                        if ($item->{$item->getKeyName()} == $id) {
                             return true;
                         }
                         return false;

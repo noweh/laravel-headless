@@ -21,7 +21,7 @@ abstract class AbstractResource extends JsonResource
     {
         if (request('mode') != 'contribution') {
             $commonData = Cache::remember(
-                'resources:commondata:type-' . get_class($this->resource) . '.id-' . $this->resource->id,
+                'resources:commondata:type-' . get_class($this->resource) . '.id-' . $this->resource->{$item->getKeyName()},
                 Carbon::now()->addMinutes(Config::get('cache.cache_control_maxage.small')),
                 function () {
                     return $this->retrieveCommonData();
@@ -30,7 +30,7 @@ abstract class AbstractResource extends JsonResource
 
             $localeData = Cache::remember(
                 'resources:localedata:type-' . get_class($this->resource) .
-                '.id-' . $this->resource->id . '.locale-' . App::getLocale(),
+                '.id-' . $this->resource->{$item->getKeyName()} . '.locale-' . App::getLocale(),
                 Carbon::now()->addMinutes(Config::get('cache.cache_control_maxage.small')),
                 function () {
                     return $this->retrieveLocaleData();
@@ -85,7 +85,7 @@ abstract class AbstractResource extends JsonResource
                     if (get_class($relationshipContent) == Collection::class) {
                         foreach ($relationshipContent as $item) {
                             $object = new \stdClass();
-                            $object->id = $item->id;
+                            $object->{$item->getKeyName()} = $item->{$item->getKeyName()};
                             if ($item->pivot && $item->pivot->position) {
                                 $object->position = $item->pivot->position;
                             }
@@ -148,7 +148,7 @@ abstract class AbstractResource extends JsonResource
     {
         if (request('mode') != 'contribution') {
             return Cache::remember(
-                'resources:medialibrary:type-' . get_class($this->resource) . '.id-' . $this->resource->id,
+                'resources:medialibrary:type-' . get_class($this->resource) . '.id-' . $this->resource->{$item->getKeyName()},
                 Carbon::now()->addMinutes(Config::get('cache.cache_control_maxage.small')),
                 function () {
                     return MediaLibraryResource::make($this->mediasWithAttributes);
