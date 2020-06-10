@@ -3,20 +3,17 @@
 namespace App\Http\Controllers\CRUD;
 
 use App\Exceptions\AuthenticationException;
-use App\Repositories\AdminUserRepository;
-use App\Services\Validators\AdminUserValidator;
-use Illuminate\Database\Eloquent\Model;
+use App\Repositories\ClientRepository;
+use App\Services\Validators\ClientValidator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Exception;
-use Log;
-use Mail;
-use App\Mail\Confirmation;
 
-class AdminUserController extends AbstractCRUDController
+class ClientController extends AbstractCRUDController
 {
     public function __construct(
-        AdminUserRepository $repository,
-        AdminUserValidator $validator
+        ClientRepository $repository,
+        ClientValidator $validator
     ) {
         $this->repository = $repository;
         $this->validator = $validator;
@@ -35,20 +32,19 @@ class AdminUserController extends AbstractCRUDController
         $authenticatedUser = $this->getAuthenticatedUser();
         if (!$authenticatedUser->is_superadmin) {
             // If user is not a superadmin, force client_id by its own
-            $scopeQueries += ['admin_user_id' => $authenticatedUser->admin_user_id];
+            $scopeQueries += ['client_id' => $authenticatedUser->client_id];
         }
 
         return $scopeQueries;
     }
 
-
     /**
      * @OA\Get(
-     *     path="/adminUsers",
-     *     tags={"CRUD\AdminUser"},
-     *     summary="Retrieve a listing of AdminUsers.",
-     *     description="Returns a listing of AdminUsers.",
-     *     operationId="getAdminUsers",
+     *     path="/clients",
+     *     tags={"CRUD\Client"},
+     *     summary="Retrieve a listing of Clients.",
+     *     description="Returns a listing of Clients.",
+     *     operationId="getClients",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="mode",
@@ -64,7 +60,7 @@ class AdminUserController extends AbstractCRUDController
      *         name="include",
      *         required=false,
      *         in="query",
-     *         description="Include relationship in results. String=client",
+     *         description="Include relationship in results. String=adminUsers,shows",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -90,10 +86,10 @@ class AdminUserController extends AbstractCRUDController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Display a listing of AdminUsers.",
+     *         description="Display a listing of Clients.",
      *         @OA\Schema(
      *             type="array",
-     *             @OA\Items(ref="#/components/schemas/AdminUser")
+     *             @OA\Items(ref="#/components/schemas/Client")
      *         ),
      *     ),
      *     @OA\Response(
@@ -109,12 +105,22 @@ class AdminUserController extends AbstractCRUDController
 
     /**
      * @OA\Get(
-     *     path="/adminUsers/{userId}",
-     *     tags={"CRUD\AdminUser"},
-     *     summary="Find a AdminUser by ID.",
-     *     description="Returns a single AdminUser.",
-     *     operationId="getAdminUserById",
+     *     path="/clients/{clientId}",
+     *     tags={"CRUD\Client"},
+     *     summary="Find a Client by ID.",
+     *     description="Returns a single Client.",
+     *     operationId="getClientById",
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="clientId",
+     *         in="path",
+     *         description="ID of Client to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
      *     @OA\Parameter(
      *         name="mode",
      *         required=false,
@@ -129,25 +135,15 @@ class AdminUserController extends AbstractCRUDController
      *         name="include",
      *         required=false,
      *         in="query",
-     *         description="Include relationship in results. String=client",
+     *         description="Include relationship in results. String=adminUsers,shows",
      *         @OA\Schema(
      *             type="string"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="userId",
-     *         in="path",
-     *         description="ID of AdminUser to return",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer",
-     *             format="int64"
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation.",
-     *         @OA\JsonContent(ref="#/components/schemas/AdminUser")
+     *         @OA\JsonContent(ref="#/components/schemas/Client")
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -166,15 +162,15 @@ class AdminUserController extends AbstractCRUDController
 
     /**
      * @OA\Post(
-     *     path="/adminUsers",
-     *     tags={"CRUD\AdminUser"},
-     *     summary="Add a new AdminUser",
-     *     operationId="addAdminUser",
+     *     path="/clients",
+     *     tags={"CRUD\Client"},
+     *     summary="Add a new Client",
+     *     operationId="addClient",
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=201,
      *         description="Created.",
-     *         @OA\JsonContent(ref="#/components/schemas/AdminUser")
+     *         @OA\JsonContent(ref="#/components/schemas/Client")
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -185,40 +181,28 @@ class AdminUserController extends AbstractCRUDController
      *         description="Internal Server Error."
      *     ),
      *     @OA\RequestBody(
-     *         description="Create an AdminUser object",
+     *         description="Create a Client object",
      *         required=true,
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
-     *                @OA\Property(
-     *                     property="first_name",
-     *                     description="Person's first_name",
+     *                 @OA\Property(
+     *                     description="logo to upload",
+     *                     property="logo",
      *                     type="string",
-     *                     default="John"
+     *                     format="binary",
      *                 ),
      *                 @OA\Property(
-     *                     property="last_name",
-     *                     description="Person's last_name",
+     *                     property="name",
+     *                     description="Client's name",
      *                     type="string",
-     *                     default="Doe"
+     *                     default="client's name"
      *                 ),
      *                 @OA\Property(
-     *                     property="email",
-     *                     description="Person's email",
-     *                     type="string",
-     *                     default="john.doe@mazarine.com"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="password",
-     *                     description="Person's password",
-     *                     type="string",
-     *                     default="Passw0rd!"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="client_id",
-     *                     description="Create a client_id value",
-     *                     type="integer",
-     *                     example=1
+     *                     property="is_activated",
+     *                     description="Client's is_activated state",
+     *                     type="boolean",
+     *                     default=true
      *                 )
      *             )
      *         )
@@ -234,40 +218,24 @@ class AdminUserController extends AbstractCRUDController
         // Check if AdminUser is authenticated
         $this->getSuperadminUser();
 
-        $input = $this->updateInputBeforeSave($this->getElementsFromRequest($request));
+        $newItem = $this->doStoreObject($request);
+        $newItem = $this->checkFilesToUpload($newItem->client_id, $request);
 
-        // If a validator is setted, check if input is validate
-        if (!$this->validator || $this->validator->validate($input)) {
-            $userData = $this->getRepository()->create($input);
-
-            try {
-                Mail::to($input['email'])->send(new Confirmation($input));
-            } catch (Exception $e) {
-                Log::error(
-                    "Send Account creation confirmation mail error",
-                    [
-                        'method' => __METHOD__,
-                        'email' => $input['email']
-                    ]
-                );
-            }
-
-            return response()->json(['data' => $this->getResource()::make($userData)], 201);
-        }
+        return response()->json(['data' => $this->getResource()::make($newItem)], 201);
     }
 
     /**
      * @OA\Patch(
-     *     path="/adminUsers/{userId}",
-     *     tags={"CRUD\AdminUser"},
-     *     summary="Update AdminUser by ID",
-     *     description="Update a single AdminUser.",
-     *     operationId="updateUser",
+     *     path="/clients/{clientId}",
+     *     tags={"CRUD\Client"},
+     *     summary="Update Client by ID",
+     *     description="Update a single Client.",
+     *     operationId="updateClient",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="userId",
+     *         name="clientId",
      *         in="path",
-     *         description="ID of AdminUser that to be updated",
+     *         description="ID of Client that to be updated",
      *         required=true,
      *         @OA\Schema(
      *             type="integer",
@@ -277,7 +245,7 @@ class AdminUserController extends AbstractCRUDController
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation.",
-     *         @OA\JsonContent(ref="#/components/schemas/AdminUser")
+     *         @OA\JsonContent(ref="#/components/schemas/Client")
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -292,40 +260,28 @@ class AdminUserController extends AbstractCRUDController
      *         description="Internal Server Error."
      *     ),
      *     @OA\RequestBody(
-     *         description="Updated AdminUser object",
+     *         description="Updated Client object",
      *         required=true,
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
      *                 @OA\Property(
-     *                     property="first_name",
-     *                     description="Person's first_name",
+     *                     description="logo to upload",
+     *                     property="logo",
      *                     type="string",
-     *                     default="John"
+     *                     format="binary",
      *                 ),
      *                 @OA\Property(
-     *                     property="last_name",
-     *                     description="Person's last_name",
+     *                     property="name",
+     *                     description="Client's name",
      *                     type="string",
-     *                     default="Doe"
+     *                     default="client's name"
      *                 ),
      *                 @OA\Property(
-     *                     property="email",
-     *                     description="Person's email",
-     *                     type="string",
-     *                     default="john.doe@mazarine.com"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="password",
-     *                     description="Person's password",
-     *                     type="string",
-     *                     default="Passw0rd!"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="client_id",
-     *                     description="client_id value",
-     *                     type="integer",
-     *                     example=1
+     *                     property="is_activated",
+     *                     description="Client's is_activated state",
+     *                     type="boolean",
+     *                     default=true
      *                 )
      *             )
      *         )
@@ -344,26 +300,29 @@ class AdminUserController extends AbstractCRUDController
         // Check if adminUser can update this client
         $authenticatedUser = $this->getAuthenticatedUser();
         if (!$authenticatedUser->is_superadmin) {
-            if ($authenticatedUser->admin_user_id != last($route->parameters())) {
+            if ($authenticatedUser->client_id != last($route->parameters())) {
                 throw new AuthenticationException(null, 'Insufficient rights');
             }
         }
 
-        return parent::update($request);
+        $updatedItem = $this->doUpdateObject($request, last($route->parameters()));
+        $updatedItem = $this->checkFilesToUpload($updatedItem->client_id, $request);
+
+        return response()->json(['data' => $this->getResource()::make($updatedItem)]);
     }
 
     /**
      * @OA\Delete(
-     *     path="/adminUsers/{userId}",
-     *     tags={"CRUD\AdminUser"},
-     *     summary="Delete AdminUser by ID.",
-     *     description="Delete a single AdminUser.",
-     *     operationId="deleteAdminUserById",
+     *     path="/clients/{clientId}",
+     *     tags={"CRUD\Client"},
+     *     summary="Delete Client by ID.",
+     *     description="Delete a single Client.",
+     *     operationId="deleteClientById",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="userId",
+     *         name="clientId",
      *         in="path",
-     *         description="ID of AdminUser that needs to be deleted",
+     *         description="ID of Client that needs to be deleted",
      *         required=true,
      *         @OA\Schema(
      *             type="integer",
@@ -398,40 +357,5 @@ class AdminUserController extends AbstractCRUDController
         $this->getSuperadminUser();
 
         return parent::destroy($itemId);
-    }
-
-    /**
-     * Override doUpdateObject
-     * @param Request $request
-     * @param $itemId
-     * @return Model|\stdClass|array Which is normally a Model.|null
-     * @throws \App\Exceptions\ValidationException
-     */
-    protected function doUpdateObject(Request $request, $itemId)
-    {
-        $dataElementsCandidate = $this->getResource()::make(
-            $this->getRepository()->getById($itemId, $this->parseIncludes())
-        )->toArray([]);
-        if ($dataElementsCandidate instanceof \stdClass) {
-            $dataElementsCandidate = (array)$dataElementsCandidate;
-        }
-        $existingData = $this->getElementsFromData($dataElementsCandidate);
-
-        $input = $this->updateInputBeforeSave(
-            $this->getElementsFromRequest($request),
-            $existingData
-        );
-
-        // Override validator to remove email verification to own account
-        $this->validator->rules['email'] = 'required|string|email|max:255|' .
-            \Illuminate\Validation\Rule::unique('admin_users')->whereNot('admin_user_id', $itemId);
-
-        // If a validator is setted, check if existingData + input are validate
-        if (!$this->validator || $this->validator->validate(array_merge($existingData, $input))) {
-            $this->getRepository()->update($itemId, $input);
-            return $this->getRepository()->getById($itemId);
-        }
-
-        return null;
     }
 }

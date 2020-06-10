@@ -33,31 +33,34 @@ trait SlugModelTrait
 
     public function setSlug($slugParams)
     {
-        //we cannot reuse a slug with active == false.
-        unset($slugParams['active']);
-        $slugParams['slug'] = sluggify($slugParams['slug']);
+        if ($slugParams) {
+            //we cannot reuse a slug with active == false.
+            unset($slugParams['active']);
+            $slugParams['slug'] = sluggify($slugParams['slug']);
 
-        $slug = $this->slugs()->firstOrNew($slugParams);
-        $slug->active = true;
+            $slug = $this->slugs()->firstOrNew($slugParams);
+            $slug->active = true;
 
-        foreach ($slugParams as $key => $value) {
-            $slug->$key = $value;
-        }
-
-        if (!$slug->exists) {
-            $slug->slug = $this->makeSlugUnique($slugParams);
-            $slug->save();
-        } else {
-            if (!$slug->slug) {
-                $slug->slug = $this->makeSlugUnique($slugParams);
-                $slug->update(['slug' => $slug->slug]);
+            foreach ($slugParams as $key => $value) {
+                $slug->$key = $value;
             }
-            $this->slugs()->where($slugParams)->where('id', '<>', $slug->id)->update(['active' => 0]);
-            $slug->update(['active' => 1]);
-        }
 
-        $this->slugs()->where('locale', $slugParams['locale'])
-            ->where('id', '<>', $slug->id)->update(['active' => 0]);
+            if (!$slug->exists) {
+                $slug->slug = $this->makeSlugUnique($slugParams);
+                $slug->save();
+            } else {
+                if (!$slug->slug) {
+                    $slug->slug = $this->makeSlugUnique($slugParams);
+                    $slug->update(['slug' => $slug->slug]);
+                }
+                $this->slugs()->where($slugParams)
+                    ->where($slug->getKeyName(), '<>', $slug->{$slug->getKeyName()})->update(['active' => 0]);
+                $slug->update(['active' => 1]);
+            }
+
+            $this->slugs()->where('locale', $slugParams['locale'])
+                ->where($slug->getKeyName(), '<>', $slug->{$slug->getKeyName()})->update(['active' => 0]);
+        }
     }
 
     /**

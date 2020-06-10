@@ -14,6 +14,8 @@ class Cors
      */
     public function handle($request, Closure $next)
     {
+        $response = $next($request);
+
         $allowOrigin = '*';
         $allowHeaders = '*';
         $allowMethods = 'GET, POST, PUT, PATCH, DELETE, OPTIONS';
@@ -35,7 +37,7 @@ class Cors
             }
 
         }
-        return $next($request)
+        return $response
             ->header('Referrer-Policy', 'origin-when-cross-origin')
             ->header('Access-Control-Allow-Origin', $allowOrigin)
             ->header('Access-Control-Allow-Methods', $allowMethods)

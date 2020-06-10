@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use Config;
+use Str;
+use Illuminate\Database\Eloquent\Model;
+
 /**
  * Class Show
  * @package App\Models
@@ -18,16 +22,72 @@ namespace App\Models;
 class Show extends AbstractModel
 {
     /**
-     * @OA\Property(),
-     * @var integer
+     * The primary key for the model.
+     *
+     * @var string
      */
-    private $id;
+    protected $primaryKey = 'show_id';
+
+    public const TYPES = [
+        'REPLAY' => 'replay',
+        'LIVE' => 'live'
+    ];
+
+    /**
+     * @OA\Property(),
+     * @var string
+     */
+    private $show_id;
+
+    /**
+     * @OA\Property(),
+     * @var string
+     */
+    private $slug;
 
     /**
      * @OA\Property()
      * @var boolean
      */
     private $published;
+
+    /**
+     * @OA\Property()
+     * @var string
+     */
+    private $title;
+
+    /**
+     * @OA\Property(
+     *     enum={"replay", "live"},
+     * ),
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @OA\Property()
+     * @var string
+     */
+    private $source_desktop_url;
+
+    /**
+     * @OA\Property()
+     * @var string
+     */
+    private $source_mobile_url;
+
+    /**
+     * @OA\Property()
+     * @var string
+     */
+    private $thumbnail_desktop_url;
+
+    /**
+     * @OA\Property()
+     * @var string
+     */
+    private $thumbnail_mobile_url;
 
     /**
      * @OA\Property(
@@ -57,8 +117,15 @@ class Show extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'id',
-        'published'
+        'published',
+        'title',
+        'type',
+        'source_desktop_url',
+        'source_mobile_url',
+        'thumbnail_desktop_url',
+        'thumbnail_mobile_url',
+        'client_id',
+        'player_id'
     ];
 
     /**
@@ -66,8 +133,7 @@ class Show extends AbstractModel
      *
      * @var array
      */
-    protected $translatedAttributes = [
-    ];
+    protected $translatedAttributes = [];
 
     /**
      * The used relationships
@@ -88,7 +154,57 @@ class Show extends AbstractModel
      * @var array
      */
     protected $dates = [
+		'deleted_at',
         'created_at',
         'updated_at'
     ];
+
+    /**
+     * The attributes used for slug
+     *
+     * @var array
+     */
+    public $slugAttributes = [
+        'title',
+    ];
+
+    public function slugs()
+    {
+        return $this->hasMany(ShowSlug::class, 'show_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (Model $model) {
+            $model->setAttribute($model->getKeyName(), (string)Str::uuid());
+        });
+    }
+
+    public function getIncrementing()
+    {
+        return false;
+    }
+
+    public function getKeyType()
+    {
+        return 'string';
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_id', 'client_id');
+    }
+
+    public function getSlugsParams()
+    {
+        $slugs = [];
+        $slugs[] = [
+            'active' => true,
+            'slug' => $this->getAttribute('title'),
+            'locale' => Config::get('app.locale'),
+        ];
+        return $slugs;
+    }
 }

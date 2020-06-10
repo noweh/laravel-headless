@@ -25,8 +25,7 @@ class AuthController extends AbstractAuthController
      *     operationId="login",
      *     @OA\Response(
      *         response=200,
-     *         description="Authenticated.",
-     *         @OA\JsonContent(ref="#/components/schemas/AdminUser")
+     *         description="Authenticated."
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -39,21 +38,23 @@ class AuthController extends AbstractAuthController
      *     @OA\RequestBody(
      *         description="Credentials",
      *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="email",
-     *                 description="Person's email",
-     *                 type="string",
-     *                 default="julien.schmitt@mazarinedigital.com",
-     *                 example="julien.schmitt@mazarinedigital.com"
-     *             ),
-     *             @OA\Property(
-     *                 property="password",
-     *                 description="Person's password",
-     *                 type="string",
-     *                 default="julien.schmitt",
-     *                 example="julien.schmitt"
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="email",
+     *                     description="Person's email",
+     *                     type="string",
+     *                     default="julien.schmitt@mazarinedigital.com",
+     *                     example="julien.schmitt@mazarinedigital.com"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     description="Person's password",
+     *                     type="string",
+     *                     default="julien.schmitt",
+     *                     example="julien.schmitt"
+     *                 )
      *             )
      *         )
      *     )
@@ -93,7 +94,7 @@ class AuthController extends AbstractAuthController
      *         name="include",
      *         required=false,
      *         in="query",
-     *         description="Include relationship in results. String=questionnaires",
+     *         description="Include relationship in results. String=client",
      *         @OA\Schema(
      *             type="string"
      *         )
@@ -173,4 +174,31 @@ class AuthController extends AbstractAuthController
      * )
      */
 
+    /**
+     * Test and refresh a token.
+     *
+     * @OA\Get(
+     *     path="/admin/auth/testAndRefresh",
+     *     tags={"Admin\Authentication"},
+     *     summary="Test and refresh a token",
+     *     operationId="testAndRefresh",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Status and New token.",
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Unprocessable Entity. Undefined method or relationship."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error."
+     *     )
+     * )
+     */
 }

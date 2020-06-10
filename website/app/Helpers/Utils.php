@@ -1,7 +1,6 @@
 <?php
 
 use Cocur\Slugify\Slugify;
-use Illuminate\Http\Request;
 
 if (!function_exists('array_unique_recursive')) {
     function array_unique_recursive($array)
@@ -39,22 +38,6 @@ if (!function_exists('routeLocalize')) {
         $routeName = ($locale==config('app.fallback_locale') && !$forceUrlLocale) ? $routeName : $locale.'.'.$routeName;
 
         return route($routeName, $parameters, $absolute);
-    }
-}
-
-if (!function_exists('sluggify')) {
-    function sluggify($str)
-    {
-        // Remove &nbsp; from str
-        $str = str_replace('&nbsp;', ' ', $str);
-
-        if ('fr' == App::getLocale()) {
-            $rulesetLanguage = 'french';
-        } else {
-            $rulesetLanguage = 'english';
-        }
-        $slugify = new Slugify;
-        return $slugify->slugify($str, ['ruleset' => $rulesetLanguage]);
     }
 }
 
@@ -113,15 +96,10 @@ if (!function_exists('dumpQueries')) {
 }
 
 if (!function_exists('formatJsonWithHeaders')) {
-    function formatJsonWithHeaders($data, $maxAge = 0)
+    function formatJsonWithHeaders($data)
     {
         // CPU Optimizations
         header('Content-Type: application/json');
-
-        if (request()->method() == 'GET' && intval($maxAge) &&
-            (!request('mode') || request('mode') != 'contribution')) {
-            header('Cache-Control: max-age='.$maxAge.', public');
-        }
 
         $allowOrigin = '*';
         $allowHeaders = '*';
@@ -129,6 +107,11 @@ if (!function_exists('formatJsonWithHeaders')) {
         $headers = [];
         foreach (request()->headers->all() as $header => $values) {
             $header = str_replace(' ', '-', ucwords(str_replace('-', ' ', $header)));
+            if ('Cache-Control' == $header && $values[0] != 'max-age=0') {
+                if (request()->method() == 'GET' && (!request('mode') || request('mode') != 'contribution')) {
+                    header('Cache-Control:' . $values[0]);
+                }
+            }
             if ('Access-Control-Request-Headers' == $header) {
                 $tmp = explode(',', $values[0]);
                 foreach ($tmp as $tmpItem) {
@@ -166,35 +149,20 @@ if (!function_exists('formatJsonWithHeaders')) {
         flush();
         exit;
     }
-}
 
-if (!function_exists('getEnvFromUrl')) {
-    function getEnvFromUrl(Request $request)
-    {
-        $host = $request->getHttpHost();
-        if('aria.operadeparis.fr' == $host) {
-            $ret = '';
-        } else {
-            $possible = ['dev', 'local', 'test', 'int', 'uat', 'oat', 'staging', 'preprod'];
-            $localPossible = ['xip.io', 'nip.io'];
-            $hostParts = explode('.', $host);
-            $subdomainParts = explode('-', $hostParts[0]);
-            $envCandidate = array_pop($subdomainParts);
-            if (in_array($envCandidate, $possible)) {
-                $ret = $envCandidate;
+    if (!function_exists('sluggify')) {
+        function sluggify($str)
+        {
+            // Remove &nbsp; from str
+            $str = str_replace('&nbsp;', ' ', $str);
+
+            if ('fr' == App::getLocale()) {
+                $rulesetLanguage = 'french';
             } else {
-                if (in_array($envCandidate = array_pop($hostParts), $possible)) {
-                    $ret = $envCandidate;
-                } else {
-                    if (in_array(array_pop($hostParts) . '.' . $envCandidate, $localPossible)) {
-                        $ret = 'dev';
-                    } else {
-                        $ret = '';
-                    }
-                }
+                $rulesetLanguage = 'default';
             }
+            $slugify = new Slugify;
+            return $slugify->slugify($str, ['ruleset' => $rulesetLanguage]);
         }
-
-        return $ret;
     }
 }

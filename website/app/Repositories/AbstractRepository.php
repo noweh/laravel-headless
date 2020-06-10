@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Traits\MediaLibraryTraitPolymorphic;
 use Carbon\Carbon;
 use DB;
+use Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,14 +13,11 @@ use App;
 use Config;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\RelationNotFoundException;
-use Request;
 use Schema;
 use Cache;
 
 abstract class AbstractRepository
 {
-    use MediaLibraryTraitPolymorphic;
-
     /**
      * @var Model|null
      */
@@ -625,6 +622,36 @@ abstract class AbstractRepository
     }
 
     /**
+     * Find an entity by slug
+     * @param $slugCandidate
+     * @param array $with
+     * @throws ModelNotFoundException
+
+     * @return array|Model|\stdClass
+     */
+    public function getBySlug($slugCandidate, array $with = [])
+    {
+        $id = null;
+        $collection = $this->getCollection()->filter(function ($item) use ($slugCandidate) {
+            foreach ($item->getSlugs() as $slug) {
+                if ($slug->slug == $slugCandidate) {
+                    return $item;
+                }
+            }
+        });
+        if ($collection->isEmpty()) {
+            $exception = new ModelNotFoundException();
+            $exception->setModel(get_class($this->getModel()));
+            throw $exception;
+        } else {
+            return $this->getById(
+                $collection->first()->{$collection->first()->getKeyName()},
+                $with
+            );
+        }
+    }
+
+    /**
      * Find an entity by id
      *
      * @param int $id
@@ -647,16 +674,17 @@ abstract class AbstractRepository
      *
      * @param int $id
      * @param array $scopes
+     * @param array $queries
      * @param array|string $with
      * @return Model|\stdClass|array|null
      */
-    public function getByIdWithScope($id, $scopes = [], array $with = [])
+    public function getByIdWithScope($id, $scopes = [], $queries = [], array $with = [])
     {
         if ($this->checkIfCacheCanBeActivated($with)) {
-            return $this->setScopesAndOrders($this->make($with), $scopes)->find($id);
+            return $this->setScopesAndOrders($this->make($with), $scopes, $queries)->findOrFail($id);
         } else {
-            return app("model-cache")->runDisabled(function () use ($id, $scopes, $with) {
-                return $this->setScopesAndOrders($this->make($with), $scopes)->find($id);
+            return app("model-cache")->runDisabled(function () use ($id, $scopes, $queries, $with) {
+                return $this->setScopesAndOrders($this->make($with), $scopes, $queries)->findOrFail($id);
             });
         }
     }
@@ -746,6 +774,13 @@ abstract class AbstractRepository
             Cache::tags('collections')->flush();
         }
 
+        // Hash passwords
+        foreach ($fields as $key => $value) {
+            if ($key == 'password') {
+                $fields['password'] = Hash::make($value);
+            }
+        }
+
         $fields = $this->prepareFieldsBeforeSave($fields);
         $object = $this->model->create($this->prepareDatesFields($fields));
 
@@ -769,6 +804,16 @@ abstract class AbstractRepository
             Cache::tags('collections')->flush();
         }
 
+        // Set empty field to NULL and Hash passwords
+        foreach ($fields as $key => $value) {
+            if (empty($value) && $value !== false && $value !== 0) {
+                $fields[$key] = null;
+            }
+            if ($key == 'password') {
+                $fields['password'] = Hash::make($value);
+            }
+        }
+
         $fields = $this->prepareFieldsBeforeSave($fields);
         $fields = $this->prepareDatesFields($fields);
 
@@ -776,12 +821,7 @@ abstract class AbstractRepository
 
         $this->updateTranslations($object, $fields);
 
-        // Set empty field to NULL
-        foreach ($fields as $key => $value) {
-            if (empty($value) && $value !== false && $value !== 0) {
-                $fields[$key] = null;
-            }
-        }
+
         // fill others fields
         $object->fill($fields);
         $object->push();
@@ -816,10 +856,10 @@ abstract class AbstractRepository
             // Remove collections cache
             Cache::tags('collections')->flush();
         }
-
-        if (($object = $this->model->find($id)) != null) {
-            $object->delete();
-        }
+		
+		if($m = $this->model->find($id)) {
+			$m->delete();
+		}
     }
 
     public function massDelete(array $filters = [])
@@ -832,7 +872,7 @@ abstract class AbstractRepository
         $query = DB::table($this->getModel()->getTable());
         foreach ($filters as $filter) {
             $nFilterTokens = count($filter);
-            if(0 == $nFilterTokens) {
+            if (0 == $nFilterTokens) {
                 continue;
             }
             if (1 == $nFilterTokens) {
@@ -843,7 +883,12 @@ abstract class AbstractRepository
                 $query->where($filter[0], $filter[1], $filter[2]);
             }
         }
-        return $query->delete();
+		
+		$time = $this->model->freshTimestamp();
+		
+        return $query->update([
+			$this->model->getDeletedAtColumn() => $this->model->fromDateTime($time)
+		]);
     }
 
     /**
@@ -900,7 +945,17 @@ abstract class AbstractRepository
      */
     protected function prepareFieldsBeforeSave($fields)
     {
+        foreach ($fields as $key => $value) {
+            if (in_array($key, ['published']) ||
+                preg_match('/^is_/i', $key) ||
+                preg_match('/^has_/i', $key) ||
+                preg_match('/^accept_/i', $key)
+            ) {
+                $fields[$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            }
+        }
 
+        return $fields;
     }
 
     /**
@@ -1079,6 +1134,24 @@ abstract class AbstractRepository
                 $translate->{$field} = null;
             }
         }
+    }
+
+    /**
+     * Add the $object Model active slugs translations to the $fields array
+     *
+     * @param Model $object
+     * @param array $fields
+     * @return array the altered $fields array
+     */
+    private function getFormFieldsSlugs(Model $object, array $fields)
+    {
+        if ($object->slugs != null) {
+            foreach ($object->slugs()->where('active', 1)->get() as $slug) {
+                $fields['slug_'.$slug->locale] = $slug->slug;
+            }
+        }
+
+        return $fields;
     }
 
     /**

@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\SlugModelTrait;
 use Carbon\Carbon;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use App\Models\Traits\MediaLibraryTraitPolymorphic;
 use App\Models\Traits\TranslatableTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App;
 
 abstract class AbstractModel extends Model
@@ -18,14 +19,39 @@ abstract class AbstractModel extends Model
     ];
 
     /**
+     * @OA\Property()
+     * @var boolean
+     */
+    protected $softDelete = true;
+
+    /**
+     * @OA\Property(
+     *     example="2017-02-02 18:31:45",
+     *     format="datetime",
+     *     type="string"
+     * )
+     *
+     * @var \DateTime
+     */
+    protected $deleted_at;
+
+    /**
      * The relationships
      * @var array
      */
     public $relationships = [];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
+
+	use SoftDeletes;
     use Cachable;
     use TranslatableTrait;
-    use MediaLibraryTraitPolymorphic;
+    use SlugModelTrait;
 
     /**
      * Save the model to the database.

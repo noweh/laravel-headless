@@ -18,11 +18,10 @@ class VerifyJwtAdminToken extends BaseMiddleware
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
-     * @param null $guard
      * @return mixed
      * @throws AuthenticationException
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next)
     {
         Auth::shouldUse('api');
         

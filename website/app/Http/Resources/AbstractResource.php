@@ -7,7 +7,6 @@ use Cache;
 use Carbon\Carbon;
 use Config;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Database\Eloquent\Collection;
 
 abstract class AbstractResource extends JsonResource
 {
@@ -21,7 +20,7 @@ abstract class AbstractResource extends JsonResource
     {
         if (request('mode') != 'contribution') {
             $commonData = Cache::remember(
-                'resources:commondata:type-' . get_class($this->resource) . '.id-' . $this->resource->{$item->getKeyName()},
+                'resources:commondata:type-' . get_class($this->resource) . '.id-' . $this->resource->{$this->resource->getKeyName()},
                 Carbon::now()->addMinutes(Config::get('cache.cache_control_maxage.small')),
                 function () {
                     return $this->retrieveCommonData();
@@ -30,7 +29,7 @@ abstract class AbstractResource extends JsonResource
 
             $localeData = Cache::remember(
                 'resources:localedata:type-' . get_class($this->resource) .
-                '.id-' . $this->resource->{$item->getKeyName()} . '.locale-' . App::getLocale(),
+                '.id-' . $this->resource->{$this->resource->getKeyName()} . '.locale-' . App::getLocale(),
                 Carbon::now()->addMinutes(Config::get('cache.cache_control_maxage.small')),
                 function () {
                     return $this->retrieveLocaleData();
@@ -73,29 +72,17 @@ abstract class AbstractResource extends JsonResource
                 }
             }
         }
-        unset($data['password']);
-        unset($data['translations']);
 
-        if (request('mode') == 'contribution') {
-            if ($this->resource->relationships) {
-                $data['relationships'] = [];
-                foreach ($this->resource->relationships as $relationship) {
-                    $relationshipContent = $this->resource->$relationship()->get();
-                    $data['relationships'][$relationship] = [];
-                    if (get_class($relationshipContent) == Collection::class) {
-                        foreach ($relationshipContent as $item) {
-                            $object = new \stdClass();
-                            $object->{$item->getKeyName()} = $item->{$item->getKeyName()};
-                            if ($item->pivot && $item->pivot->position) {
-                                $object->position = $item->pivot->position;
-                            }
-
-                            $data['relationships'][$relationship][] = $object;
-                        }
-                    }
-                }
-            }
+        if (method_exists($this->resource, 'slugs')) {
+            $data['slug'] = $this->resource->getSlug();
         }
+
+        // Remove all hidden fields
+        foreach ($this->resource->getHidden() as $fieldName) {
+            unset($data[$fieldName]);
+        }
+
+        unset($data['translations']);
 
         return $data;
     }
@@ -115,6 +102,11 @@ abstract class AbstractResource extends JsonResource
                         $translatedData[$field . '_' . $locale] = ($field == 'active') ? (boolean) $value : $value;
                     }
                 }
+
+                if (method_exists($this->resource, 'slugs')) {
+                    $translatedData['slug'] = $this->resource->getSlug();
+                }
+
                 return $translatedData;
             } else {
                 $translatedData = [];
@@ -124,6 +116,11 @@ abstract class AbstractResource extends JsonResource
                         $translatedData[$field] = ($field == 'active') ? (boolean) $value : $value;
                     }
                 }
+
+                if (method_exists($this->resource, 'slugs')) {
+                    $translatedData['slug'] = $this->resource->getSlug();
+                }
+
                 return $translatedData;
             }
         } else {
@@ -138,24 +135,5 @@ abstract class AbstractResource extends JsonResource
     protected function addSpecificData()
     {
         return [];
-    }
-
-    /**
-     * Set media calls in cache
-     * @return MediaLibraryResource|mixed
-     */
-    protected function retrieveMediaLibraryData()
-    {
-        if (request('mode') != 'contribution') {
-            return Cache::remember(
-                'resources:medialibrary:type-' . get_class($this->resource) . '.id-' . $this->resource->{$item->getKeyName()},
-                Carbon::now()->addMinutes(Config::get('cache.cache_control_maxage.small')),
-                function () {
-                    return MediaLibraryResource::make($this->mediasWithAttributes);
-                }
-            );
-        } else {
-            return MediaLibraryResource::make($this->mediasWithAttributes);
-        }
     }
 }

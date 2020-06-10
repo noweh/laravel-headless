@@ -12,22 +12,15 @@ class AdminUserTableSeeder extends Seeder
      */
     public function run()
     {
-        $this->command->info("Creating two admin users.");
+        $this->command->info("Creating admin users.");
 
         // Create a first User
         AdminUser::create([
             'is_superadmin' => true,
-            'name' => 'Julien Schmitt',
+            'first_name' => 'Julien',
+            'last_name' => 'SCHMITT',
             'email' => 'julien.schmitt@mazarinedigital.com',
             'password' => Hash::make('julien.schmitt')
-        ]);
-
-        // Create a first User
-        AdminUser::create([
-            'is_superadmin' => false,
-            'name' => 'Simple user',
-            'email' => 'simple.user@mazarinedigital.com',
-            'password' => Hash::make('simple.user')
         ]);
 
         $this->command->info('Admin users Created!');

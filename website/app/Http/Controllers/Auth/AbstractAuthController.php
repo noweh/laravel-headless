@@ -9,7 +9,8 @@ use Exception;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Config;
+use Carbon\Carbon;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 abstract class AbstractAuthController extends AbstractController
 {
@@ -42,7 +43,7 @@ abstract class AbstractAuthController extends AbstractController
             if (JWTAuth::parseToken()->getClaim('origin') == $this->claim) {
                 JWTAuth::invalidate(JWTAuth::getToken());
 
-                return response()->json(['message' => 'User logged out successfully']);
+                return response()->json(['data' => ['message' => 'User logged out successfully']]);
             } else {
                 throw new AuthenticationException(null, 'Invalid Token');
             }
@@ -93,7 +94,45 @@ abstract class AbstractAuthController extends AbstractController
     public function test()
     {
         $this->getAuthenticatedUser();
-        return response()->json(['status' => 'OK'], 200);
+        return response()->json(['data' => ['status' => 'OK']], 200);
+    }
+
+    /**
+     * Test if given token is still valid and refresh if needed
+     * @return \Illuminate\Http\JsonResponse
+     * @throws AuthenticationException
+     */
+    public function testAndRefresh()
+    {
+        try {
+            if (JWTAuth::parseToken()->getClaim('origin') == $this->claim) {
+                $payload = JWTAuth::parseToken()->getPayload()->get('exp');
+
+                switch (true) {
+                    case ($payload - Carbon::now()->timestamp > 600):
+                        return response()->json(['data' => ['status' => 1]], 200);
+                        break;
+                    case ($payload - Carbon::now()->timestamp > 0):
+                        return response()->json([
+                            'data' => [
+                                'status' => 2,
+                                'access_token' => JWTAuth::parseToken()->refresh(),
+                                'token_type' => 'bearer',
+                                'expires_in' => JWTAuth::factory()->getTTL()
+                            ]
+                        ], 200);
+                        break;
+                }
+            } else {
+                throw new AuthenticationException(null, 'Invalid Token');
+            }
+        } catch (TokenExpiredException $e) {
+            return response()->json(['data' => ['status' => 0]], 200);
+        } catch (JWTException $e) {
+            throw new AuthenticationException($e->getMessage(), 'The token cannot be tested');
+        }
+
+        return response()->json(['data' => ['status' => 0]], 200);
     }
 
     /**
@@ -103,10 +142,11 @@ abstract class AbstractAuthController extends AbstractController
      */
     protected function respondWithToken($token)
     {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL()
+        return response()->json(['data' => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => JWTAuth::factory()->getTTL()
+            ]
         ]);
     }
 }

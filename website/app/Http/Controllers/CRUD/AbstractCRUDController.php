@@ -4,9 +4,10 @@ namespace App\Http\Controllers\CRUD;
 
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\AbstractController;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 abstract class AbstractCRUDController extends AbstractController
 {
@@ -18,19 +19,15 @@ abstract class AbstractCRUDController extends AbstractController
         $this->claim = 'admin';
         parent::__construct();
     }
-    
+
     /**
      * Display a listing of the resource.
-     * @return \Illuminate\Http\JsonResponse
-     * @throws ModelNotFoundException
-     * @throws RelationNotFoundException
+     * @return \Illuminate\Http\JsonResponse|void
      */
     public function index()
     {
-        // If slug or id is setted in url, show a simple resource with the data, else, show the entity collection
-        if ($this->id) {
-            return $this->show($this->id);
-        } elseif ($this->slug) {
+        // If slug setted in url, show a simple resource with the data, else, show the entity collection
+        if ($this->slug) {
             $filteredCollection = $this->getRepository()->getCollection(
                 $this->getScopeFilters(),
                 $this->getScopeQueries(),
@@ -57,27 +54,31 @@ abstract class AbstractCRUDController extends AbstractController
             )]);
         } else {
             if ($this->nbPerPage == -1) {
-                return response()->json(['data' => $this->getResource()::collection(
-                    $this->getRepository()->getCollection(
-                        $this->getScopeFilters(),
-                        $this->getScopeQueries(),
-                        $this->parseIncludes(),
-                        $this->getOrderFilters(),
-                        $this->getExcludeIdsFilters(),
-                        $this->getRelationshipOrderByQuantityFilters()
+                return formatJsonWithHeaders(
+                    $this->getResource()::collection(
+                        $this->getRepository()->getCollection(
+                            $this->getScopeFilters(),
+                            $this->getScopeQueries(),
+                            $this->parseIncludes(),
+                            $this->getOrderFilters(),
+                            $this->getExcludeIdsFilters(),
+                            $this->getRelationshipOrderByQuantityFilters()
+                        )
                     )
-                )]);
+                );
             } else {
-                return $this->getResource()::collection(
-                    $this->getRepository()->getPaginateCollection(
-                        $this->nbPerPage,
-                        $this->page,
-                        $this->getScopeFilters(),
-                        $this->getScopeQueries(),
-                        $this->parseIncludes(),
-                        $this->getOrderFilters(),
-                        $this->getExcludeIdsFilters(),
-                        $this->getRelationshipOrderByQuantityFilters()
+                return formatJsonWithHeaders(
+                    $this->getResource()::collection(
+                        $this->getRepository()->getPaginateCollection(
+                            $this->nbPerPage,
+                            $this->page,
+                            $this->getScopeFilters(),
+                            $this->getScopeQueries(),
+                            $this->parseIncludes(),
+                            $this->getOrderFilters(),
+                            $this->getExcludeIdsFilters(),
+                            $this->getRelationshipOrderByQuantityFilters()
+                        )
                     )
                 );
             }
@@ -87,14 +88,21 @@ abstract class AbstractCRUDController extends AbstractController
     /**
      * Display the specified resource.
      *
-     * @param $itemId
-     * @return \Illuminate\Http\JsonResponse
-     * @throws ModelNotFoundException
+     * @param int $itemId
+     * @return \Illuminate\Http\JsonResponse|void
      */
-    public function show($itemId)
+    public function show()
     {
-        return response()->json(
-            ['data' => $this->getResource()::make($this->getRepository()->getById($itemId, $this->parseIncludes()))]
+        $route = \Route::current();
+        return formatJsonWithHeaders(
+            $this->getResource()::make(
+                $this->getRepository()->getByIdWithScope(
+                    last($route->parameters()),
+                    $this->getScopeFilters(),
+                    $this->getScopeQueries(),
+                    $this->parseIncludes()
+                )
+            )
         );
     }
 
@@ -107,21 +115,27 @@ abstract class AbstractCRUDController extends AbstractController
      */
     public function store(Request $request)
     {
-        $newItem = $this->doStoreObject($request);
-        return response()->json(['data' => $this->getResource()::make($newItem)], 201);
+        return response()->json(['data' => $this->getResource()::make(
+            $this->doStoreObject($request)
+        )], 201);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request $request
-     * @param int $itemId
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws ValidationException
      */
-    public function update(Request $request, $itemId)
+    public function update(Request $request)
     {
-        $item = $this->doUpdateObject($request, $itemId);
-        return $this->show($item->{$item->getKeyName()});
+        $route = \Route::current();
+
+        return response()->json(
+            ['data' => $this->getResource()::make(
+                $this->doUpdateObject($request, last($route->parameters()))
+            )]
+        );
     }
 
     /**
@@ -137,6 +151,11 @@ abstract class AbstractCRUDController extends AbstractController
         return response()->json(null, 204);
     }
 
+    /**
+     * @param Request $request
+     * @return Model|\stdClass|array Which is normally a Model.|null
+     * @throws ValidationException
+     */
     protected function doStoreObject(Request $request)
     {
         if (!$request->request->all()) {
@@ -152,10 +171,21 @@ abstract class AbstractCRUDController extends AbstractController
         return null;
     }
 
+    /**
+     * @param Request $request
+     * @param $itemId
+     * @return Model|\stdClass|array Which is normally a Model.|null
+     * @throws ValidationException
+     */
     protected function doUpdateObject(Request $request, $itemId)
     {
+        if (!$request->request->all()) {
+            throw new ValidationException(null, 'No data in input or invalid format for data');
+        }
+
         $dataElementsCandidate = $this->getResource()::make(
-            $this->getRepository()->getById($itemId, $this->parseIncludes()))->toArray([]);
+            $this->getRepository()->getById($itemId, $this->parseIncludes())
+        )->toArray([]);
         if ($dataElementsCandidate instanceof \stdClass) {
             $dataElementsCandidate = (array)$dataElementsCandidate;
         }
@@ -165,6 +195,7 @@ abstract class AbstractCRUDController extends AbstractController
             $this->getElementsFromRequest($request),
             $existingData
         );
+
         // If a validator is setted, check if existingData + input are validate
         if (!$this->validator || $this->validator->validate(array_merge($existingData, $input))) {
             $this->getRepository()->update($itemId, $input);
@@ -172,5 +203,42 @@ abstract class AbstractCRUDController extends AbstractController
         }
 
         return null;
+    }
+
+    /**
+     * Put files in public folders
+     * @param $itemId
+     * @param Request $request
+     * @return Model|\stdClass|array Which is normally a Model.
+     */
+    protected function checkFilesToUpload($itemId, Request $request)
+    {
+        ini_set('max_execution_time', '300');
+        ini_set('memory_limit', '512M');
+
+        $path = explode('\\', get_class($this->getRepository()->getModel()));
+        $storage = \Storage::disk(Str::plural(mb_strtolower(array_pop($path))));
+
+        // if not exists, create folder in public/medias/PATHNAME
+        $dirCandidate = $storage->getDriver()->getAdapter()->getPathPrefix() . $itemId;
+        if (!$storage->exists($itemId)) {
+            //creates directories
+            $storage->makeDirectory('/' . $itemId);
+            chmod( $dirCandidate, 0777);
+        }
+
+        foreach ($request->files as $key => $file) {
+
+            $fileName = $itemId . '/' . $file->getClientOriginalName();
+
+            if ($file && $fileName &&
+                $storage->put($fileName, fopen($file->getFileInfo()->getPathname(), 'rb+'))
+            ) {
+                chmod($storage->getDriver()->getAdapter()->getPathPrefix() . $fileName, 0666);
+                $this->getRepository()->update($itemId, [$key . '_url' => $storage->url($fileName) . '?uploaded=1']);
+            }
+        }
+
+        return $this->getRepository()->getById($itemId);
     }
 }

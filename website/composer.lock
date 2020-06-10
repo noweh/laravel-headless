@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "beb849170918f3eae513b201e6ab1c04",
+    "content-hash": "00198f1b95cd666488fd12d133b2fb28",
     "packages": [
         {
             "name": "astrotomic/laravel-translatable",
@@ -72,174 +72,43 @@
             "time": "2020-03-03T10:43:26+00:00"
         },
         {
-            "name": "aws/aws-sdk-php",
-            "version": "3.130.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "916356edb5c30fa564d02de94bde51a9c0bb4469"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/916356edb5c30fa564d02de94bde51a9c0bb4469",
-                "reference": "916356edb5c30fa564d02de94bde51a9c0bb4469",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "ext-pcre": "*",
-                "ext-simplexml": "*",
-                "guzzlehttp/guzzle": "^5.3.3|^6.2.1",
-                "guzzlehttp/promises": "~1.0",
-                "guzzlehttp/psr7": "^1.4.1",
-                "mtdowling/jmespath.php": "~2.2",
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "andrewsville/php-token-reflection": "^1.4",
-                "aws/aws-php-sns-message-validator": "~1.0",
-                "behat/behat": "~3.0",
-                "doctrine/cache": "~1.4",
-                "ext-dom": "*",
-                "ext-openssl": "*",
-                "ext-pcntl": "*",
-                "ext-sockets": "*",
-                "nette/neon": "^2.3",
-                "phpunit/phpunit": "^4.8.35|^5.4.3",
-                "psr/cache": "^1.0",
-                "psr/simple-cache": "^1.0",
-                "sebastian/comparator": "^1.2.3"
-            },
-            "suggest": {
-                "aws/aws-php-sns-message-validator": "To validate incoming SNS notifications",
-                "doctrine/cache": "To use the DoctrineCacheAdapter",
-                "ext-curl": "To send requests using cURL",
-                "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages",
-                "ext-sockets": "To use client-side monitoring"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Aws\\": "src/"
-                },
-                "files": [
-                    "src/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Amazon Web Services",
-                    "homepage": "http://aws.amazon.com"
-                }
-            ],
-            "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
-            "homepage": "http://aws.amazon.com/sdkforphp",
-            "keywords": [
-                "amazon",
-                "aws",
-                "cloud",
-                "dynamodb",
-                "ec2",
-                "glacier",
-                "s3",
-                "sdk"
-            ],
-            "time": "2020-01-02T19:13:50+00:00"
-        },
-        {
-            "name": "cloudinary/cloudinary_php",
-            "version": "1.16.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cloudinary/cloudinary_php.git",
-                "reference": "e33619e48ea8fa0350c007d640777091bfa4fdbc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/e33619e48ea8fa0350c007d640777091bfa4fdbc",
-                "reference": "e33619e48ea8fa0350c007d640777091bfa4fdbc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.8.*"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src"
-                ],
-                "files": [
-                    "src/Helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Cloudinary",
-                    "homepage": "https://github.com/cloudinary/cloudinary_php/graphs/contributors"
-                }
-            ],
-            "description": "Cloudinary PHP SDK",
-            "homepage": "https://github.com/cloudinary/cloudinary_php",
-            "keywords": [
-                "cdn",
-                "cloud",
-                "cloudinary",
-                "image management",
-                "sdk"
-            ],
-            "time": "2019-11-28T15:57:33+00:00"
-        },
-        {
             "name": "cocur/slugify",
-            "version": "v3.2",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cocur/slugify.git",
-                "reference": "d41701efe58ba2df9cae029c3d21e1518cc6780e"
+                "reference": "3f1ffc300f164f23abe8b64ffb3f92d35cec8307"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cocur/slugify/zipball/d41701efe58ba2df9cae029c3d21e1518cc6780e",
-                "reference": "d41701efe58ba2df9cae029c3d21e1518cc6780e",
+                "url": "https://api.github.com/repos/cocur/slugify/zipball/3f1ffc300f164f23abe8b64ffb3f92d35cec8307",
+                "reference": "3f1ffc300f164f23abe8b64ffb3f92d35cec8307",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": ">=5.5.9"
+                "php": ">=7.0"
+            },
+            "conflict": {
+                "symfony/config": "<3.4 || >=4,<4.3",
+                "symfony/dependency-injection": "<3.4 || >=4,<4.3",
+                "symfony/http-kernel": "<3.4 || >=4,<4.3",
+                "twig/twig": "<2.12.1"
             },
             "require-dev": {
                 "laravel/framework": "~5.1",
                 "latte/latte": "~2.2",
                 "league/container": "^2.2.0",
-                "mikey179/vfsstream": "~1.6",
-                "mockery/mockery": "~0.9",
-                "nette/di": "~2.2",
-                "phpunit/phpunit": "~4.8.36|~5.2",
+                "mikey179/vfsstream": "~1.6.8",
+                "mockery/mockery": "^1.3",
+                "nette/di": "~2.4",
+                "phpunit/phpunit": "^5.7.27",
                 "pimple/pimple": "~1.1",
                 "plumphp/plum": "~0.1",
-                "silex/silex": "~1.3",
-                "symfony/config": "~2.4|~3.0|~4.0",
-                "symfony/dependency-injection": "~2.4|~3.0|~4.0",
-                "symfony/http-kernel": "~2.4|~3.0|~4.0",
-                "twig/twig": "~1.26|~2.0",
+                "symfony/config": "^3.4 || ^4.3 || ^5.0",
+                "symfony/dependency-injection": "^3.4 || ^4.3 || ^5.0",
+                "symfony/http-kernel": "^3.4 || ^4.3 || ^5.0",
+                "twig/twig": "^2.12.1 || ~3.0",
                 "zendframework/zend-modulemanager": "~2.2",
                 "zendframework/zend-servicemanager": "~2.2",
                 "zendframework/zend-view": "~2.2"
@@ -256,13 +125,13 @@
             ],
             "authors": [
                 {
-                    "name": "Ivo Bathke",
-                    "email": "ivo.bathke@gmail.com"
-                },
-                {
                     "name": "Florian Eckerstorfer",
                     "email": "florian@eckerstorfer.co",
                     "homepage": "https://florian.ec"
+                },
+                {
+                    "name": "Ivo Bathke",
+                    "email": "ivo.bathke@gmail.com"
                 }
             ],
             "description": "Converts a string into a slug.",
@@ -270,7 +139,7 @@
                 "slug",
                 "slugify"
             ],
-            "time": "2019-01-31T20:38:55+00:00"
+            "time": "2019-12-14T13:04:14+00:00"
         },
         {
             "name": "darkaonline/l5-swagger",
@@ -1540,130 +1409,6 @@
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
-            "name": "james-heinrich/getid3",
-            "version": "v1.9.19",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "c6fd499a690ae67eea2eec6b2edba5df13f60f6f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/c6fd499a690ae67eea2eec6b2edba5df13f60f6f",
-                "reference": "c6fd499a690ae67eea2eec6b2edba5df13f60f6f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "jakub-onderka/php-parallel-lint": "^0.9 || ^1.0"
-            },
-            "suggest": {
-                "ext-SimpleXML": "SimpleXML extension is required to analyze RIFF/WAV/BWF audio files (also requires `ext-libxml`).",
-                "ext-com_dotnet": "COM extension is required when loading files larger than 2GB on Windows.",
-                "ext-ctype": "ctype extension is required when loading files larger than 2GB on 32-bit PHP (also on 64-bit PHP on Windows) or executing `getid3_lib::CopyTagsToComments`.",
-                "ext-dba": "DBA extension is required to use the DBA database as a cache storage.",
-                "ext-exif": "EXIF extension is required for graphic modules.",
-                "ext-iconv": "iconv extension is required to work with different character sets (when `ext-mbstring` is not available).",
-                "ext-json": "JSON extension is required to analyze Apple Quicktime videos.",
-                "ext-libxml": "libxml extension is required to analyze RIFF/WAV/BWF audio files.",
-                "ext-mbstring": "mbstring extension is required to work with different character sets.",
-                "ext-mysql": "MySQL extension is required to use the MySQL database as a cache storage (deprecated in PHP 5.5, removed in PHP >= 7.0, use `ext-mysqli` instead).",
-                "ext-mysqli": "MySQLi extension is required to use the MySQL database as a cache storage.",
-                "ext-rar": "RAR extension is required for RAR archive module.",
-                "ext-sqlite3": "SQLite3 extension is required to use the SQLite3 database as a cache storage.",
-                "ext-xml": "XML extension is required for graphic modules to analyze the XML metadata.",
-                "ext-zlib": "Zlib extension is required for archive modules and compressed metadata."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.9.x-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "getid3/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-1.0-or-later",
-                "LGPL-3.0-only",
-                "MPL-2.0"
-            ],
-            "description": "PHP script that extracts useful information from popular multimedia file formats",
-            "homepage": "https://www.getid3.org/",
-            "keywords": [
-                "codecs",
-                "php",
-                "tags"
-            ],
-            "time": "2019-12-17T21:17:26+00:00"
-        },
-        {
-            "name": "jrm2k6/cloudder",
-            "version": "0.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jrm2k6/cloudder.git",
-                "reference": "a69d49fc483bc45d58db4f3ca23d6e54f944b98e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jrm2k6/cloudder/zipball/a69d49fc483bc45d58db4f3ca23d6e54f944b98e",
-                "reference": "a69d49fc483bc45d58db4f3ca23d6e54f944b98e",
-                "shasum": ""
-            },
-            "require": {
-                "cloudinary/cloudinary_php": ">=1.1",
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "laravel/framework": ">=5.0",
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "JD\\Cloudder\\CloudderServiceProvider"
-                    ],
-                    "aliases": {
-                        "Cloudder": "JD\\Cloudder\\Facades\\Cloudder"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "JD\\Cloudder": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jeremy Dagorn",
-                    "email": "jeremy.dagorn@gmail.com"
-                }
-            ],
-            "description": "Cloudinary API wrapper for Laravel",
-            "homepage": "https://github.com/jrm2k6/cloudder",
-            "keywords": [
-                "api",
-                "cloudinary",
-                "image",
-                "laravel",
-                "laravel4",
-                "upload"
-            ],
-            "time": "2018-05-08T00:22:05+00:00"
-        },
-        {
             "name": "laravel/framework",
             "version": "v6.6.2",
             "source": {
@@ -1929,16 +1674,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.66",
+            "version": "1.0.67",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "021569195e15f8209b1c4bebb78bd66aa4f08c21"
+                "reference": "5b1f36c75c4bdde981294c2a0ebdb437ee6f275e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/021569195e15f8209b1c4bebb78bd66aa4f08c21",
-                "reference": "021569195e15f8209b1c4bebb78bd66aa4f08c21",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/5b1f36c75c4bdde981294c2a0ebdb437ee6f275e",
+                "reference": "5b1f36c75c4bdde981294c2a0ebdb437ee6f275e",
                 "shasum": ""
             },
             "require": {
@@ -2009,69 +1754,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2020-03-17T18:58:12+00:00"
-        },
-        {
-            "name": "lightsaml/lightsaml",
-            "version": "1.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lightSAML/lightSAML.git",
-                "reference": "377f04d1fb25f2fb2e72dabeff10b336f1cbe4c5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lightSAML/lightSAML/zipball/377f04d1fb25f2fb2e72dabeff10b336f1cbe4c5",
-                "reference": "377f04d1fb25f2fb2e72dabeff10b336f1cbe4c5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.6",
-                "robrichards/xmlseclibs": "~2.0|~3.0|~4.0",
-                "symfony/event-dispatcher": "~2.3|~3.0|~4.0",
-                "symfony/http-foundation": "~2.3|~3.0|~4.0"
-            },
-            "require-dev": {
-                "monolog/monolog": "~1.3",
-                "phpunit/phpunit": ">=5.7",
-                "pimple/pimple": "~3.0",
-                "symfony/css-selector": "~2.3|~3.0|~4.0",
-                "symfony/dom-crawler": "~2.3|~3.0|~4.0"
-            },
-            "suggest": {
-                "lightsaml/sp-bundle": "Symfony 2 SP security bundle",
-                "lightsaml/symfony-bridge": "Symfony 2 build container bridge"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "LightSaml\\Tests\\": "tests/",
-                    "LightSaml\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Milos Tomic",
-                    "email": "tmilos@gmail.com",
-                    "homepage": "https://github.com/tmilos/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Light SAML 2.0 PHP library",
-            "homepage": "https://www.lightsaml.com/",
-            "keywords": [
-                "SAML 2.0",
-                "Single Logout",
-                "Single SignOn",
-                "library",
-                "lightSAML",
-                "php"
-            ],
-            "time": "2018-05-28T11:21:22+00:00"
+            "time": "2020-04-16T13:21:26+00:00"
         },
         {
             "name": "malkusch/lock",
@@ -3081,98 +2764,6 @@
                 "uuid"
             ],
             "time": "2020-02-21T04:36:14+00:00"
-        },
-        {
-            "name": "rbdwllr/reallysimplejwt",
-            "version": "2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/RobDWaller/ReallySimpleJWT.git",
-                "reference": "145c55fbd70ab2295059228e098e86bf4070eabc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/RobDWaller/ReallySimpleJWT/zipball/145c55fbd70ab2295059228e098e86bf4070eabc",
-                "reference": "145c55fbd70ab2295059228e098e86bf4070eabc",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "require-dev": {
-                "infection/infection": "^0.12.2",
-                "phploc/phploc": "^4.0",
-                "phpmd/phpmd": "2.6.*",
-                "phpstan/phpstan": "^0.10",
-                "phpunit/phpunit": "^7.0",
-                "sebastian/phpcpd": "^4.0",
-                "squizlabs/php_codesniffer": "^3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ReallySimpleJWT\\": "src",
-                    "Tests\\": "tests"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Rob Waller",
-                    "email": "rdwaller1984@gmail.com"
-                }
-            ],
-            "description": "A really simple library to generate user authentication JSON Web Tokens.",
-            "keywords": [
-                "Authentication",
-                "json",
-                "json web tokens",
-                "jwt",
-                "php",
-                "tokens"
-            ],
-            "time": "2019-08-13T15:31:13+00:00"
-        },
-        {
-            "name": "robrichards/xmlseclibs",
-            "version": "3.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/robrichards/xmlseclibs.git",
-                "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/0a53d3c3aa87564910cae4ed01416441d3ae0db5",
-                "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5",
-                "shasum": ""
-            },
-            "require": {
-                "ext-openssl": "*",
-                "php": ">= 5.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "RobRichards\\XMLSecLibs\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "A PHP library for XML Security",
-            "homepage": "https://github.com/robrichards/xmlseclibs",
-            "keywords": [
-                "security",
-                "signature",
-                "xml",
-                "xmldsig"
-            ],
-            "time": "2019-11-05T11:44:22+00:00"
         },
         {
             "name": "swagger-api/swagger-ui",
@@ -5081,16 +4672,16 @@
     "packages-dev": [
         {
             "name": "barryvdh/laravel-debugbar",
-            "version": "v3.2.9",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-debugbar.git",
-                "reference": "42d5da5379a7860093f8e4032167e4cb5ebec180"
+                "reference": "67ced7c6a7451b8bb079d92a57d75f1111f3342d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/42d5da5379a7860093f8e4032167e4cb5ebec180",
-                "reference": "42d5da5379a7860093f8e4032167e4cb5ebec180",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/67ced7c6a7451b8bb079d92a57d75f1111f3342d",
+                "reference": "67ced7c6a7451b8bb079d92a57d75f1111f3342d",
                 "shasum": ""
             },
             "require": {
@@ -5145,7 +4736,7 @@
                 "profiler",
                 "webprofiler"
             ],
-            "time": "2020-02-25T20:42:23+00:00"
+            "time": "2020-04-16T09:09:05+00:00"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -7544,8 +7135,8 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^7.3.5",
-        "ext-json": "*",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "ext-json": "*"
     },
     "platform-dev": []
 }

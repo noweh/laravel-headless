@@ -28,12 +28,10 @@ class AppServiceProvider extends ServiceProvider
             * Load third party local providers
             */
 
-            if (class_exists('\Barryvdh\Debugbar\ServiceProvider')) {
+            if (class_exists('\\Barryvdh\\Debugbar\\ServiceProvider')) {
                 $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
                 $loader->alias('Debugbar', \Barryvdh\Debugbar\Facade::class);
             }
-
-
         }
     }
 
@@ -45,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Validator::extend('phone_number', 'App\\Rules\\PhoneNumber@passes');
-        Validator::extend('unique_email', 'App\\Rules\\UniqueEmail@passes');
+        Validator::extend('is_unique', 'App\\Rules\\IsUnique@passes');
         View::share('languages', array_keys(Config::get('app.locales', [])));
         View::share('language_names', Config::get('app.locale_names', []));
         Schema::defaultStringLength(191);
