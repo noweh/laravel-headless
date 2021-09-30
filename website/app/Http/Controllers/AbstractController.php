@@ -53,21 +53,6 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
  *     name="CRUD\AdminUser",
  *     description="Operations about AdminUsers"
  * )
- *
- * @OA\Tag(
- *     name="CRUD\MediaLibrary",
- *     description="Operations about MediaLibraries"
- * )
- *
- * @OA\Tag(
- *     name="CRUD\Show",
- *     description="Operations about Shows"
- * )
- *
- * @OA\Tag(
- *     name="Setting",
- *     description="Operations about Settings"
- * )
  */
 abstract class AbstractController extends BaseController
 {
