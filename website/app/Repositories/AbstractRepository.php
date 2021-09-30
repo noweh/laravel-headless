@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use Carbon\Carbon;
 use DB;
 use Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -13,8 +12,6 @@ use App;
 use Config;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\RelationNotFoundException;
-use Schema;
-use Cache;
 
 abstract class AbstractRepository
 {
@@ -33,7 +30,7 @@ abstract class AbstractRepository
     /**
      * @return Model|null
      */
-    public function getModel()
+    public function getModel(): ?Model
     {
         return $this->model;
     }
@@ -55,7 +52,7 @@ abstract class AbstractRepository
         array $queries = [],
         array $orders = [],
         array $excludeIds = []
-    ) {
+    ): Builder {
         // Filter data for associated models
         $modelScopes = [];
         foreach ($scopes as $key => $value) {
@@ -237,7 +234,7 @@ abstract class AbstractRepository
      * @param Builder $query
      * @param array $orders
      */
-    private function setTranslateOrder($query, &$orders)
+    private function setTranslateOrder($query, &$orders): void
     {
         if (property_exists($this->model, 'translatedAttributes')  && !empty($this->model->getTranslatedAttributes())) {
             $attributes = $this->model->getTranslatedAttributes();
@@ -285,7 +282,7 @@ abstract class AbstractRepository
      * @param array $params
      * @return string
      */
-    protected function getCacheKeyName($params = [])
+    protected function getCacheKeyName($params = []): string
     {
         $cacheName = Config::get('app.domain_api') . $this->getModel()->getTable();
 
@@ -304,7 +301,7 @@ abstract class AbstractRepository
      * @param array $includes
      * @return bool
      */
-    protected function checkIfCacheCanBeActivated($includes = [])
+    protected function checkIfCacheCanBeActivated($includes = []): bool
     {
         $useCache = true;
         foreach ($includes as $value) {
@@ -339,64 +336,31 @@ abstract class AbstractRepository
         $orders = [],
         $excludeIds = [],
         $relationshipOrderByQuantity = []
-    ) {
-        if (Cache::getDefaultDriver() == 'redis') {
-            return Cache::tags('collections')->rememberForever(
-                $this->getCacheKeyName([
-                    'take' => $take, 'page' => $page, 'scopes' => $scopes, 'queries' => $queries, 'with' => $with,
-                    'orders' => $orders, 'excludeIds' => $excludeIds, 'relationships' => $relationshipOrderByQuantity
-                ]),
-                function () use (
-                    $take,
-                    $page,
-                    $scopes,
-                    $queries,
-                    $with,
-                    $orders,
-                    $excludeIds,
-                    $relationshipOrderByQuantity
-                ) {
-                    // If data not in cache, call to eloquent
-                    if ($this->checkIfCacheCanBeActivated($with)) {
-                        return $this->retrievePaginatedCollectionContent(
-                            $take,
-                            $page,
-                            $scopes,
-                            $queries,
-                            $with,
-                            $orders,
-                            $excludeIds,
-                            $relationshipOrderByQuantity
-                        );
-                    } else {
-                        return app("model-cache")->runDisabled(
-                            function () use (
-                                $take,
-                                $page,
-                                $scopes,
-                                $queries,
-                                $with,
-                                $orders,
-                                $excludeIds,
-                                $relationshipOrderByQuantity
-                            ) {
-                                return $this->retrievePaginatedCollectionContent(
-                                    $take,
-                                    $page,
-                                    $scopes,
-                                    $queries,
-                                    $with,
-                                    $orders,
-                                    $excludeIds,
-                                    $relationshipOrderByQuantity
-                                );
-                            }
-                        );
-                    }
-                }
+    ): LengthAwarePaginator {
+        if ($this->checkIfCacheCanBeActivated($with)) {
+            return $this->retrievePaginatedCollectionContent(
+                $take,
+                $page,
+                $scopes,
+                $queries,
+                $with,
+                $orders,
+                $excludeIds,
+                $relationshipOrderByQuantity
             );
-        } else {
-            if ($this->checkIfCacheCanBeActivated($with)) {
+        }
+
+        return app("model-cache")->runDisabled(
+            function () use (
+                $take,
+                $page,
+                $scopes,
+                $queries,
+                $with,
+                $orders,
+                $excludeIds,
+                $relationshipOrderByQuantity
+            ) {
                 return $this->retrievePaginatedCollectionContent(
                     $take,
                     $page,
@@ -407,32 +371,8 @@ abstract class AbstractRepository
                     $excludeIds,
                     $relationshipOrderByQuantity
                 );
-            } else {
-                return app("model-cache")->runDisabled(
-                    function () use (
-                        $take,
-                        $page,
-                        $scopes,
-                        $queries,
-                        $with,
-                        $orders,
-                        $excludeIds,
-                        $relationshipOrderByQuantity
-                    ) {
-                        return $this->retrievePaginatedCollectionContent(
-                            $take,
-                            $page,
-                            $scopes,
-                            $queries,
-                            $with,
-                            $orders,
-                            $excludeIds,
-                            $relationshipOrderByQuantity
-                        );
-                    }
-                );
             }
-        }
+        );
     }
 
     /**
@@ -454,55 +394,26 @@ abstract class AbstractRepository
         $excludeIds = [],
         $relationshipOrderByQuantity = []
     ) {
-        if (Cache::getDefaultDriver() == 'redis') {
-            return Cache::tags('collections')->rememberForever(
-                $this->getCacheKeyName([
-                    'scopes' => $scopes, 'queries' => $queries, 'with' => $with,
-                    'orders' => $orders, 'excludeIds' => $excludeIds, 'relationships' => $relationshipOrderByQuantity
-                ]),
-                function () use (
-                    $scopes,
-                    $queries,
-                    $with,
-                    $orders,
-                    $excludeIds,
-                    $relationshipOrderByQuantity
-                ) {
-                    // If data not in cache, call to eloquent
-                    if ($this->checkIfCacheCanBeActivated($with)) {
-                        return $this->retrieveCollectionContent(
-                            $scopes,
-                            $queries,
-                            $with,
-                            $orders,
-                            $excludeIds,
-                            $relationshipOrderByQuantity
-                        );
-                    } else {
-                        return app("model-cache")->runDisabled(
-                            function () use (
-                                $scopes,
-                                $queries,
-                                $with,
-                                $orders,
-                                $excludeIds,
-                                $relationshipOrderByQuantity
-                            ) {
-                                return $this->retrieveCollectionContent(
-                                    $scopes,
-                                    $queries,
-                                    $with,
-                                    $orders,
-                                    $excludeIds,
-                                    $relationshipOrderByQuantity
-                                );
-                            }
-                        );
-                    }
-                }
+        if ($this->checkIfCacheCanBeActivated($with)) {
+            return $this->retrieveCollectionContent(
+                $scopes,
+                $queries,
+                $with,
+                $orders,
+                $excludeIds,
+                $relationshipOrderByQuantity
             );
-        } else {
-            if ($this->checkIfCacheCanBeActivated($with)) {
+        }
+
+        return app("model-cache")->runDisabled(
+            function () use (
+                $scopes,
+                $queries,
+                $with,
+                $orders,
+                $excludeIds,
+                $relationshipOrderByQuantity
+            ) {
                 return $this->retrieveCollectionContent(
                     $scopes,
                     $queries,
@@ -511,28 +422,8 @@ abstract class AbstractRepository
                     $excludeIds,
                     $relationshipOrderByQuantity
                 );
-            } else {
-                return app("model-cache")->runDisabled(
-                    function () use (
-                        $scopes,
-                        $queries,
-                        $with,
-                        $orders,
-                        $excludeIds,
-                        $relationshipOrderByQuantity
-                    ) {
-                        return $this->retrieveCollectionContent(
-                            $scopes,
-                            $queries,
-                            $with,
-                            $orders,
-                            $excludeIds,
-                            $relationshipOrderByQuantity
-                        );
-                    }
-                );
             }
-        }
+        );
     }
 
     /**
@@ -554,7 +445,7 @@ abstract class AbstractRepository
         $orders = [],
         $excludeIds = [],
         $relationshipOrderByQuantity = []
-    ) {
+    ): Collection {
         $collection = $this->setScopesAndOrders($this->make($with), $scopes, $queries, $orders, $excludeIds)->get();
 
         if ($relationshipOrderByQuantity) {
@@ -599,7 +490,7 @@ abstract class AbstractRepository
         $orders = [],
         $excludeIds = [],
         $relationshipOrderByQuantity = []
-    ) {
+    ): LengthAwarePaginator {
         $content = $this->retrieveCollectionContent(
             $scopes,
             $queries,
@@ -619,36 +510,6 @@ abstract class AbstractRepository
                 'pageName' => 'page'
             ]
         );
-    }
-
-    /**
-     * Find an entity by slug
-     * @param $slugCandidate
-     * @param array $with
-     * @throws ModelNotFoundException
-
-     * @return array|Model|\stdClass
-     */
-    public function getBySlug($slugCandidate, array $with = [])
-    {
-        $id = null;
-        $collection = $this->getCollection()->filter(function ($item) use ($slugCandidate) {
-            foreach ($item->getSlugs() as $slug) {
-                if ($slug->slug == $slugCandidate) {
-                    return $item;
-                }
-            }
-        });
-        if ($collection->isEmpty()) {
-            $exception = new ModelNotFoundException();
-            $exception->setModel(get_class($this->getModel()));
-            throw $exception;
-        } else {
-            return $this->getById(
-                $collection->first()->{$collection->first()->getKeyName()},
-                $with
-            );
-        }
     }
 
     /**
@@ -767,13 +628,8 @@ abstract class AbstractRepository
      * @param  array $fields [description]
      * @return Model         [description]
      */
-    public function create($fields)
+    public function create($fields): Model
     {
-        if (Cache::getDefaultDriver() == 'redis') {
-            // Remove collections cache
-            Cache::tags('collections')->flush();
-        }
-
         // Hash passwords
         foreach ($fields as $key => $value) {
             if ($key == 'password') {
@@ -788,6 +644,7 @@ abstract class AbstractRepository
 
         $object->push();
         $this->updateAfter($object, $fields);
+
         return $object;
     }
 
@@ -797,13 +654,8 @@ abstract class AbstractRepository
      * @param  array $fields [description]
      * @return void [description]
      */
-    public function update($id, $fields)
+    public function update($id, $fields): Model
     {
-        if (Cache::getDefaultDriver() == 'redis') {
-            // Remove collections cache
-            Cache::tags('collections')->flush();
-        }
-
         // Set empty field to NULL and Hash passwords
         foreach ($fields as $key => $value) {
             if (empty($value) && $value !== false && $value !== 0) {
@@ -826,6 +678,8 @@ abstract class AbstractRepository
         $object->fill($fields);
         $object->push();
         $this->updateAfter($object, $fields);
+
+        return $object;
     }
 
     /**
@@ -835,7 +689,7 @@ abstract class AbstractRepository
      * @param Model $object
      * @param array $fields
      */
-    public function updateAfter($object, $fields)
+    public function updateAfter($object, $fields): void
     {
         foreach (class_uses_recursive(get_called_class()) as $trait) {
             if (method_exists(get_called_class(), $method = 'updateAfter' . class_basename($trait))) {
@@ -850,25 +704,15 @@ abstract class AbstractRepository
      * @param  int|string $id [description]
      * @return void
      */
-    public function delete($id)
+    public function delete($id): void
     {
-        if (Cache::getDefaultDriver() == 'redis') {
-            // Remove collections cache
-            Cache::tags('collections')->flush();
-        }
-		
 		if($m = $this->model->find($id)) {
 			$m->delete();
 		}
     }
 
-    public function massDelete(array $filters = [])
+    public function massDelete(array $filters = []): int
     {
-        if (Cache::getDefaultDriver() == 'redis') {
-            // Remove collections cache
-            Cache::tags('collections')->flush();
-        }
-
         $query = DB::table($this->getModel()->getTable());
         foreach ($filters as $filter) {
             $nFilterTokens = count($filter);
@@ -898,7 +742,7 @@ abstract class AbstractRepository
      * @param array $fields
      * @return array
      */
-    protected function prepareDatesFields($fields)
+    protected function prepareDatesFields($fields): array
     {
         foreach ($this->model->getDates() as $f) {
             if (isset($fields[$f])) {
@@ -921,7 +765,7 @@ abstract class AbstractRepository
      * @param string $f
      * @return array
      */
-    protected function prepareDatesField($fields, $f)
+    protected function prepareDatesField($fields, $f): array
     {
         if ($datetime = \DateTime::createFromFormat("Y-m-d H:i:s", $fields[$f])) {
             $fields[$f] = $datetime->format("Y-m-d H:i:s");
@@ -943,7 +787,7 @@ abstract class AbstractRepository
      * @param array $fields
      * @return array
      */
-    protected function prepareFieldsBeforeSave($fields)
+    protected function prepareFieldsBeforeSave($fields): array
     {
         foreach ($fields as $key => $value) {
             if (in_array($key, ['published']) ||
@@ -951,7 +795,7 @@ abstract class AbstractRepository
                 preg_match('/^has_/i', $key) ||
                 preg_match('/^accept_/i', $key)
             ) {
-                $fields[$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                $fields[$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
             }
         }
 
@@ -963,7 +807,7 @@ abstract class AbstractRepository
      *
      * @param array $ids
      */
-    public function setPositions(array $ids)
+    public function setPositions(array $ids): void
     {
         if (!empty($ids)) {
             $position = 1;
@@ -1137,30 +981,12 @@ abstract class AbstractRepository
     }
 
     /**
-     * Add the $object Model active slugs translations to the $fields array
-     *
-     * @param Model $object
-     * @param array $fields
-     * @return array the altered $fields array
-     */
-    private function getFormFieldsSlugs(Model $object, array $fields)
-    {
-        if ($object->slugs != null) {
-            foreach ($object->slugs()->where('active', 1)->get() as $slug) {
-                $fields['slug_'.$slug->locale] = $slug->slug;
-            }
-        }
-
-        return $fields;
-    }
-
-    /**
      * Reorganize positions in a collection of items for a $parent_field_name given
      * @param array $fields
      * @param string $parent_field_name
      * @param integer $id
      */
-    protected function organizePositions($fields, $parent_field_name = null, $id = null)
+    protected function organizePositions($fields, $parent_field_name = null, $id = null): void
     {
         if (isset($fields['position'])) {
             $newPosition = $fields['position'];
@@ -1239,243 +1065,32 @@ abstract class AbstractRepository
      * @param Model $object
      * @param array $fields
      * @param string $relatedFieldName
-     * @param array $pivotValues additional pivot field to set ['pivotfieldname' => value, ...]
-     * @param array $linkedFieldNames
      * @return void
      */
     public function updateRelatedElements(
         Model $object,
         array $fields,
-        $relatedFieldName,
-        array $pivotValues = [],
-        $linkedFieldNames = []
-    ) {
-        if (array_key_exists($relatedFieldName, $fields)) {
-            $relatedElements = [];
-            if (isset($fields[$relatedFieldName]) && !empty($fields[$relatedFieldName])) {
-                $relatedElements = (is_array($fields[$relatedFieldName])) ?
-                    $fields[$relatedFieldName] : explode(',', $fields[$relatedFieldName]);
-            }
+        string $relatedFieldName
+    ): void {
+        // Reformat $relatedFieldName in expected $relatedObjectName
+        $relatedObjectName = Str::plural($relatedFieldName);
+        $relatedElements = [];
+        $relatedObjectRelation = $object->$relatedObjectName();
 
-            // Reformat $relatedFieldName in expected $relatedObjectName
-            $relatedObjectName = str_replace('_id', '', $relatedFieldName);
-            // Camelize field
-            $relatedObjectName = str_replace('_', '', ucwords($relatedObjectName, '_'));
-
-            $relatedObjectRelation = $object->$relatedObjectName();
-
-            try {
-                // Check if relatedElement needs to be updated with position or not
-                if (Schema::hasColumn($relatedObjectRelation->getTable(), 'position')) {
-                    $relatedElementsWithPosition = [];
-                    $position = 1;
-                    foreach ($relatedElements as $relatedElement) {
-                        $relatedElementsWithPosition[$relatedElement] = ['position' => $position++] + $pivotValues;
-                    }
-
-                    $relatedObjectRelation->sync($relatedElementsWithPosition);
-                } else {
-                    $relatedElementsWithoutPosition = [];
-                    foreach ($relatedElements as $relatedElement) {
-                        $relatedElementsWithoutPosition[$relatedElement] = $pivotValues;
-                    }
-
-                    // If pivotValues indicated, detach only items with this pivot values else, sync all
-                    if ($pivotValues) {
-                        $detach_ids = $relatedObjectRelation->pluck('id')
-                            ->diff(array_keys($relatedElementsWithoutPosition))->all();
-                        $attach_ids = collect(array_keys($relatedElementsWithoutPosition))
-                            ->diff($relatedObjectRelation->pluck('id'))->all();
-
-                        $relatedObjectRelation->detach($detach_ids);
-
-                        if ($linkedFieldNames) {
-                            // If linkedFieldNames, remove duplicate content from linked fields
-                            foreach ($linkedFieldNames as $linkedFieldName) {
-                                // Reformat $relatedFieldName in expected $relatedObjectName
-                                $linkedObjectName = str_replace('_id', '', $linkedFieldName);
-                                // Camelize field
-                                $linkedObjectName = str_replace('_', '', ucwords($linkedObjectName, '_'));
-
-                                $linkedObjectRelation = $object->$linkedObjectName();
-
-                                $detach_linked_ids = $linkedObjectRelation->pluck('id')
-                                    ->intersect(array_keys($relatedElementsWithoutPosition))->all();
-
-                                $linkedObjectRelation->detach($detach_linked_ids);
-                            }
-                        }
-
-                        $relatedObjectRelation->attach($attach_ids, $pivotValues);
-                    } else {
-                        $relatedObjectRelation->sync($relatedElementsWithoutPosition);
-                    }
-                }
-            } catch (\Exception $e) {
-                throw new RelationNotFoundException(
-                    'No query result for model [' . get_class($object->$relatedObjectName()->getRelated()) .
-                    '] ' . implode(' or ', array_values($relatedElements))
-                );
-            }
-        }
-    }
-
-    /**
-     * Retrieve last published items with limit
-     * Check if published is true
-     * And if publication_started_at and publication_ended_at are setted and valid for current date
-     * @param $limit
-     * @param array $idsToExclude
-     * @param array $filters
-     * @param bool $accumulativeFilters
-     * @return \Illuminate\Support\Collection
-     */
-    public function findLastPublished($limit = null, $idsToExclude = [], $filters = [], $accumulativeFilters = true)
-    {
-        $tableName = $this->getModel()->getTable();
-        $path = explode('\\', get_class($this->getModel()));
-        $modelName = array_pop($path);
-        $singularTableName = mb_strtolower($modelName);
-
-        $path = explode('\\', get_class($this->getModel()));
-        $modelName = array_pop($path);
-
-        $query = DB::table($tableName)
-            ->distinct()
-            ->select(
-                DB::raw('"' . mb_strtolower($modelName) . '" as type'),
-                $tableName . '.id as id',
-                $tableName . '.created_at as created_at'
-            )
-        ;
-
-        $fillables = $this->getModel()->getFillable();
-
-        if (in_array('published', $fillables)) {
-            $query->where($tableName . '.published', true);
-        }
-
-        if (in_array('is_standalone', $fillables)) {
-            $query->where($tableName . '.is_standalone', true);
-        }
-
-        if (in_array('publication_started_at', $fillables) &&
-            in_array('publication_ended_at', $fillables)
-        ) {
-            $query
-                ->addSelect($tableName . '.publication_started_at as publication_started_at')
-                ->where(function ($query) use ($tableName) {
-                    $query
-                        ->where($tableName . '.publication_started_at', null)
-                        ->orWhere($tableName . '.publication_started_at', '<=', Carbon::now());
-                })
-                ->where(function ($query) use ($tableName) {
-                    $query
-                        ->where($tableName . '.publication_ended_at', null)
-                        ->orWhere($tableName . '.publication_ended_at', '>=', Carbon::now());
-                })
-                ->orderBy($tableName . '.publication_started_at', 'desc')
-            ;
-        }
-
-        if ($idsToExclude) {
-            $query->whereNotIn($tableName . '.id', $idsToExclude);
-        }
-
-        if ($filters) {
-            foreach ($filters as $column => $dataToFilter) {
-                if ($column == 'tag' && Schema::hasTable($singularTableName . '_tag')) {
-                    if (!$accumulativeFilters) {
-                        $query->leftJoin(
-                            $singularTableName . '_tag',
-                            $singularTableName . '_tag.' . $singularTableName . '_id',
-                            '=',
-                            $tableName . '.id'
-                        );
-                        $query->whereIn($singularTableName . '_tag.tag_id', $dataToFilter['ids']);
-                        if (isset($dataToFilter['primary'])) {
-                            $query->where($singularTableName . '_tag.is_primary', $dataToFilter['primary']);
-                        }
-                    } else {
-                        $nbLoop = 0;
-                        foreach ($dataToFilter['ids'] as $value) {
-                            $nbLoop = ++$nbLoop;
-                            $query
-                                ->leftJoin(
-                                    $singularTableName . '_tag as associatedTag' . $nbLoop,
-                                    'associatedTag' . $nbLoop . '.' . $singularTableName . '_id',
-                                    '=',
-                                    $tableName . '.id'
-                                )
-                                ->where('associatedTag' . $nbLoop . '.tag_id', $value)
-                            ;
-                            if (isset($dataToFilter['primary'])) {
-                                $query->where('associatedTag' . $nbLoop . 'is_primary', $dataToFilter['primary']);
-                            }
-                        }
-                    }
-                } elseif ($column == 'theme') {
-                    if (Schema::hasTable($singularTableName.'_theme')) {
-                        if (!$accumulativeFilters) {
-                            $query->leftJoin(
-                                $singularTableName.'_theme',
-                                $singularTableName.'_theme.'.$singularTableName.'_id',
-                                '=',
-                                $tableName.'.id'
-                            );
-                            $query->whereIn($singularTableName.'_theme.theme_id', $dataToFilter['ids']);
-                        } else {
-                            $nbLoop = 0;
-                            foreach ($dataToFilter['ids'] as $value) {
-                                $nbLoop = ++$nbLoop;
-                                $query
-                                    ->leftJoin(
-                                        $singularTableName . '_theme as associatedTheme' . $nbLoop,
-                                        'associatedTheme' . $nbLoop . '.' . $singularTableName . '_id',
-                                        '=',
-                                        $tableName . '.id'
-                                    )
-                                    ->where('associatedTheme' . $nbLoop . '.theme_id', $value)
-                                ;
-                            }
-                        }
-
-                    }
-                } elseif ($column == 'duration') {
-                    if (in_array('duration', $fillables)) {
-                        $query->where('duration', $dataToFilter['operator'], $dataToFilter['value']);
-                    }
-                } else {
-                    $query->whereIn($tableName . '.' . $column, [$dataToFilter]);
-                }
+        foreach ($fields as $key => $value) {
+            $expKey = explode('_', $key);
+            if ($expKey[0] == $relatedFieldName) {
+                $relatedElements[] = [
+                    $object->getKeyName() => $object->getKey(),
+                    $relatedObjectRelation->getRelatedPivotKeyName() => $expKey[1],
+                    'is_activated' => filter_var($value, FILTER_VALIDATE_BOOLEAN)
+                ];
             }
         }
 
-        if (property_exists($this->getModel(), 'translatedAttributes') && !empty($this->getModel()->getTranslatedAttributes())) {
-            if (in_array('title', $this->getModel()->getTranslatedAttributes())) {
-                $query->addSelect('title');
-            }
-
-            $query->leftJoin(
-                $singularTableName . '_translations',
-                $singularTableName . '_translations.' . $singularTableName . '_id',
-                '=',
-                $tableName . '.id'
-            );
-            $query->where(
-                $singularTableName . '_translations.locale',
-                '=',
-                request('lang') ? request('lang') : App::getLocale()
-            );
-            $query->where($singularTableName . '_translations.active', '=', true);
+        if (!empty($relatedElements)) {
+            DB::table($relatedObjectRelation->getTable())->where($object->getKeyName(), $object->getKey())->delete();
+            DB::table($relatedObjectRelation->getTable())->insert($relatedElements);
         }
-
-        $query->orderBy($tableName . '.created_at', 'desc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query->get();
     }
 }

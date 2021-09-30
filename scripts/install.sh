@@ -5,4 +5,4 @@ sh scripts/refresh_cache.sh
 rm -Rf vendor
 composer install
 sh scripts/set_jwt_secret.sh
-sh scripts/generate_fake_data.sh
+sh scripts/generate_admin_user.sh

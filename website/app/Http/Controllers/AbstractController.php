@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\AuthenticationException;
+use App\Exceptions\ValidationException;
 use App\Models\AdminUser;
 use Auth;
 use Carbon\Carbon;
@@ -31,7 +32,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
  *
  * @OA\Server(
  *     description="API Local",
- *     url=API_BASE
+ *     url=L5_SWAGGER_CONST_HOST
  * )
  *
  * @OA\SecurityScheme(
@@ -99,14 +100,6 @@ abstract class AbstractController extends BaseController
         if (request('slug')) {
             $this->slug = request('slug');
         }
-
-        if (request('id') && is_numeric(request('id'))) {
-            $this->id = request('id');
-        }
-
-        if ($this->claim == 'admin') {
-            Auth::shouldUse('api');
-        }
     }
 
     /**
@@ -148,7 +141,7 @@ abstract class AbstractController extends BaseController
     /**
      * @return array
      */
-    protected function getScopeFilters()
+    protected function getScopeFilters(): array
     {
         $scope = [];
 
@@ -181,13 +174,13 @@ abstract class AbstractController extends BaseController
     /**
      * @return array
      */
-    protected function getScopeQueries()
+    protected function getScopeQueries(): array
     {
         $scope = [];
 
         // Retrieve all filters for associated data
         foreach (request()->all() as $parameter => $values) {
-            if (substr($parameter, 0, 1) === 'q' && strpos($parameter, '_') !== false) {
+            if ($parameter[0] === 'q' && strpos($parameter, '_') !== false) {
                 $scope += $this->getFilterValues(
                     lcfirst(substr(str_replace('_', '.', $parameter), 1)),
                     explode(',', $values)
@@ -216,7 +209,7 @@ abstract class AbstractController extends BaseController
      * @param $values
      * @return array
      */
-    private function getFilterValues($field, $values)
+    private function getFilterValues($field, $values): array
     {
         $scope = [];
 
@@ -250,7 +243,7 @@ abstract class AbstractController extends BaseController
     /**
      * @return array
      */
-    protected function getOrderFilters()
+    protected function getOrderFilters(): array
     {
         $orders = [];
         if (request('sort')) {
@@ -268,7 +261,7 @@ abstract class AbstractController extends BaseController
     /**
      * @return array
      */
-    protected function getRelationshipOrderByQuantityFilters()
+    protected function getRelationshipOrderByQuantityFilters(): array
     {
         $relationshipOrdersByQuantity = [];
         if (request('relSortByQuantity')) {
@@ -281,7 +274,7 @@ abstract class AbstractController extends BaseController
     /**
      * @return array
      */
-    protected function getExcludeIdsFilters()
+    protected function getExcludeIdsFilters(): array
     {
         $excludeIds = [];
         if (request('excludeIds')) {
@@ -295,7 +288,7 @@ abstract class AbstractController extends BaseController
      * Get all includes to set for the Model Collection
      * @return array
      */
-    protected function parseIncludes()
+    protected function parseIncludes(): array
     {
         return request('include') ? explode(',', request('include')) : [];
     }
@@ -305,7 +298,7 @@ abstract class AbstractController extends BaseController
      * @param Request $request
      * @return array
      */
-    protected function getElementsFromRequest(Request $request)
+    protected function getElementsFromRequest(Request $request): array
     {
         return $this->getElementsFromData($request->request->all());
     }
@@ -315,9 +308,14 @@ abstract class AbstractController extends BaseController
      * @param array $input
      * @param array|null $existingData
      * @return array
+     * @throws ValidationException
      */
-    protected function updateInputBeforeSave(array $input, array $existingData = null)
+    protected function updateInputBeforeSave(array $input, array $existingData = null): array
     {
+        if (empty($input)) {
+            throw new ValidationException(null, 'No data in input or invalid format for data');
+        }
+
         if ($input) {
             // set updated_at with a value to force base model to update
             $input['updated_at'] = Carbon::now();
@@ -331,7 +329,7 @@ abstract class AbstractController extends BaseController
      * @param array $data
      * @return array
      */
-    protected function getElementsFromData(array $data)
+    protected function getElementsFromData(array $data): array
     {
         $reconstructedElements = [];
         foreach ($data as $elementKeyInRequest => $elementValueInRequest) {

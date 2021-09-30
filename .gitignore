@@ -12,6 +12,7 @@ yarn.lock
 
 node_modules
 bower_components
+logs/*
 website/public/assets/*
 website/public/page_ouverture*
 website/public/dist/*

@@ -28,7 +28,7 @@ class AdminUserController extends AbstractCRUDController
      * @throws \App\Exceptions\AuthenticationException
      * @throws \Tymon\JWTAuth\Exceptions\JWTException
      */
-    public function getScopeQueries()
+    public function getScopeQueries(): array
     {
         $scopeQueries = parent::getScopeQueries();
 
@@ -51,13 +51,12 @@ class AdminUserController extends AbstractCRUDController
      *     operationId="getAdminUsers",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="mode",
+     *         name="removeCache",
      *         required=false,
      *         in="query",
-     *         description="Display mode",
+     *         description="Display without cache",
      *         @OA\Schema(
-     *             type="string",
-     *             enum={"contribution"}
+     *             type="boolean"
      *         )
      *     ),
      *     @OA\Parameter(
@@ -116,13 +115,12 @@ class AdminUserController extends AbstractCRUDController
      *     operationId="getAdminUserById",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="mode",
+     *         name="removeCache",
      *         required=false,
      *         in="query",
-     *         description="Display mode",
+     *         description="Display without cache",
      *         @OA\Schema(
-     *             type="string",
-     *             enum={"contribution"}
+     *             type="boolean"
      *         )
      *     ),
      *     @OA\Parameter(
@@ -215,10 +213,10 @@ class AdminUserController extends AbstractCRUDController
      *                     default="Passw0rd!"
      *                 ),
      *                 @OA\Property(
-     *                     property="client_id",
-     *                     description="Create a client_id value",
-     *                     type="integer",
-     *                     example=1
+     *                     property="password_confirmation",
+     *                     description="Person's password confirmation",
+     *                     type="string",
+     *                     default="Passw0rd!"
      *                 )
      *             )
      *         )
@@ -229,7 +227,7 @@ class AdminUserController extends AbstractCRUDController
      * @throws \App\Exceptions\ValidationException
      * @throws Exception
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         // Check if AdminUser is authenticated
         $this->getSuperadminUser();
@@ -322,10 +320,10 @@ class AdminUserController extends AbstractCRUDController
      *                     default="Passw0rd!"
      *                 ),
      *                 @OA\Property(
-     *                     property="client_id",
-     *                     description="client_id value",
-     *                     type="integer",
-     *                     example=1
+     *                     property="password_confirmation",
+     *                     description="Person's password confirmation",
+     *                     type="string",
+     *                     default="Passw0rd!"
      *                 )
      *             )
      *         )
@@ -337,16 +335,14 @@ class AdminUserController extends AbstractCRUDController
      * @throws \Tymon\JWTAuth\Exceptions\JWTException
      * @throws \App\Exceptions\ValidationException
      */
-    public function update(Request $request)
+    public function update(Request $request): \Illuminate\Http\JsonResponse
     {
         $route = \Route::current();
 
         // Check if adminUser can update this client
         $authenticatedUser = $this->getAuthenticatedUser();
-        if (!$authenticatedUser->is_superadmin) {
-            if ($authenticatedUser->admin_user_id != last($route->parameters())) {
-                throw new AuthenticationException(null, 'Insufficient rights');
-            }
+        if (!$authenticatedUser->is_superadmin && $authenticatedUser->admin_user_id !== last($route->parameters())) {
+            throw new AuthenticationException(null, 'Insufficient rights');
         }
 
         return parent::update($request);
@@ -392,7 +388,7 @@ class AdminUserController extends AbstractCRUDController
      * @throws AuthenticationException
      * @throws \Tymon\JWTAuth\Exceptions\JWTException
      */
-    public function destroy($itemId)
+    public function destroy($itemId): \Illuminate\Http\JsonResponse
     {
         // Check if adminUser is authenticated
         $this->getSuperadminUser();

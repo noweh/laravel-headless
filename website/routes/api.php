@@ -35,14 +35,7 @@ Route::group(
             Route::get('admin/auth/refresh', 'Auth\Admin\AuthController@refresh');
             Route::get('admin/auth/user', 'Auth\Admin\AuthController@show');
             Route::get('admin/auth/test', 'Auth\Admin\AuthController@test');
-			Route::get('admin/auth/testAndRefresh', 'Auth\Admin\AuthController@testAndRefresh');
-
-            Route::group(
-                ['middleware' => ['headerCacheControl:' . Config::get('cache.cache_control_maxage.huge')]],
-                function () {
-                    Route::get('settings', 'SettingController@index');
-                }
-            );
+            Route::get('admin/auth/testAndRefresh', 'Auth\Admin\AuthController@testAndRefresh');
 
             Route::group(['middleware' => ['jwt.admin.verify']], function () {
                 Route::apiResource('adminUsers', 'CRUD\AdminUserController');
@@ -50,8 +43,7 @@ Route::group(
                 Route::group(
                     ['middleware' => ['headerCacheControl:' . Config::get('cache.cache_control_maxage.medium')]],
                     function () {
-                        Route::apiResource('clients', 'CRUD\ClientController');
-                        Route::apiResource('shows', 'CRUD\ShowController');
+
                     }
                 );
             });

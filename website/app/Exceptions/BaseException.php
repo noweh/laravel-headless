@@ -16,7 +16,7 @@ abstract class BaseException extends Exception
         parent::__construct($message, $code, $previous);
     }
 
-    protected function setErrors($errors)
+    protected function setErrors($errors): void
     {
         if (is_string($errors)) {
             $errors = array(

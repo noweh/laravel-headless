@@ -11,14 +11,23 @@ use Illuminate\Http\Resources\Json\JsonResource;
 abstract class AbstractResource extends JsonResource
 {
     /**
+     * Check if cache can be activated
+     * @return bool
+     */
+    protected function checkIfCacheCanBeActivated(): bool
+    {
+        return request()->method() === 'GET' && filter_var(request('removeCache'), FILTER_VALIDATE_BOOLEAN) !== true;
+    }
+
+    /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request $request
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
-        if (request('mode') != 'contribution') {
+        if ($this->checkIfCacheCanBeActivated()) {
             $commonData = Cache::remember(
                 'resources:commondata:type-' . get_class($this->resource) . '.id-' . $this->resource->{$this->resource->getKeyName()},
                 Carbon::now()->addMinutes(Config::get('cache.cache_control_maxage.small')),
@@ -47,7 +56,7 @@ abstract class AbstractResource extends JsonResource
      * Retrieve all common data
      * @return array
      */
-    private function retrieveCommonData()
+    private function retrieveCommonData(): array
     {
         if (is_null($this->resource)) {
             return [];
@@ -68,7 +77,7 @@ abstract class AbstractResource extends JsonResource
 
             if (preg_match('/_at$/i', $key)) {
                 if (preg_match('/^[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/', $value)) {
-                    $data[$key] = date(DATE_ISO8601, strtotime($value));
+                    $data[$key] = date(DATE_ATOM, strtotime($value));
                 }
             }
         }
@@ -91,38 +100,22 @@ abstract class AbstractResource extends JsonResource
      * Retrieve all translated data
      * @return array
      */
-    private function retrieveLocaleData()
+    private function retrieveLocaleData(): array
     {
         if (method_exists($this->resource, 'getTranslation') && !empty($this->resource->getTranslatedAttributes()) && $this->resource->getTranslation()) {
-            if (request('mode') == 'contribution') {
-                $translatedData = [];
+            $translatedData = [];
 
-                foreach ($this->resource->getTranslationsArray() as $locale => $localeTranslations) {
-                    foreach ($localeTranslations as $field => $value) {
-                        $translatedData[$field . '_' . $locale] = ($field == 'active') ? (boolean) $value : $value;
-                    }
+            foreach ($this->resource->getTranslation()->toArray() as $field => $value) {
+                if (in_array($field, $this->resource->getTranslatedAttributes())) {
+                    $translatedData[$field] = ($field == 'active') ? (boolean) $value : $value;
                 }
-
-                if (method_exists($this->resource, 'slugs')) {
-                    $translatedData['slug'] = $this->resource->getSlug();
-                }
-
-                return $translatedData;
-            } else {
-                $translatedData = [];
-
-                foreach ($this->resource->getTranslation()->toArray() as $field => $value) {
-                    if (in_array($field, $this->resource->getTranslatedAttributes())) {
-                        $translatedData[$field] = ($field == 'active') ? (boolean) $value : $value;
-                    }
-                }
-
-                if (method_exists($this->resource, 'slugs')) {
-                    $translatedData['slug'] = $this->resource->getSlug();
-                }
-
-                return $translatedData;
             }
+
+            if (method_exists($this->resource, 'slugs')) {
+                $translatedData['slug'] = $this->resource->getSlug();
+            }
+
+            return $translatedData;
         } else {
             return [];
         }
@@ -132,7 +125,7 @@ abstract class AbstractResource extends JsonResource
      * Override this to add spectific data in resource
      * @return array
      */
-    protected function addSpecificData()
+    protected function addSpecificData(): array
     {
         return [];
     }

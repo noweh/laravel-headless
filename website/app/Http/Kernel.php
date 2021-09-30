@@ -18,7 +18,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\TrustProxies::class,
     ];
 
     /**
@@ -59,13 +58,11 @@ class Kernel extends HttpKernel
         'cors' => \App\Http\Middleware\Cors::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'headerCacheControl' => \App\Http\Middleware\HeaderCacheControl::class,
-        'parseMultipartFormData' => \App\Http\Middleware\ParseMultipartFormDataInputForNonPostRequests::class,
         'profile.jsonresponse' => \App\Http\Middleware\ProfileJsonResponse::class,
         'jwt.admin.verify' => \App\Http\Middleware\VerifyJwtAdminToken::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'forcePlayerId' => \App\Http\Middleware\ForcePlayerId::class,
     ];
 
     /**

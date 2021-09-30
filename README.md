@@ -1,12 +1,27 @@
-# Backstage
+# Laravel Headless
 
-### Requirements
+## What is the point ?
+
+This allows a fast and simple implementation of a REST API based on the [Laravel Framework](https://packagist.org/packages/laravel/laravel), [Repository Pattern](https://designpatternsphp.readthedocs.io/en/latest/More/Repository/README.html), [Eloquent Resources](https://laravel.com/docs/8.x/eloquent-resources), [Translatability](https://packagist.org/packages/astrotomic/laravel-translatable), and [Swagger](https://swagger.io/) for the documentation.
+
+The objective is to have the least code to write to add new types of content: the important processing is carried out in the Abstract files.
+
+In a development environment, the display of the Debugbar ([barryvdh/laravel-debugbar](https://packagist.org/packages/barryvdh/laravel-debugbar)) has been modified in a Middleware to integrate with the json return.
+
+## Cache
+
+Several levels of caches are used to optimize the display: a first with the bundle [genealabs/laravel-model-caching](https://packagist.org/packages/genealabs/laravel-model-caching) for Objects, a second in the processing of the display of Resources, and a third with a configurable Cache-Control in Header.
+
+By default, GET routes are behind cache. To remove that, you have to add the following GET parameter:
+`removeCache=true`
+
+## Requirements
 
 Here are the requirements for the project:
 
 - [PHP 7.3](http://www.php.net)
 - [MySql 5.7](https://www.mysql.com)
-- [Composer](https://getcomposer.org) (installed as an executable)
+- [Composer 2](https://getcomposer.org) (installed as an executable)
 
 ## Procedures
 
@@ -21,7 +36,7 @@ Here are the requirements for the project:
 sh scripts/install.sh
 ```
 
-If for some reason your project stop working do these:
+If for some reasons your project stop working do these:
 
 ```
 cd website
@@ -41,10 +56,10 @@ sh scripts/refresh_cache.sh
 cd website
 sh scripts/reset_database.sh
 ```
-- To generate fake data:
+- To reset database with default user:
 ```
 cd website
-sh scripts/generate_fake_data.sh
+sh scripts/generate_data.sh
 ```
 - To update existing database:
 ```
@@ -55,20 +70,6 @@ php artisan migrate
 ```
 * * * * * cd /path-to-your-project && php artisan schedule:run
 ```
-
-## Included Schedule Commands
-
-
-
-## Fake data
-
-- You can log to the interface with fake data as follows:<br />
-    Login: Fake user email<br />
-    Pwd: local-part/account name of the email address (before the @)
-
-    Example:<br />
-    Login: test-6@mazarinedigital.com<br />
-    Pwd: test-6
 
 ## Swagger
 

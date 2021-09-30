@@ -1,7 +1,5 @@
 <?php
 
-use Cocur\Slugify\Slugify;
-
 if (!function_exists('array_unique_recursive')) {
     function array_unique_recursive($array)
     {
@@ -148,21 +146,5 @@ if (!function_exists('formatJsonWithHeaders')) {
         echo $encoded;
         flush();
         exit;
-    }
-
-    if (!function_exists('sluggify')) {
-        function sluggify($str)
-        {
-            // Remove &nbsp; from str
-            $str = str_replace('&nbsp;', ' ', $str);
-
-            if ('fr' == App::getLocale()) {
-                $rulesetLanguage = 'french';
-            } else {
-                $rulesetLanguage = 'default';
-            }
-            $slugify = new Slugify;
-            return $slugify->slugify($str, ['ruleset' => $rulesetLanguage]);
-        }
     }
 }

@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'frontstage',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
 
@@ -44,11 +44,7 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
             'hash' => true,
-        ],
-        'frontstage' => [
-            'driver' => 'frontstage',
-            'provider' => 'secutix_users',
-        ],
+        ]
     ],
 
     /*

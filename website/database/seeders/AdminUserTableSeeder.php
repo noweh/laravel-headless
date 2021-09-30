@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+use Hash;
 use Illuminate\Database\Seeder;
 use App\Models\AdminUser;
 
@@ -19,7 +22,7 @@ class AdminUserTableSeeder extends Seeder
             'is_superadmin' => true,
             'first_name' => 'Julien',
             'last_name' => 'SCHMITT',
-            'email' => 'julien.schmitt@mazarinedigital.com',
+            'email' => 'jschmitt95@protonmail.com',
             'password' => Hash::make('julien.schmitt')
         ]);
 

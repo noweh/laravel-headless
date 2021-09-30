@@ -45,8 +45,8 @@ class AuthController extends AbstractAuthController
      *                     property="email",
      *                     description="Person's email",
      *                     type="string",
-     *                     default="julien.schmitt@mazarinedigital.com",
-     *                     example="julien.schmitt@mazarinedigital.com"
+     *                     default="jschmitt95@protonmail.com",
+     *                     example="jschmitt95@protonmail.com"
      *                 ),
      *                 @OA\Property(
      *                     property="password",

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Cache;
 use Illuminate\Console\Command;
 
 abstract class AbstractCommand extends Command
@@ -30,11 +29,6 @@ abstract class AbstractCommand extends Command
 
     protected function endProcess()
     {
-        if (Cache::getDefaultDriver() == 'redis') {
-            // Remove collections cache
-            Cache::tags('collections')->flush();
-        }
-
         if (file_exists(storage_path() . $this->file_process)) {
             @unlink(storage_path() . $this->file_process);
         }

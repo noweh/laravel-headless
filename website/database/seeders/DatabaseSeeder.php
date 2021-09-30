@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+use Eloquent;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,7 +17,6 @@ class DatabaseSeeder extends Seeder
         Eloquent::unguard();
 
         $this->call(AdminUserTableSeeder::class);
-        $this->call(FakeDataSeeder::class);
         
         $this->command->info("Database seeded.");
 

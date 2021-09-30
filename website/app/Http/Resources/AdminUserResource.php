@@ -8,12 +8,8 @@ class AdminUserResource extends AbstractResource
      * Override method to add some data to resource
      * @return array
      */
-    public function addSpecificData()
+    public function addSpecificData(): array
     {
-        return [
-            'client' => $this->when($this->relationLoaded('client'), function () {
-                return ClientResource::make($this->client);
-            })
-        ];
+        return [];
     }
 }

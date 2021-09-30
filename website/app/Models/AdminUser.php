@@ -110,12 +110,6 @@ class AdminUser extends Authenticatable implements JWTSubject
     private $email;
 
     /**
-     * @OA\Property(),
-     * @var integer
-     */
-    private $client_id;
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -127,8 +121,7 @@ class AdminUser extends Authenticatable implements JWTSubject
         'last_name',
         'is_superadmin',
         'email',
-        'password',
-        'client_id'
+        'password'
     ];
 
     /**
@@ -137,7 +130,7 @@ class AdminUser extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $dates = [
-		'deleted_at',
+        'deleted_at',
         'updated_at'
     ];
 
@@ -176,10 +169,5 @@ class AdminUser extends Authenticatable implements JWTSubject
         return [
             'origin' => 'admin'
         ];
-    }
-
-    public function client()
-    {
-        return $this->belongsTo(Client::class, 'client_id', 'client_id');
     }
 }

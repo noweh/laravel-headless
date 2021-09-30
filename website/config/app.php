@@ -176,7 +176,6 @@ return [
          */
         Astrotomic\Translatable\TranslatableServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-        Cocur\Slugify\Bridge\Laravel\SlugifyServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -238,8 +237,7 @@ return [
         'Str' => Illuminate\Support\Str::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
-        'View' => Illuminate\Support\Facades\View::class,
-        "Slugify" => Cocur\Slugify\Bridge\Laravel\SlugifyFacade::class,
+        'View' => Illuminate\Support\Facades\View::class
     ],
 
 ];
