@@ -1,16 +1,16 @@
 # Laravel Headless
 
-## What is the point ?
+## What about?
 
 This allows a fast and simple implementation of a REST API based on the [Laravel Framework](https://packagist.org/packages/laravel/laravel), [Repository Pattern](https://designpatternsphp.readthedocs.io/en/latest/More/Repository/README.html), [Eloquent Resources](https://laravel.com/docs/8.x/eloquent-resources), [Translatability](https://packagist.org/packages/astrotomic/laravel-translatable), and [Swagger](https://swagger.io/) for the documentation.
 
-The objective is to have the least code to write to add new types of content: the important processing is carried out in the Abstract files.
+The objective is to have the least code to write for adding new kind of content: the most important process is carried out in the Abstract files.
 
 In a development environment, the display of the Debugbar ([barryvdh/laravel-debugbar](https://packagist.org/packages/barryvdh/laravel-debugbar)) has been modified in a Middleware to integrate with the json return.
 
 ## Cache
 
-Several levels of caches are used to optimize the display: a first with the bundle [genealabs/laravel-model-caching](https://packagist.org/packages/genealabs/laravel-model-caching) for Objects, a second in the processing of the display of Resources, and a third with a configurable Cache-Control in Header.
+Several levels of caches are used to optimize the display: a first one with the bundle [genealabs/laravel-model-caching](https://packagist.org/packages/genealabs/laravel-model-caching) for Objects, a second one in the process of the Resources display, and a third one with a configurable Cache-Control in Header.
 
 By default, GET routes are behind cache. To remove that, you have to add the following GET parameter:
 `removeCache=true`
@@ -25,7 +25,7 @@ Here are the requirements for the project:
 
 ## Procedures
 
-#### Install the project:
+#### To install the project:
 
 - Create one vhost with documentRoot positionned on "website/public"
 - Duplicate **website/.env.example** to **website/.env** 
@@ -36,7 +36,7 @@ Here are the requirements for the project:
 sh scripts/install.sh
 ```
 
-If for some reasons your project stop working do these:
+If for some reasons your project stop working, do the following:
 
 ```
 cd website
@@ -46,7 +46,7 @@ php artisan migrate
 
 ## Commands
 
-- To refresh cache, do these:
+- To refresh cache, do the following:
 ```
 cd website
 sh scripts/refresh_cache.sh
@@ -66,7 +66,7 @@ sh scripts/generate_data.sh
 cd website
 php artisan migrate
 ```
-- To launch all API Commands with configured schedule, add in crontab these:
+- To launch all API Commands with configured schedule, add in crontab the following:
 ```
 * * * * * cd /path-to-your-project && php artisan schedule:run
 ```
@@ -79,7 +79,7 @@ php artisan migrate
 cd website
 php artisan l5-swagger:generate
 ```
-- Alternatively, you can set L5_SWAGGER_GENERATE_ALWAYS to true in your .env file so that your documentation will automatically be generated.
+- Alternatively, you can set `L5_SWAGGER_GENERATE_ALWAYS` to `true` in your .env file. It will allow your documentation to be automatically generated.
 
-You can **retrieve an User token** from the route /users/auth/login in Authentication Tag on Swagger interface.<br />
+You can **retrieve an User Token** from the route /users/auth/login in Authentication Tag on Swagger interface.<br />
 Copy this token and past it in "Authorize" button (see above right of the Swagger interface) to activate the JWT mode
